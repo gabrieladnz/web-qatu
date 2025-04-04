@@ -1,93 +1,234 @@
-# Grupo-4
+# Documentação sobre Commits e Pull Requests
 
+## Padrão de Nomenclatura das Branches
 
+Para manter organização no fluxo de desenvolvimento, utilizaremos um padrão para nomear as branches:
 
-## Getting started
+- `nome-autor/docs/referência-da-task`
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- `nome-autor/feat/referência-da-task`
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- `nome-autor/fix/referência-da-task`
 
-## Add your files
+- `nome-autor/perf/referência-da-task`
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+## Tipos de Commits
+
+Para manter um histórico de commits organizado e padronizado, utilizaremos as seguintes convenções:
+
+- **docs**: Apenas mudanças na documentação.
+  
+  ```sh
+  docs: atualizar documentação sobre autenticação
+  ```
+
+- **feat**: Adiciona uma nova funcionalidade.
+  
+  ```sh
+  feat: adicionar validação de senha no cadastro de usuário
+  ```
+
+- **fix**: Corrige um bug.
+  
+  ```sh
+  fix: corrigir erro na exibição do modal de login
+  ```
+
+- **perf**: Modifica o código para melhorar a performance.
+  
+  ```sh
+  perf: otimizar carregamento de imagens no dashboard
+  ```
+
+- **refactor**: Refatora o código sem adicionar funcionalidades nem corrigir bugs.
+  
+  ```sh
+  refactor: simplificar função de formatação de datas
+  ```
+
+- **style**: Altera a formatação do código sem impactar sua funcionalidade (espaços, ponto e vírgula, etc.).
+  
+  ```sh
+  style: remover console.log desnecessário
+  ```
+
+- **test**: Adiciona ou corrige testes.
+  
+  ```sh
+  test: adicionar testes para o serviço de autenticação
+  ```
+
+## Boas Práticas para Commits
+
+### 1. Utilize Commits Atômicos
+
+Commits atômicos referem-se a mudanças pequenas e concisas. Evite agrupar diversas alterações em um único commit, pois isso dificulta a rastreabilidade e o rollback caso seja necessário. Exemplo:
+
+**Ruim (commit bomba)**:
+
+```sh
+commit -m "Implementação do formulário de cadastro de clientes"
+```
+
+**Bom (commits atômicos)**:
+
+```sh
+feat: cria estrutura HTML do formulário
+feat: implementa validações dos campos
+feat: aplica estilos ao formulário
+fix: corrigi erro na validação do CNPJ
+```
+
+Isso facilita a identificação de mudanças e o rastreamento de bugs no código.
+
+### 2. Siga um Padrão de Mensagens de Commit
+
+Utilizar um padrão ajuda a organizar o histórico de commits e facilita futuras buscas. Um bom formato inclui:
+
+- **Tipo do commit** (feat, fix, refactor, etc.).
+
+- **Escopo** (opcional) — qual parte do código foi alterada.
+
+- **Mensagem descritiva** sobre a mudança.
+
+Exemplo:
+
+```sh
+feat(client): adiciona validação nos campos do cadastro
+```
+
+Para commits mais detalhados, use múltiplas linhas:
+
+```sh
+
+git commit -m "feat(client): lógica de validação dos campos no cadastro de clientes
+
+Criação da lógica de validação dos campos utilizando express-validator. 
+Para os campos Nome Fantasia, CNPJ, Endereço e Razão Social foi utilizado 
+uma validação de notEmpty."
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/jala-university1/cohort-2/oficial-pt-desenvolvimento-de-software-4-cssd-245.ga.t1.25.m2/se-o-b/capstones/grupo-4.git
-git branch -M main
-git push -uf origin main
+
+Isso melhora a compreensão do histórico e evita mensagens genéricas como "Correções de code review".
+
+### 3. Evite Commits Genéricos
+
+**Exemplos de mensagens ruins:**
+
+```sh
+commit -m "Ajustes gerais"
+commit -m "Correções diversas"
+commit -m "Refatoração do código"
 ```
+Essas mensagens não indicam claramente o que foi alterado. Prefira mensagens explicativas e organizadas.
 
-## Integrate with your tools
+### 4. Processo de Criar um Commit
 
-- [ ] [Set up project integrations](https://gitlab.com/jala-university1/cohort-2/oficial-pt-desenvolvimento-de-software-4-cssd-245.ga.t1.25.m2/se-o-b/capstones/grupo-4/-/settings/integrations)
+1. **Fazer as alterações no código**.
 
-## Collaborate with your team
+2. **Adicionar os arquivos modificados** ao stage:
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+   ```sh
+   git add .
+   ```
 
-## Test and Deploy
+3. **Criar o commit com a convenção correta**:
+ 
+   ```sh
+   git commit -m "feat: setup tag release workflow"
+   ```
 
-Use the built-in continuous integration in GitLab.
+4. **Enviar as alterações para o repositório remoto**:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+   ```sh
+   git push origin minha-branch
+   ```
 
-***
+## Criando um Pull Request (PR)
 
-# Editing this README
+1. Após enviar as alterações para a branch remota, acesse o repositório no GitHub.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+2. Clique em **New Pull Request**.
 
-## Suggestions for a good README
+3. Selecione a branch de origem e a branch de destino (geralmente `main`).
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+4. Preencha a descrição seguindo a estrutura:
 
-## Name
-Choose a self-explaining name for your project.
+   ```
+   ## Descrição
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+   Breve explicação sobre o que foi feito.
+   
+   ## Changes
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+   - feat: setup tag release workflow
+   - fix: corrigi erro de autenticação
+   - refactor: melhora estrutura de componentes
+   - style: ajusta espaçamento entre botões
+   
+   ## Notes
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+   Observação sobre algo a ser destacado caso haja alguma excepcionalidade.
+   
+   ## Preview
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+   Imagens de pré-visualização da implementação podem ser incluídas aqui.
+   
+   ## Close
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+   Referência da tarefa correspondente ao commit.
+   ```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+5. **Criar o PR e aguardar revisão**.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+6. Se aprovado, realizar o merge e deletar a branch, se necessário.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Exemplo de Pull Request
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+**Branch Criada:**
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+   ```
+   joao/feat/1234-adiciona-autenticacao
+   ```
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+**Commit realizado:**
 
-## License
-For open source projects, say how it is licensed.
+   ```sh
+   git commit -m "feat: implementa sistema de autenticação com JWT"
+   ```
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+**Descrição do Pull Request:**
+
+   ```
+   ## Descrição
+
+   Implementação do sistema de autenticação utilizando JWT. O objetivo desta feature é garantir que apenas usuários 
+   autenticados possam acessar áreas protegidas do sistema, garantindo maior segurança.
+
+   ## Changes
+
+   - feat: adiciona middleware de autenticação
+   - fix: corrigi erro de token inválido
+   - refactor: melhora validação dos tokens
+
+   ## Notes
+
+   O token expira após 1 hora e pode ser renovado via refresh token.
+
+   ## Preview
+
+   [Inserir imagem demonstrando a autenticação funcionando]
+
+   ## Close
+
+   Closes #1234
+   ```
+
+---
+
+Essa documentação visa manter o processo de versionamento claro e eficiente.
+
+## Bibliografia
+
+[Guia de Padrões de Commits - iuricode](https://github.com/iuricode/padroes-de-commits)
+
