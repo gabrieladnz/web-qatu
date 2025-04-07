@@ -11,8 +11,8 @@ Qatu é uma plataforma de e-commerce desenvolvida para proporcionar uma experiê
 O projeto é composto por várias partes, cada uma com suas responsabilidades:
 
 - **👨‍💻 Front-End**: Responsável pela interface do usuário, desenvolvido com **Angular** e **TypeScript**.
-- **💻 Back-End**: API construída com **Java Spring Boot**, que gerencia as salas de conversa, usuários e lógica do chat.
-- **🗄️ Banco de dados**: **MongoDB** para armazenamento de dados persistentes.
+- **💻 Back-End**: API construída com **Java Spring Boot**.
+- **🗄️ Banco de dados**: **MongoDB** para armazenamento de dados.
 
 ## 💡 Funcionalidades
 
