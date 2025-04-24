@@ -1,0 +1,1 @@
+// TODO: Implementar interface para os dados de entrada e resposta das requests

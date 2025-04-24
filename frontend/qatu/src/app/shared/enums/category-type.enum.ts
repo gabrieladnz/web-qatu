@@ -1,0 +1,1 @@
+// TODO: Implementar Enum representando as categorias da aplicação 
