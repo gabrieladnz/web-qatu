@@ -8,7 +8,7 @@ import { ApiService } from '../../api/api.service';
 
 // Interfaces
 import { LoginRequest, LoginResponse } from './auth.interface';
-import { RegisterRequest, RegisterResponse } from './auth.interface'; 
+import { RegisterRequest, RegisterResponse } from './auth.interface'; // você vai precisar criar essas interfaces também
 
 @Injectable({
     providedIn: 'root'
