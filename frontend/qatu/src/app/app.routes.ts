@@ -5,12 +5,13 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuthComponent } from './pages/auth/auth.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 export const routes: Routes = [
     {
         path: '',
         redirectTo: 'dashboard',
-        pathMatch: 'full'
+        pathMatch: 'full',
     },
     {
         path: 'auth',
@@ -19,18 +20,21 @@ export const routes: Routes = [
             {
                 path: '',
                 redirectTo: 'login',
-                pathMatch: 'full'
+                pathMatch: 'full',
             },
             {
                 path: 'login',
-                component: LoginComponent
+                component: LoginComponent,
             },
-            // TODO: Definir rota pra o componente de cadastro
-        ]
+            {
+                path: 'register',
+                component: RegisterComponent,
+            },
+        ],
     },
     {
         path: 'dashboard',
-        component: DashboardComponent
+        component: DashboardComponent,
     },
     {
         path: '**',
