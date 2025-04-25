@@ -1,0 +1,41 @@
+<form class="register__form" [formGroup]="registerForm">
+    <h2>Crie sua conta!</h2>
+
+    <div class="form-group">
+        <label for="signup-name">Nome</label>
+        <input type="text" formControlName="name" id="signup-name" required>
+
+        @if (registerForm.get('name')?.hasError('required') && registerForm.get('name')?.touched) {
+        <span class="form-group__error">O nome é obrigatório.</span>
+        }
+    </div>
+
+    <div class="form-group">
+        <label for="signup-email">E-mail</label>
+        <input type="email" formControlName="email" id="signup-email" required>
+
+        @if (registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched) {
+        <span class="form-group__error">Por favor, insira um e-mail válido.</span>
+        }
+    </div>
+
+    <div class="form-group">
+        <label for="signup-password">Senha</label>
+
+        <div class="form-group__password">
+            <input type="password" formControlName="password" id="signup-password"
+                [type]="hidePassword ? 'password' : 'text'" required>
+
+            <button class="form-group__password__toggle-password" (click)="passwordVisibility()" type="button">
+                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    @if (registerFailed) {
+    <span class="form-group__error">Não foi possível realizar o cadastro. Verifique os dados e tente novamente.</span>
+    }
+</form>
+
+<button class="register__button" [disabled]="registerForm.invalid" mat-raised-button type="submit"
+    (click)="register()">CADASTRAR</button>
