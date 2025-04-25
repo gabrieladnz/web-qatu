@@ -1,1 +1,10 @@
-// TODO: Implementar interface para os dados de entrada e resposta das requests
+export interface LoginRequest {
+    email: string;
+    password: string;
+}
+
+export interface LoginResponse {
+    success: boolean;
+    message: string;
+    token: string;
+}
