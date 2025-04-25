@@ -1,0 +1,27 @@
+<main class="auth">
+    <section class="auth__form">
+        <div class="auth__form__content">
+            <figure class="auth__form__content__logo">
+                <img src="assets/images/logo-small.svg" alt="Logo Qatu">
+            </figure>
+
+            <div class="auth__form__content__tabs">
+                <button routerLink="/auth/login" routerLinkActive="active">Login</button>
+                <button routerLink="/auth/register">Cadastrar</button>
+            </div>
+            
+            <router-outlet></router-outlet>
+        </div>
+    </section>
+
+    <section class="auth__decoration">
+        <article class="auth__decoration__content">
+            <h2>Qatu</h2>
+            <p>Seu e-commerce casca grossa</p>
+        </article>
+
+        <figure class="auth__decoration__image">
+            <img src="assets/images/logo-big.svg" alt="Logo Qatu">
+        </figure>
+    </section>
+</main>
