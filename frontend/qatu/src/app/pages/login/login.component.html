@@ -23,8 +23,8 @@
         </div>
 
     </div>
-    
-    @if (loginFailed && !loginForm.get('email')?.touched && !loginForm.get('password')?.touched) {
+
+    @if (loginFailed) {
     <span class="form-group__error">Credenciais inválidas. Por favor, verifique seu e-mail e senha.</span>
     }
 </form>
