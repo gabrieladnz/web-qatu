@@ -19,9 +19,9 @@ export const registerUser = async (req, res) => {
     const newUser = new UserModel({ name, email, password });
     await newUser.save();
 
-    res.status(201).json({ message: 'Usuário registrado com sucesso.' });
+    res.status(201).json({ success: true, message: 'Usuário registrado com sucesso.' });
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao registrar usuário.', error: error.message });
+    res.status(500).json({ success: false, message: 'Erro ao registrar usuário.', error: error.message });
   }
 };
 
@@ -98,9 +98,9 @@ export const resetPassword = async (req, res) => {
       user.password = newPassword; // o pre('save') vai criptografar
       await user.save();
   
-      res.status(200).json({ message: 'Senha redefinida com sucesso.' });
+      res.status(200).json({ success: true, message: 'Senha redefinida com sucesso.' });
     } catch (error) {
-      res.status(500).json({ message: 'Erro ao redefinir senha.', error: error.message });
+      res.status(500).json({ success: false, message: 'Erro ao redefinir senha.', error: error.message });
     }
   };
   
