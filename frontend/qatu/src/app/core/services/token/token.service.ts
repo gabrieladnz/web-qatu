@@ -24,7 +24,7 @@ export class TokenService {
 
     public async logout(): Promise<boolean> {
         this.delete();
-        return this.router.navigate(['/login'], {
+        return this.router.navigate(['/auth/login'], {
             replaceUrl: true,
         });
     }
