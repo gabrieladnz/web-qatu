@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, updateUser, resetPassword, getAllUsers, getUserById } from '../controllers/userController.js';
+import { registerUser, updateUser, resetPassword, getAllUsers, getUserById, loginUser } from '../controllers/userController.js';
 
 const router = express.Router();
 
@@ -8,6 +8,12 @@ const router = express.Router();
  * @route POST /api/users/register
  */
 router.post('/register', registerUser);
+
+/**
+ * Rota para login de um usuário.
+ * @route POST /api/users/login
+ */
+router.post('/login', loginUser);
 
 /**
  * Rota para atualizar os dados de um usuário.
