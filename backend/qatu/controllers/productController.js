@@ -17,7 +17,9 @@ export const createProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
     try {
-      const products = await Product.find();
+      const { category } = req.query;
+      const filter = category ? { category } : {};
+      const products = await Product.find(filter);
   
       const productsWithAverage = products.map((product) => {
         const ratings = product.ratings || [];
@@ -35,7 +37,7 @@ export const getAllProducts = async (req, res) => {
     } catch (err) {
       res.status(500).json({ message: 'Erro ao buscar produtos', error: err.message });
     }
-  };
+};
   
 
 export const getProductById = async (req, res) => {
