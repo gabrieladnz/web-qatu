@@ -16,23 +16,49 @@ export const createProduct = async (req, res) => {
 };
 
 export const getAllProducts = async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.status(200).json(products);
-  } catch (err) {
-    res.status(500).json({ message: 'Erro ao buscar produtos', error: err.message });
-  }
-};
+    try {
+      const products = await Product.find();
+  
+      const productsWithAverage = products.map((product) => {
+        const ratings = product.ratings || [];
+        const average = ratings.length
+          ? ratings.reduce((acc, r) => acc + r.score, 0) / ratings.length
+          : null;
+  
+        return {
+          ...product.toObject(),
+          averageRating: average
+        };
+      });
+  
+      res.status(200).json(productsWithAverage);
+    } catch (err) {
+      res.status(500).json({ message: 'Erro ao buscar produtos', error: err.message });
+    }
+  };
+  
 
 export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ message: 'Produto não encontrado' });
-    res.status(200).json(product);
+
+    const ratings = product.ratings || [];
+    const average = ratings.length
+      ? ratings.reduce((acc, r) => acc + r.score, 0) / ratings.length
+      : null;
+
+    const productWithAverage = {
+      ...product.toObject(),
+      averageRating: average
+    };
+
+    res.status(200).json(productWithAverage);
   } catch (err) {
     res.status(500).json({ message: 'Erro ao buscar produto', error: err.message });
   }
 };
+
 
 export const updateProduct = async (req, res) => {
   try {
