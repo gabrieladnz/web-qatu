@@ -6,6 +6,8 @@ import {
   updateProduct,
   deleteProduct
 } from '../controllers/productController.js';
+import { validateProduct } from '../middlewares/productValidator.js';
+import { handleValidationErrors } from '../middlewares/handleValidationErrors.js';
 
 /**
  * @file Rotas de produtos.
@@ -13,10 +15,10 @@ import {
  */
 const router = express.Router();
 
-router.post('/', createProduct);
+router.post('/', validateProduct, handleValidationErrors, createProduct);
 router.get('/', getAllProducts);
 router.get('/:id', getProductById);
-router.put('/:id', updateProduct);
+router.put('/:id', validateProduct, handleValidationErrors, updateProduct);
 router.delete('/:id', deleteProduct);
 
 export default router;
