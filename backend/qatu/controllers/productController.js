@@ -53,3 +53,21 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ message: 'Erro ao deletar produto', error: err.message });
   }
 };
+
+export const addProductReview = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { score, comment } = req.body;
+  
+      const product = await Product.findById(id);
+      if (!product) return res.status(404).json({ message: 'Produto não encontrado' });
+  
+      product.ratings.push({ score, comment });
+      await product.save();
+  
+      res.status(201).json({ message: 'Avaliação adicionada com sucesso' });
+    } catch (err) {
+      res.status(500).json({ message: 'Erro ao adicionar avaliação', error: err.message });
+    }
+  };
+  
