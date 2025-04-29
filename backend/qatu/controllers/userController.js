@@ -109,18 +109,18 @@ export const loginUser = async (req, res) => {
     const { email, password} = req.body
     
     if(!email || !password)  {
-        return res.status(400),json({ message: 'Senha ou email inválidos.'
-        })
+        return res.status(400),json({ success: false, message: 'Senha ou email inválidos.' })
     }
     try{
         const{token, message} = await loginUserService( email, password);
         res.status(200).json({
+            success: true,
             message: 'Login realizado com sucesso',
             token,
             message
         });
     }catch (error){
-        res.status(error.status || 500).json({message: error.message})
+        res.status(error.status || 500).json({success: false, message: error.message})
     }
   };
   
