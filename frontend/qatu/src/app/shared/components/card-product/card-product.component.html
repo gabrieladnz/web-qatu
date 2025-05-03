@@ -1,0 +1,32 @@
+@for (itemProduct of product; track $index) {
+<!-- TODO: Implementar abertura da página de detalhes do produto -->
+<section class="product-card">
+    <figure class="product-card__image-container">
+        <!-- TODO: Validar como essa imagem vai ser carregada -->
+        <img class="product-card__image" [src]="itemProduct.imageUrl" [alt]="itemProduct.name">
+    </figure>
+
+    <div class="product-card__tags">
+        <span class="product-card__tag product-card__tag--category">{{ itemProduct.category }}</span>
+        <span class="product-card__tag product-card__tag--shipping">Entrega grátis</span>
+    </div>
+
+    <h2 class="product-card__title">{{ itemProduct.name }}</h2>
+
+    <div class="product-card__description">
+        <p class="product-card__specification">{{ itemProduct.description }}</p>
+    </div>
+
+    <div class="product-card__footer">
+        <div class="product-card__price-container">
+            <span class="product-card__currency">R$</span>
+            <span class="product-card__price">{{ itemProduct.price }}</span>
+        </div>
+
+        <button class="product-card__button">
+            <!-- TODO: Implementar a lógica de adicionar ao carrinho -->
+            <span class="product-card__button-icon"></span>
+        </button>
+    </div>
+</section>
+}
