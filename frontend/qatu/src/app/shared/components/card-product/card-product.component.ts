@@ -1,4 +1,6 @@
+// Libs
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 // Interfaces
 import { Product } from '../../../core/services/product/product.interface';
@@ -10,6 +12,11 @@ import { Product } from '../../../core/services/product/product.interface';
     styleUrl: './card-product.component.scss'
 })
 export class CardProductComponent {
-    // TODO: Objeto mocado com produto de exemplo. Após integração utilizar só o @Input() com a lista passada pelo componente que chama
     @Input() product: Product[] = [];
+
+    constructor(private router: Router) { }
+
+    protected openProductDetails(productId: number): void {
+        this.router.navigate(['/product', productId]);
+    }
 }
