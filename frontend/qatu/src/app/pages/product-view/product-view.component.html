@@ -1,0 +1,49 @@
+<app-navbar></app-navbar>
+
+<main class="product">
+    <section class="product__container">
+        <div class="product__gallery">
+            <figure class="product__figure">
+                <img class="product__image" [src]="product.imageUrl" [alt]="product.name">
+            </figure>
+        </div>
+
+        <div class="product__info">
+            <h1 class="product__title">{{ product.name }}</h1>
+
+            <div class="product__category">
+                <span class="product__category-tag">{{ product.category }}</span>
+            </div>
+
+            <!-- TODO: Rever como vai funcionar a avaliação do produto  -->
+            <!-- <div class="product__rating">
+                <div class="product__stars">
+                    <span class="product__star" *ngFor="let star of generateStars(product.rating)">★</span>
+                </div>
+                    <span class="product__reviews">({{ product.reviews }} avaliações)</span>
+                </div> -->
+
+            <div class="product__delivery">
+                <span class="product__delivery-text">Entrega grátis</span>
+            </div>
+
+            <div class="product__price">
+                <span class="product__price-currency">R$</span>
+                <span class="product__price-value">{{ product.price.toFixed(2).replace('.', ',') }}</span>
+            </div>
+
+            <div class="product__stock">
+                <span class="product__stock-text">Em estoque: {{ product.stock }} unidade</span>
+            </div>
+
+            <div class="product__description">
+                <h2 class="product__description-title">Descrição</h2>
+                <p class="product__description-text">{{ product.description }}</p>
+            </div>
+
+            <button class="product__buy-button">COMPRAR</button>
+        </div>
+    </section>
+</main>
+
+<app-footer></app-footer>

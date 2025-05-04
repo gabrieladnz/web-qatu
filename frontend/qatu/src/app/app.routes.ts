@@ -6,6 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuthComponent } from './pages/auth/auth.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { ProductViewComponent } from './pages/product-view/product-view.component';
 
 export const routes: Routes = [
     {
@@ -31,6 +32,10 @@ export const routes: Routes = [
                 component: RegisterComponent,
             },
         ],
+    },
+    {
+        path: 'product/:id',
+        component: ProductViewComponent
     },
     {
         path: 'dashboard',

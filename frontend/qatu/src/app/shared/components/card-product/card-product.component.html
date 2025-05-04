@@ -1,6 +1,5 @@
 @for (itemProduct of product; track $index) {
-<!-- TODO: Implementar abertura da página de detalhes do produto -->
-<section class="product-card">
+<section class="product-card" (click)="openProductDetails(itemProduct.id)">
     <figure class="product-card__image-container">
         <!-- TODO: Validar como essa imagem vai ser carregada -->
         <img class="product-card__image" [src]="itemProduct.imageUrl" [alt]="itemProduct.name">
