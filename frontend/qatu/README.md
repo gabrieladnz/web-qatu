@@ -1,59 +1,122 @@
-# Qatu
+# Documentação do Frontend - Qatu
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.5.
+Esse documento fornece instruções detalhadas para configurar e executar o frontend do projeto Qatu.
 
-## Development server
+## Índice
+- [Requisitos de Software](#requisitos-de-software)
+- [Instalação](#instalação)
+- [Configuração do ambiente](#configuração-do-ambiente)
+- [Comandos para executar o Front-End](#comandos-para-executar-o-frontend)
+- [Estrutura do projeto](#estrutura-do-projeto)
+- [Solução de problemas](#solução-de-problemas)
 
-To start a local development server, run:
+## Requisitos de Software
+
+Para que o Front-End funcione corretamente, é necessário ter os seguintes softwares instalados:
+
+| Requisito | Versão | Descrição |
+|-----------|--------|-----------|
+| Node.js   | 16.x ou superior | Ambiente de execução JavaScript |
+| npm       | 8.x ou superior | Gerenciador de pacotes do Node |
+| Angular CLI | 16.x ou superior | Framework e ferramentas CLI |
+| TypeScript | 5.0 ou superior | Linguagem de programação |
+
+## Instalação
+
+Siga eses passos para configurar o ambiente do Front:
+
+1. Clone o repositório:
+   ```bash
+   git clone https://gitlab.com/jala-university1/cohort-2/oficial-pt-desenvolvimento-de-software-4-cssd-245.ga.t1.25.m2/se-o-b/capstones/grupo-4.git
+
+   cd frontend/qatu
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Instale o Angular CLI globalmente (se não tiver):
+   ```bash
+   npm install -g @angular/cli
+   ```
+
+## Configuração do ambiente
+
+1. Verifique o arquivo `src/app/environments/environment.ts` para configurações de desenvolvimento:
+   ```typescript
+   export const environment = {
+     production: false,
+     baseUrl: 'http://localhost:5000/api',
+   };
+   ```
+
+## Comandos para executar o Front-End
+
+### Ambiente de desenvolvimento
+
+Para iniciar o servidor:
 
 ```bash
+# Método padrão
 ng serve
+
+# OU
+npm run start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Acesse o aplicativo em `http://localhost:4200/`.
 
-## Code scaffolding
+### Executando testes
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Para executar os testes unitários:
 
 ```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
+# Executa testes com Karma
 ng test
+
+# OU
+npm run test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### Outros comandos úteis
 
 ```bash
-ng e2e
+# Gerar componentes, serviços, etc
+ng generate component nome-do-componente
+ng generate service nome-do-servico
+ng generate module nome-do-modulo
+
+# Verificar a versão do Angular CLI
+ng version
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Estrutura do projeto
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```
+qatu/
+├── angular.json          # Configuração do Angular
+├── package.json          # Dependências e scripts
+├── package-lock.json     # Versões exatas das dependências
+├── public                # Arquivos públicos
+├── README.md             # Essa documentação
+├── tsconfig.json         # Configuração do TypeScript
+├── tsconfig.app.json     # Configuração do TypeScript pra a aplicação
+├── tsconfig.spec.json    # Configuração do TypeScript pra testes
+└── src/                  # Código-fonte da aplicação
+    ├── app/              # Componentes e lógica da aplicação
+    │   ├── app.component.html    # Template componente principal
+    │   ├── app.component.scss    # Estilos do componente principal
+    │   ├── app.component.ts      # Lógica do componente principal
+    │   ├── app.component.spec.ts # Testes do componente principal
+    │   ├── app.config.ts         # Configurações da aplicação
+    │   ├── app.routes.ts         # Rotas da aplicação
+    │   ├── core                  # Funcionalidades centrais
+    │   ├── environments          # Configurações de ambiente
+    │   ├── pages                 # Componentes de páginas
+    │   └── shared                # Componentes compartilhados
+    ├── index.html        # Página principal HTML
+    ├── main.ts           # Ponto de entrada da aplicação
+    └── styles.scss       # Estilos globais
+```
