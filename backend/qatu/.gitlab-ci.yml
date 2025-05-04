@@ -1,0 +1,7 @@
+stages:
+  - greet
+
+hello-be:
+  stage: greet
+  script:
+    - echo "Hello World from Backend!"
