@@ -9,6 +9,8 @@ import {
 import { validateProduct } from '../middlewares/productValidator.js';
 import { handleValidationErrors } from '../middlewares/handleValidationErrors.js';
 import { addProductReview } from '../controllers/productController.js';
+import express from 'express';
+import { authenticate } from '../middlewares/authMiddleware.js';
 
 /**
  * @file Rotas de produtos.
@@ -16,11 +18,13 @@ import { addProductReview } from '../controllers/productController.js';
  */
 const router = express.Router();
 
-router.post('/', validateProduct, handleValidationErrors, createProduct);
-router.post('/:id/review', addProductReview);
 router.get('/', getAllProducts);
 router.get('/:id', getProductById);
-router.put('/:id', validateProduct, handleValidationErrors, updateProduct);
-router.delete('/:id', deleteProduct);
+
+// Rotas protegidas
+router.post('/', authenticate, validateProduct, handleValidationErrors, createProduct);
+router.post('/:id/review', authenticate, addProductReview);
+router.put('/:id', authenticate, validateProduct, handleValidationErrors, updateProduct);
+router.delete('/:id', authenticate, deleteProduct);
 
 export default router;
