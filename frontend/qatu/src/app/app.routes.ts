@@ -11,7 +11,7 @@ import { ProductViewComponent } from './pages/product-view/product-view.componen
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'auth',
         pathMatch: 'full',
     },
     {
