@@ -7,6 +7,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuthComponent } from './pages/auth/auth.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ProductViewComponent } from './pages/product-view/product-view.component';
+import { SearchComponent } from './pages/search/search.component';
 
 export const routes: Routes = [
     {
@@ -35,14 +36,21 @@ export const routes: Routes = [
     },
     {
         path: 'product/:id',
-        component: ProductViewComponent
+        component: ProductViewComponent,
     },
     {
         path: 'dashboard',
         component: DashboardComponent,
     },
+
+    {
+        path: 'search',
+        component: SearchComponent,
+    },
+    
     {
         path: '**',
         redirectTo: '/dashboard',
     },
+
 ];
