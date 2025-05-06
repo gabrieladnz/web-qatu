@@ -12,11 +12,19 @@ import { Observable } from 'rxjs';
 export class ApiService {
     private BASE_URL: string = environment.baseUrl;
 
-    constructor(protected http: HttpClient) { }
+    constructor(protected http: HttpClient) {}
 
-    public get<T>(url: string, token?: string): Observable<T> {
+    public get<T>(
+        url: string,
+        params?: unknown,
+        token?: string
+    ): Observable<T> {
         return this.http.get<T>(`${this.BASE_URL}/${url}`, {
             headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+            params:
+                params && typeof params === 'object'
+                    ? { ...params }
+                    : undefined,
         });
     }
 

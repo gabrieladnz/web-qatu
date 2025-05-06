@@ -7,3 +7,12 @@ export interface Product {
     stock: number;
     imageUrl: string;
 }
+
+export interface ProductRequest {
+    query?: string;
+    category?: string;
+    priceRange?: string;
+    order?: 'desc' | 'asc';
+}
+
+export interface ProductResponse extends Product {}
