@@ -1,5 +1,5 @@
 <!-- Navbar  -->
-<app-navbar></app-navbar>
+<app-navbar (products)="updateArray($event)"></app-navbar>
 
 <main class="search">
     <!-- Categorias -->
@@ -36,7 +36,7 @@
     <!-- Produtos -->
     <section class="search__products">
         <div class="search__products__list">
-            <app-card-product [product]="mockListProducts"></app-card-product>
+            <app-card-product [product]="(listProducts | async) || []"></app-card-product>
         </div>
     </section>
 </main>
