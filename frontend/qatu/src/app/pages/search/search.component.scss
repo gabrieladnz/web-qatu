@@ -2,9 +2,7 @@
     background-color: #F3F3F2;
 
     &__products {
-        margin-top: 2rem;
-        padding: 0 32px;
-        padding-bottom: 2rem;
+        padding: 2em;
     }
 }
 
@@ -36,6 +34,7 @@ app-footer {
 }
 
 @keyframes floatBags {
+
     0%,
     100% {
         transform: translateY(0);

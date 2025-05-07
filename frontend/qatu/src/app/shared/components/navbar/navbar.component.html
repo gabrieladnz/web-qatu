@@ -40,27 +40,27 @@
 
 <header class="categories">
     <div class="categories__content">
-        <a href="#" class="categories__content__item">
+        <a (click)="searchToCategory('')" class="categories__content__item">
             <span class="categories__content__emoji">🛒</span>
             <span class="categories__content__text">Todos os produtos</span>
         </a>
-        <a href="#" class="categories__content__item">
+        <a (click)="searchToCategory(CategoryType.CASA_E_MOVEIS)" class="categories__content__item">
             <span class="categories__content__emoji">🏠</span>
             <span class="categories__content__text">Casa e móveis</span>
         </a>
-        <a href="#" class="categories__content__item">
+        <a (click)="searchToCategory(CategoryType.ESPORTE)" class="categories__content__item">
             <span class="categories__content__emoji">⚽</span>
             <span class="categories__content__text">Esportes</span>
         </a>
-        <a href="#" class="categories__content__item">
+        <a (click)="searchToCategory(CategoryType.BELEZA)" class="categories__content__item">
             <span class="categories__content__emoji">💅🏻</span>
             <span class="categories__content__text">Beleza</span>
         </a>
-        <a href="#" class="categories__content__item">
+        <a (click)="searchToCategory(CategoryType.MODA)" class="categories__content__item">
             <span class="categories__content__emoji">👕</span>
             <span class="categories__content__text">Moda</span>
         </a>
-        <a href="#" class="categories__content__item">
+        <a (click)="searchToCategory(CategoryType.TECNOLOGIA)" class="categories__content__item">
             <span class="categories__content__emoji">📱</span>
             <span class="categories__content__text">Tecnologia</span>
         </a>

@@ -1,5 +1,6 @@
 // Libs
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 // Components
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
@@ -10,6 +11,9 @@ import { CardProductComponent } from '../../shared/components/card-product/card-
 import { Product } from '../../core/services/product/product.interface';
 import { ProductService } from '../../core/services/product/product.service';
 
+// Enums
+import { CategoryType } from '../../shared/enums/category-type.enum';
+
 @Component({
     selector: 'app-dashboard',
     imports: [NavbarComponent, FooterComponent, CardProductComponent],
@@ -18,8 +22,9 @@ import { ProductService } from '../../core/services/product/product.service';
 })
 export class DashboardComponent implements OnInit {
     protected listProducts: Product[] = [];
+    protected CategoryType = CategoryType;
 
-    constructor(private productService: ProductService) {}
+    constructor(private productService: ProductService, private router: Router) {}
 
     ngOnInit(): void {
         this.getProducts();
@@ -32,5 +37,11 @@ export class DashboardComponent implements OnInit {
         } catch (error) {
             console.error('Error ao buscar produtos:', error);
         }
+    }
+
+    protected searchToCategory(category: string): void {
+        this.router.navigate(['/search'], {
+            queryParams: { category }
+        });
     }
 }

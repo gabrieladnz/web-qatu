@@ -12,7 +12,7 @@ import { SearchComponent } from './pages/search/search.component';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'auth',
+        redirectTo: 'dashboard',
         pathMatch: 'full',
     },
     {
@@ -42,15 +42,12 @@ export const routes: Routes = [
         path: 'dashboard',
         component: DashboardComponent,
     },
-
     {
         path: 'search',
         component: SearchComponent,
     },
-    
     {
         path: '**',
         redirectTo: '/dashboard',
     },
-
 ];
