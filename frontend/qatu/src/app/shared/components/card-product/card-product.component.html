@@ -1,16 +1,16 @@
 @for (itemProduct of product; track $index) {
-<section class="product-card" (click)="openProductDetails(itemProduct.id)">
+<section class="product-card" (click)="openProductDetails(itemProduct._id)">
     <figure class="product-card__image-container">
         <!-- TODO: Validar como essa imagem vai ser carregada -->
-        <img class="product-card__image" [src]="itemProduct.imageUrl" [alt]="itemProduct.name">
+        <img class="product-card__image" [src]="itemProduct.image" [alt]="itemProduct.title">
     </figure>
 
     <div class="product-card__tags">
-        <span class="product-card__tag product-card__tag--category">{{ itemProduct.category }}</span>
+        <span class="product-card__tag product-card__tag--category">{{ itemProduct.category | titlecase }}</span>
         <span class="product-card__tag product-card__tag--shipping">Entrega grátis</span>
     </div>
 
-    <h2 class="product-card__title">{{ itemProduct.name }}</h2>
+    <h2 class="product-card__title">{{ itemProduct.title }}</h2>
 
     <div class="product-card__description">
         <p class="product-card__specification">{{ itemProduct.description }}</p>
