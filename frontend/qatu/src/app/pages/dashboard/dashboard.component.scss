@@ -1,69 +1,6 @@
 .dashboard {
     background-color: #F3F3F2;
 
-    &__categories {
-        background-color: #fff;
-        border-top: 1px solid #e6e6e6;
-        padding: 12px 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-        &__content {
-            margin: 0 auto;
-            display: flex;
-            overflow-x: auto;
-            padding: 0 16px;
-            scrollbar-width: none;
-
-            &::-webkit-scrollbar {
-                display: none;
-            }
-
-            &__item {
-                display: flex;
-                align-items: center;
-                padding: 8px 16px;
-                margin-right: 16px;
-                white-space: nowrap;
-                text-decoration: none;
-                color: #333;
-                transition: all 0.2s ease;
-                border-radius: 4px;
-
-                &:hover {
-                    background-color: #f8f8f8;
-                    color: #25A55F;
-                }
-            }
-
-            &__emoji {
-                font-size: 20px;
-                margin-right: 8px;
-            }
-
-            &__text {
-                font-size: 13px;
-                font-weight: 500;
-            }
-
-            // Responsividade
-            @media (max-width: 768px) {
-                &__item {
-                    padding: 6px 12px;
-                    margin-right: 12px;
-                }
-
-                &__emoji {
-                    font-size: 16px;
-                    margin-right: 6px;
-                }
-
-                &__text {
-                    font-size: 12px;
-                }
-            }
-        }
-    }
-
     &__banner {
         padding: 2em;
         overflow: hidden;
@@ -261,6 +198,7 @@
             align-items: center;
             gap: 0.2rem;
             position: relative;
+            cursor: pointer;
             transition: color 0.3s, transform 0.2s;
 
             .arrow {
@@ -412,6 +350,7 @@
             align-items: center;
             gap: 0.2rem;
             position: relative;
+            cursor: pointer;
             transition: color 0.3s, transform 0.2s;
 
             .arrow {

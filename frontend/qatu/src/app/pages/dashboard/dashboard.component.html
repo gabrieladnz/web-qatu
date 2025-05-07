@@ -1,38 +1,7 @@
 <!-- Navbar  -->
-<app-navbar></app-navbar>
+<app-navbar style="position: relative;"></app-navbar>
 
 <main class="dashboard">
-    <!-- Categorias -->
-    <header class="dashboard__categories">
-        <!-- TODO: Implementar ação ao clicar na categoria  -->
-        <div class="dashboard__categories__content">
-            <a href="#" class="dashboard__categories__content__item">
-                <span class="dashboard__categories__content__emoji">🛒</span>
-                <span class="dashboard__categories__content__text">Todos os produtos</span>
-            </a>
-            <a href="#" class="dashboard__categories__content__item">
-                <span class="dashboard__categories__content__emoji">🏠</span>
-                <span class="dashboard__categories__content__text">Casa e móveis</span>
-            </a>
-            <a href="#" class="dashboard__categories__content__item">
-                <span class="dashboard__categories__content__emoji">⚽</span>
-                <span class="dashboard__categories__content__text">Esportes</span>
-            </a>
-            <a href="#" class="dashboard__categories__content__item">
-                <span class="dashboard__categories__content__emoji">🏋️</span>
-                <span class="dashboard__categories__content__text">Fitness</span>
-            </a>
-            <a href="#" class="dashboard__categories__content__item">
-                <span class="dashboard__categories__content__emoji">👕</span>
-                <span class="dashboard__categories__content__text">Moda</span>
-            </a>
-            <a href="#" class="dashboard__categories__content__item">
-                <span class="dashboard__categories__content__emoji">📱</span>
-                <span class="dashboard__categories__content__text">Eletrônicos</span>
-            </a>
-        </div>
-    </header>
-
     <!-- Banner  -->
     <section class="dashboard__banner">
         <div class="dashboard__banner__container">
@@ -41,8 +10,8 @@
                 <p class="dashboard__banner__text">Qualidade, estilo e praticidade em um só lugar. Tudo o que você
                     procura, sem complicação.</p>
                 <div class="dashboard__banner__buttons">
-                    <!-- TODO: Implementar ação nos botoes  -->
                     <a href="#products" class="dashboard__banner__btn primary">Ir às compras</a>
+                    <!-- TODO: Implementar modal/tela sobre  -->
                     <a href="#about" class="dashboard__banner__btn secondary">Conheça nossa missão</a>
                 </div>
             </div>
@@ -60,32 +29,33 @@
                 <span class="dashboard__category__indicator"></span>
                 Categorias em destaque
             </h2>
+            <!-- TODO: Implementar ação no botão/e listagem de categorias -->
             <a href="#" class="dashboard__category__view-all">Ver todas <span class="arrow">›</span></a>
         </div>
 
         <div class="dashboard__category__cards">
-            <div class="dashboard__category__card">
+            <div class="dashboard__category__card" (click)="searchToCategory(CategoryType.TECNOLOGIA)">
                 <div class="dashboard__category__card__icon tech">
                     <span class="dashboard__category__card__emoji">💻</span>
                 </div>
                 <h3 class="dashboard__category__card__title">Tecnologia</h3>
             </div>
 
-            <div class="dashboard__category__card">
+            <div class="dashboard__category__card" (click)="searchToCategory(CategoryType.MODA)">
                 <div class="dashboard__category__card__icon fashion">
                     <span class="dashboard__category__card__emoji">👜</span>
                 </div>
                 <h3 class="dashboard__category__card__title">Moda</h3>
             </div>
 
-            <div class="dashboard__category__card">
+            <div class="dashboard__category__card" (click)="searchToCategory(CategoryType.INFANTIL)">
                 <div class="dashboard__category__card__icon kids">
-                    <span class="dashboard__category__card__emoji">👶</span>
+                    <span class="dashboard__category__card__emoji">👶🏻</span>
                 </div>
                 <h3 class="dashboard__category__card__title">Infantil</h3>
             </div>
 
-            <div class="dashboard__category__card">
+            <div class="dashboard__category__card" (click)="searchToCategory(CategoryType.BELEZA)">
                 <div class="dashboard__category__card__icon beauty">
                     <span class="dashboard__category__card__emoji">💄</span>
                 </div>
@@ -95,18 +65,18 @@
     </section>
 
     <!-- Produtos em destaque  -->
-    <section class="dashboard__products">
+    <section class="dashboard__products" id="products">
         <div class="dashboard__products__header">
             <h2 class="dashboard__products__title">
                 <span class="dashboard__products__indicator"></span>
                 Produtos em destaque
             </h2>
-            <a href="#" class="dashboard__products__view-all">Ver todos <span class="arrow">›</span></a>
+            <a class="dashboard__products__view-all" (click)="searchToCategory('')">Ver todos <span class="arrow">›</span></a>
         </div>
 
         <!-- Lista de produtos  -->
         <div class="dashboard__products__list">
-            <app-card-product [product]="mockListProducts"></app-card-product>
+            <app-card-product [product]="listProducts"></app-card-product>
         </div>
     </section>
 </main>
