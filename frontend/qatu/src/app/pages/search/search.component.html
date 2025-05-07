@@ -1,38 +1,7 @@
 <!-- Navbar  -->
-<app-navbar (products)="updateArray($event)"></app-navbar>
+<app-navbar style="position: relative;" (products)="updateArray($event)"></app-navbar>
 
 <main class="search">
-    <!-- Categorias -->
-    <header class="search__categories">
-        <!-- TODO: Implementar ação ao clicar na categoria  -->
-        <div class="search__categories__content">
-            <a href="#" class="search__categories__content__item">
-                <span class="search__categories__content__emoji">🛒</span>
-                <span class="search__categories__content__text">Todos os produtos</span>
-            </a>
-            <a href="#" class="search__categories__content__item">
-                <span class="search__categories__content__emoji">🏠</span>
-                <span class="search__categories__content__text">Casa e móveis</span>
-            </a>
-            <a href="#" class="search__categories__content__item">
-                <span class="search__categories__content__emoji">⚽</span>
-                <span class="search__categories__content__text">Esportes</span>
-            </a>
-            <a href="#" class="search__categories__content__item">
-                <span class="search__categories__content__emoji">🏋️</span>
-                <span class="search__categories__content__text">Fitness</span>
-            </a>
-            <a href="#" class="search__categories__content__item">
-                <span class="search__categories__content__emoji">👕</span>
-                <span class="search__categories__content__text">Moda</span>
-            </a>
-            <a href="#" class="search__categories__content__item">
-                <span class="search__categories__content__emoji">📱</span>
-                <span class="search__categories__content__text">Eletrônicos</span>
-            </a>
-        </div>
-    </header>
-
     <!-- Produtos -->
     <section class="search__products">
         <div class="search__products__list">
