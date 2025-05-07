@@ -24,13 +24,17 @@ export class NavbarComponent {
     protected searchValue: string = '';
     protected CategoryType = CategoryType;
 
-    constructor(private productService: ProductService, private router: Router) { }
+    constructor(private router: Router) { }
 
-    protected async search() {
-        const productList = await this.productService.getProducts({
-            title: this.searchValue,
-        });
-        this.products.emit(productList);
+    protected search(): void {
+        // TODO: A lógica aqui vai ser parecida com a da função searchToCategory().
+        // Vamos usar o router para navegar pra a página de busca e passar o valor do input como parâmetro de busca.
+        // A consulta pra puxar os produtos do ProductService vai ser feita lá também, na função fetchProducts()
+
+        // const productList = await this.productService.getProducts({
+        //     title: this.searchValue,
+        // });
+        // this.products.emit(productList);
     }
 
     protected searchToCategory(category: string): void {

@@ -10,8 +10,8 @@
                 <p class="dashboard__banner__text">Qualidade, estilo e praticidade em um só lugar. Tudo o que você
                     procura, sem complicação.</p>
                 <div class="dashboard__banner__buttons">
-                    <!-- TODO: Implementar ação nos botoes  -->
                     <a href="#products" class="dashboard__banner__btn primary">Ir às compras</a>
+                    <!-- TODO: Implementar modal/tela sobre  -->
                     <a href="#about" class="dashboard__banner__btn secondary">Conheça nossa missão</a>
                 </div>
             </div>
@@ -29,6 +29,7 @@
                 <span class="dashboard__category__indicator"></span>
                 Categorias em destaque
             </h2>
+            <!-- TODO: Implementar ação no botão/e listagem de categorias -->
             <a href="#" class="dashboard__category__view-all">Ver todas <span class="arrow">›</span></a>
         </div>
 
@@ -64,14 +65,13 @@
     </section>
 
     <!-- Produtos em destaque  -->
-    <section class="dashboard__products">
+    <section class="dashboard__products" id="products">
         <div class="dashboard__products__header">
             <h2 class="dashboard__products__title">
                 <span class="dashboard__products__indicator"></span>
                 Produtos em destaque
             </h2>
-            <!-- TODO: Implementar ação no botão -->
-            <a href="#" class="dashboard__products__view-all">Ver todos <span class="arrow">›</span></a>
+            <a class="dashboard__products__view-all" (click)="searchToCategory('')">Ver todos <span class="arrow">›</span></a>
         </div>
 
         <!-- Lista de produtos  -->

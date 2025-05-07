@@ -28,11 +28,12 @@ import { CardProductComponent } from '../../shared/components/card-product/card-
 })
 export class SearchComponent implements OnInit {
     protected arraySubject = new BehaviorSubject<Product[]>([]);
-    listProducts = this.arraySubject.asObservable();
+    protected listProducts = this.arraySubject.asObservable();
 
     constructor(private productService: ProductService, private route: ActivatedRoute) { }
 
     ngOnInit(): void {
+        // TODO: Adaptar lógica de busca a partir de diferentes parâmetros: Title, Category, MinPrice, MaxPrice...
         this.route.queryParams.subscribe(async (params) => {
             const category = params['category'];
 
