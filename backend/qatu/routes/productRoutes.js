@@ -9,7 +9,6 @@ import {
 import { validateProduct } from '../middlewares/productValidator.js';
 import { handleValidationErrors } from '../middlewares/handleValidationErrors.js';
 import { addProductReview } from '../controllers/productController.js';
-import express from 'express';
 import { authenticate } from '../middlewares/authMiddleware.js';
 
 /**
