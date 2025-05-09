@@ -16,21 +16,34 @@ export const createProduct = async (req, res) => {
 };
 
 export const getAllProducts = async (req, res) => {
-    try {
-      const { category, search } = req.query;
-  
+    try {  
+      const { category, search, minPrice, maxPrice, sort, page = 1} = req.query;
+      const limit = 8;
       // Filtro dinâmico
       const filters = {};
+      // Ordenação
+      const sortOptions = {};
   
-      if (category) {
-        filters.category = category;
-      }
-  
+      if (category) { filters.category = category;}
+      if (minPrice) { filters.price = { ...filters.price, $gte: Number(minPrice) }; }
+      if (maxPrice) { filters.price = { ...filters.price, $lte: Number(maxPrice) }; }
+      if (sort === 'asc') { sortOptions.price = 1; }
+      if (sort === 'desc') { sortOptions.price = -1; }
+      if (!sort) { sortOptions.stock = -1; } // Padrão: ordenar por estoque decrescente
+
       if (search) {
         filters.title = { $regex: search, $options: 'i' }; // busca insensível a maiúsculas/minúsculas
       }
+
+      const skip = (Number(page - 1)) * Number(limit);
   
-      const products = await Product.find(filters);
+      const products = await Product.find(filters)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(Number(limit));
+
+      //
+      const totalProducts = await Product.countDocuments(filters);
   
       const productsWithAverage = products.map((product) => {
         const ratings = product.ratings || [];
@@ -44,7 +57,13 @@ export const getAllProducts = async (req, res) => {
         };
       });
   
-      res.status(200).json(productsWithAverage);
+      res.status(200).json({
+        productsWithAverage,
+        pagination: {
+            currentPage: Number(page),
+            totalPages: Math.ceil(totalProducts / limit),
+            totalProducts
+        }});
     } catch (err) {
       res.status(500).json({ message: 'Erro ao buscar produtos', error: err.message });
     }
