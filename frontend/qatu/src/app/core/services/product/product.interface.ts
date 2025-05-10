@@ -16,12 +16,22 @@ export interface Review {
     _id: string;
 }
 
+export interface SearchProductsResponse {
+    productsWithAverage: ProductResponse[];
+    pagination: {
+      currentPage: number;
+      totalPages: number;
+      totalProducts: number;
+    };
+  }
+
 export interface SearchProductRequest {
     title?: string;
     category?: string;
     minPrice?: number;
     maxPrice?: number;
-    order?: 'desc' | 'asc';
+    sort?: 'desc' | 'asc';
+    page?: number;
 }
 
 export interface CreateProductRequest {
