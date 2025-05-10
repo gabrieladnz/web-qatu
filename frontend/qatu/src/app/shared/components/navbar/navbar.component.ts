@@ -23,23 +23,29 @@ export class NavbarComponent {
     @Output() products = new EventEmitter<Product[]>();
     protected searchValue: string = '';
     protected CategoryType = CategoryType;
+    protected selectedCategory: string = '';
 
-    constructor(private router: Router) { }
+    constructor(private router: Router) {}
 
     protected search(): void {
-        // TODO: A lógica aqui vai ser parecida com a da função searchToCategory().
-        // Vamos usar o router para navegar pra a página de busca e passar o valor do input como parâmetro de busca.
-        // A consulta pra puxar os produtos do ProductService vai ser feita lá também, na função fetchProducts()
+        if (!this.searchValue.trim()) return;
 
-        // const productList = await this.productService.getProducts({
-        //     title: this.searchValue,
-        // });
-        // this.products.emit(productList);
+        this.router.navigate(['/search'], {
+            queryParams: {
+                category: this.selectedCategory || undefined,
+                title: this.searchValue || undefined,
+            },
+        });
     }
 
-    protected searchToCategory(category: string): void {
+    protected searchToCategory(category?: string): void {
+        this.selectedCategory = category || '';
+
         this.router.navigate(['/search'], {
-            queryParams: { category }
+            queryParams: {
+                category: this.selectedCategory || undefined,
+                title: this.searchValue || undefined,
+            },
         });
     }
 }
