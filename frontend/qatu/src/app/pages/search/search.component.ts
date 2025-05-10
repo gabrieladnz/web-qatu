@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 // Interfaces
-import { Product } from '../../core/services/product/product.interface';
+import { Product, SearchProductRequest } from '../../core/services/product/product.interface';
 
 // Services
 import { ProductService } from '../../core/services/product/product.service';
@@ -30,14 +30,22 @@ export class SearchComponent implements OnInit {
     protected arraySubject = new BehaviorSubject<Product[]>([]);
     protected listProducts = this.arraySubject.asObservable();
 
-    constructor(private productService: ProductService, private route: ActivatedRoute) { }
+    constructor(
+        private productService: ProductService,
+        private route: ActivatedRoute
+    ) {}
 
     ngOnInit(): void {
-        // TODO: Adaptar lógica de busca a partir de diferentes parâmetros: Title, Category, MinPrice, MaxPrice...
         this.route.queryParams.subscribe(async (params) => {
-            const category = params['category'];
-
-            this.fetchProducts(category);
+            const filters = {
+                category: params['category'],
+                title: params['title'],
+                minPrice: params['minPrice'] ? +params['minPrice'] : undefined,
+                maxPrice: params['maxPrice'] ? +params['maxPrice'] : undefined,
+                page: params['page'] ? +params['page'] : 1
+            };
+    
+            await this.fetchProducts(filters);
         });
     }
 
@@ -45,10 +53,15 @@ export class SearchComponent implements OnInit {
         this.arraySubject.next(array);
     }
 
-    private async fetchProducts(category?: string): Promise<void> {
+    private async fetchProducts(filters: SearchProductRequest): Promise<void> {
         try {
-            const products = await this.productService.getProducts({ category });
-            this.updateArray(products);
+            const response = await this.productService.getProducts(filters);
+            this.updateArray(response.productsWithAverage);
+    
+            const { currentPage, totalPages, totalProducts } = response.pagination;
+            console.log('Página Atual:', currentPage);
+            console.log('Total de Páginas:', totalPages);
+            console.log('Total de Produtos:', totalProducts);
         } catch (error) {
             console.error('Erro ao buscar produtos:', error);
             this.updateArray([]);
