@@ -185,3 +185,34 @@ export const updateOrderStatus = async (req, res) => {
     });
   }
 };
+
+/**
+ * Lista todos os pedidos do usuário logado
+ * Filtra por status (opcional) ex: /my-orders?status=shipped
+ */
+export const getMyOrders = async (req, res) => {
+  try {
+    const { status } = req.query;
+    const userId = req.userId; // ID do usuário logado (do token)
+    
+    const filters = { buyer: userId };
+    if (status) filters.status = status;
+
+    const orders = await Order.find(filters)
+      .populate('products.product', 'title price image') // Traz dados básicos do produto
+      .sort({ createdAt: -1 }); // Mais recentes primeiro
+
+    res.status(200).json({
+      success: true,
+      count: orders.length,
+      orders
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao buscar seus pedidos',
+      error: err.message
+    });
+  }
+};
