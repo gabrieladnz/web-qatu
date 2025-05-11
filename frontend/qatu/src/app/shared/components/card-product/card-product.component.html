@@ -1,7 +1,6 @@
 @for (itemProduct of product; track $index) {
 <section class="product-card" (click)="openProductDetails(itemProduct._id)">
     <figure class="product-card__image-container">
-        <!-- TODO: Validar como essa imagem vai ser carregada -->
         <img class="product-card__image" [src]="itemProduct.image" [alt]="itemProduct.title">
     </figure>
 
@@ -22,8 +21,7 @@
             <span class="product-card__price">{{ itemProduct.price }}</span>
         </div>
 
-        <button class="product-card__button">
-            <!-- TODO: Implementar a lógica de adicionar ao carrinho -->
+        <button class="product-card__button" (click)="addToCart(itemProduct); $event.stopPropagation()">
             <span class="product-card__button-icon"></span>
         </button>
     </div>

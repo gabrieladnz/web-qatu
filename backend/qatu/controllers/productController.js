@@ -42,7 +42,7 @@ export const getAllProducts = async (req, res) => {
         .skip(skip)
         .limit(Number(limit));
 
-      //
+      // 
       const totalProducts = await Product.countDocuments(filters);
   
       const productsWithAverage = products.map((product) => {

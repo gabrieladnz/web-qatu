@@ -44,7 +44,7 @@ export class SearchComponent implements OnInit {
                 maxPrice: params['maxPrice'] ? +params['maxPrice'] : undefined,
                 page: params['page'] ? +params['page'] : 1
             };
-    
+
             await this.fetchProducts(filters);
         });
     }
@@ -57,7 +57,7 @@ export class SearchComponent implements OnInit {
         try {
             const response = await this.productService.getProducts(filters);
             this.updateArray(response.productsWithAverage);
-    
+
             const { currentPage, totalPages, totalProducts } = response.pagination;
             console.log('Página Atual:', currentPage);
             console.log('Total de Páginas:', totalPages);

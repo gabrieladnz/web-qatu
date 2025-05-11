@@ -1,5 +1,5 @@
 export interface Product {
-    _id: number;
+    _id: string;
     title: string;
     description: string;
     category: string;
@@ -59,4 +59,11 @@ export interface DeleteProductResponse {
     message: string;
 }
 
-export interface ProductResponse extends Product {}
+export interface ProductResponse {
+    productsWithAverage: Product[];
+    pagination: {
+      currentPage: number;
+      totalPages: number;
+      totalProducts: number;
+    };
+  }

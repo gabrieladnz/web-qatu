@@ -12,7 +12,7 @@ import { environment } from '../../environments/environment';
 export class ApiService {
     private BASE_URL: string = environment.baseUrl;
 
-    constructor(protected http: HttpClient) {}
+    constructor(protected http: HttpClient) { }
 
     public get<T>(
         url: string,
@@ -38,8 +38,11 @@ export class ApiService {
         return this.http.put<T>(`${this.BASE_URL}/${url}`, body);
     }
 
-    public delete<T>(url: string): Observable<T> {
-        return this.http.delete<T>(`${this.BASE_URL}/${url}`);
+    public delete<T>(url: string, body?: unknown, token?: string): Observable<T> {
+        return this.http.delete<T>(`${this.BASE_URL}/${url}`, {
+            body,
+            headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
     }
 
     public patch<T>(url: string, body: unknown): Observable<T> {

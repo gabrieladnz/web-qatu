@@ -7,7 +7,7 @@ import { lastValueFrom } from 'rxjs';
 import { ApiService } from '../../api/api.service';
 
 // Interfaces
-import { SearchProductRequest, SearchProductsResponse, ProductResponse, CreateProductRequest, CreateReviewRequest, CreateReviewResponse, DeleteProductResponse } from './product.interface';
+import { SearchProductRequest, ProductResponse, CreateProductRequest, CreateReviewRequest, CreateReviewResponse, DeleteProductResponse, Product } from './product.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -19,25 +19,25 @@ export class ProductService extends ApiService {
 
     public async getProducts(
         params?: SearchProductRequest
-      ): Promise<SearchProductsResponse> {
+    ): Promise<ProductResponse> {
         try {
-          return await lastValueFrom(
-            this.get<SearchProductsResponse>('products', params)
-          );
+            return await lastValueFrom(
+                this.get<ProductResponse>('products', params)
+            );
         } catch (error) {
           const errorResponse = {
             success: false,
             message: error,
           };
-      
+
           throw errorResponse;
         }
       }
 
-    public async getProductById(productId: string): Promise<ProductResponse> {
+    public async getProductById(productId: string): Promise<Product> {
         try {
             return await lastValueFrom(
-                this.get<ProductResponse>(`products/${productId}`)
+                this.get<Product>(`products/${productId}`)
             );
         } catch (error) {
             const errorResponse = {

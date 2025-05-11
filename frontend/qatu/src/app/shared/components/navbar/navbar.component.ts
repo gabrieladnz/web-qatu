@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 // Interfaces
 import { Product } from '../../../core/services/product/product.interface';
@@ -12,6 +13,9 @@ import { ProductService } from '../../../core/services/product/product.service';
 
 // Enums
 import { CategoryType } from './../../enums/category-type.enum';
+
+// Components
+import { ModalCartComponent } from '../modals/modal-cart/modal-cart.component';
 
 @Component({
     selector: 'app-navbar',
@@ -25,7 +29,7 @@ export class NavbarComponent {
     protected CategoryType = CategoryType;
     protected selectedCategory: string = '';
 
-    constructor(private router: Router) {}
+    constructor(private router: Router, public dialog: MatDialog) { }
 
     protected search(): void {
         if (!this.searchValue.trim()) return;
@@ -45,6 +49,18 @@ export class NavbarComponent {
             queryParams: {
                 category: this.selectedCategory || undefined,
                 title: this.searchValue || undefined,
+            },
+        });
+    }
+
+    protected openModalCart(): void {
+        this.dialog.open(ModalCartComponent, {
+            width: '400px',
+            height: '100%',
+            panelClass: 'custom__modal',
+            disableClose: false,
+            position: {
+                right: '0'
             },
         });
     }
