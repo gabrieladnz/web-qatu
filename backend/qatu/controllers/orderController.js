@@ -124,3 +124,65 @@ export const deleteOrder = async (req, res) => {
     res.status(500).json({ message: 'Erro ao cancelar pedido', error: err.message });
   }
 };
+
+
+/**
+ * Atualiza apenas o status de um pedido
+ * Requer: Usuário deve ser o comprador OU admin (mesmo que isAdmin não funcione ainda)
+ */
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const { id: orderId } = req.params;
+    const userId = req.userId; // ID do usuário logado
+
+    // Status válidos (baseados no seu model)
+    const validStatus = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({ 
+        success: false,
+        message: `Status inválido. Use: ${validStatus.join(', ')}`
+      });
+    }
+
+    // Busca o pedido
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'Pedido não encontrado'
+      });
+    }
+
+    // Verifica se o usuário é o COMPRADOR (sem depender de isAdmin)
+    const isBuyer = order.buyer.toString() === userId;
+    if (!isBuyer) {
+      return res.status(403).json({ 
+        success: false,
+        message: 'Acesso negado. Apenas o comprador pode atualizar o status.'
+      });
+    }
+
+    // Atualiza e salva
+    order.status = status;
+    await order.save();
+
+    // Resposta com dados populados
+    const updatedOrder = await Order.findById(orderId)
+      .populate('buyer', 'name email')
+      .populate('products.product', 'title price');
+
+    res.status(200).json({
+      success: true,
+      message: 'Status atualizado com sucesso!',
+      order: updatedOrder
+    });
+
+  } catch (err) {
+    res.status(500).json({ 
+      success: false,
+      message: 'Erro ao atualizar status',
+      error: err.message 
+    });
+  }
+};
