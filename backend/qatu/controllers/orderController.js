@@ -216,3 +216,40 @@ export const getMyOrders = async (req, res) => {
     });
   }
 };
+
+/**
+ * Lista todos os pedidos onde o usuário logado é vendedor
+ * Filtros opcionais: status e productId
+ * Ex: /seller-orders?status=shipped&productId=123
+ */
+export const getSellerOrders = async (req, res) => {
+  try {
+    const { status, productId } = req.query;
+    const sellerId = req.userId; // ID do vendedor logado
+
+    const filter = { 
+      'products.seller': sellerId 
+    };
+
+    if (status) filter.status = status;
+    if (productId) filter['products.product'] = productId;
+
+    const orders = await Order.find(filter)
+      .populate('buyer', 'name email') // Info do comprador
+      .populate('products.product', 'title price') // Info básica do produto
+      .sort({ createdAt: -1 }); // Mais recentes primeiro
+
+    res.status(200).json({
+      success: true,
+      count: orders.length,
+      orders
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao buscar pedidos',
+      error: err.message
+    });
+  }
+};
