@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
     protected async getProducts(): Promise<void> {
         try {
             const products = await this.productService.getProducts();
-            this.listProducts = products.slice(0, 8);
+            this.listProducts = products.productsWithAverage.slice(0, 8);
         } catch (error) {
             console.error('Error ao buscar produtos:', error);
         }

@@ -48,7 +48,7 @@ export class SearchComponent implements OnInit {
     private async fetchProducts(category?: string): Promise<void> {
         try {
             const products = await this.productService.getProducts({ category });
-            this.updateArray(products);
+            this.updateArray(products.productsWithAverage);
         } catch (error) {
             console.error('Erro ao buscar produtos:', error);
             this.updateArray([]);
