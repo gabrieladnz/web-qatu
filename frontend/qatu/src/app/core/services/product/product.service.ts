@@ -25,14 +25,14 @@ export class ProductService extends ApiService {
                 this.get<ProductResponse>('products', params)
             );
         } catch (error) {
-            const errorResponse = {
-                sucess: false,
-                message: error,
-            };
+          const errorResponse = {
+            success: false,
+            message: error,
+          };
 
-            throw errorResponse;
+          throw errorResponse;
         }
-    }
+      }
 
     public async getProductById(productId: string): Promise<Product> {
         try {
