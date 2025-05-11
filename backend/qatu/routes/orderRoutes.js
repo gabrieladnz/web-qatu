@@ -8,6 +8,7 @@ import {
 } from '../controllers/orderController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 import { isAdmin } from '../middlewares/isAdminMiddlewares.js'; 
+import { updateOrderStatus } from '../controllers/orderController.js';
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.get('/', authenticate, isAdmin, getAllOrders); // Apenas admin
 router.get('/:id', authenticate, getOrderById); // Dono do pedido ou admin
 router.put('/:id', authenticate, updateOrder); // Atualizar status
 router.delete('/:id', authenticate, deleteOrder); // Cancelar pedido
+router.patch('/:id/status', authenticate, updateOrderStatus);
 
 export default router;

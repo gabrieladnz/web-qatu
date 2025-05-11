@@ -136,7 +136,7 @@ export const updateOrderStatus = async (req, res) => {
     const { id: orderId } = req.params;
     const userId = req.userId; // ID do usuário logado
 
-    // Status válidos (baseados no seu model)
+    // Status válidos
     const validStatus = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
     if (!validStatus.includes(status)) {
       return res.status(400).json({ 
@@ -154,7 +154,6 @@ export const updateOrderStatus = async (req, res) => {
       });
     }
 
-    // Verifica se o usuário é o COMPRADOR (sem depender de isAdmin)
     const isBuyer = order.buyer.toString() === userId;
     if (!isBuyer) {
       return res.status(403).json({ 
