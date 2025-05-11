@@ -1,0 +1,53 @@
+<main class="cart">
+    <section class="cart__header">
+        <h2>Meu carrinho</h2>
+        <button (click)="closeCart()"></button>
+    </section>
+
+    <section class="cart__products">
+        <div>
+            @if (products.items.length > 0) {
+            @for (product of products.items; track $index) {
+            <div class="cart__product">
+                <div class="cart__product-image">
+                    <img [src]="product.product.image" [alt]="product.product.title">
+                </div>
+
+                <section>
+                    <div class="cart__product-info">
+                        <h4 class="cart__product-title">{{ product.product.title }}</h4>
+                        <p class="cart__product-description">{{ product.product.description }}</p>
+                        <p class="cart__product-price">R$ {{ product.product.price }}</p>
+                    </div>
+                    <div class="cart__product-actions">
+                        <div class="cart__product-quantity">
+                            <button class="cart__product-decrease" (click)="decreaseQuantity(product)">-</button>
+                            <span>{{ product.quantity }}</span>
+                            <button class="cart__product-increase" (click)="increaseQuantity(product)">+</button>
+                        </div>
+                        <button class="cart__product-remove" (click)="removeProduct(product.product._id)">
+                            <span class="material-symbols-outlined">
+                                delete
+                            </span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+            }
+            } @else {
+            <div class="cart__empty">
+                <p>Seu carrinho está vazio</p>
+                <button routerLink="/dashboard" (click)="closeCart()">Continuar comprando</button>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="cart__total">
+        <div>
+            <h3>Total:</h3>
+            <p>R$ {{ products.total }}</p>
+        </div>
+        <button (click)="finishPurchase()" [disabled]="products.items.length === 0">FINALIZAR COMPRA</button>
+    </section>
+</main>
