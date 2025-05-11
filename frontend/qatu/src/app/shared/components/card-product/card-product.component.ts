@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
 // Interfaces
 import { Product } from '../../../core/services/product/product.interface';
 
+// Services
+import { CartService } from '../../../core/services/cart/cart.service';
+
 @Component({
     selector: 'app-card-product',
     imports: [CommonModule],
@@ -15,9 +18,20 @@ import { Product } from '../../../core/services/product/product.interface';
 export class CardProductComponent {
     @Input() product: Product[] = [];
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private cartService: CartService) { }
 
-    protected openProductDetails(productId: number): void {
+    protected openProductDetails(productId: string): void {
         this.router.navigate(['/product', productId]);
+    }
+
+    protected async addToCart(itemProduct: Product): Promise<void> {
+        try {
+            this.cartService.addToCart({
+                productId: itemProduct._id,
+                quantity: 1,
+            })
+        } catch (error) {
+            console.error('Erro ao adicionar produto ao carrinho', error);
+        }
     }
 }
