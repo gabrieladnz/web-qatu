@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+.env
+.vscode
+.idea
+*.swp
+.DS_Store
+.git
+.gitignore
+README.md
+LICENSE
+*.md
