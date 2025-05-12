@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend/qatu
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://database:27017/qatu
+    depends_on:
+      - database
+    networks:
+      - qatu-network
+
+  frontend:
+    build:
+      context: ./frontend/qatu
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - qatu-network
+
+  database:
+    image: mongo:latest
+    container_name: database
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - qatu-network
+
+networks:
+  qatu-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
