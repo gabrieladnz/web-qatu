@@ -5,7 +5,8 @@ import {
   getOrderById,
   updateOrder,
   deleteOrder,
-  getMyOrders
+  getMyOrders,
+  getSellerOrders
 } from '../controllers/orderController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 import { isAdmin } from '../middlewares/isAdminMiddlewares.js'; 
@@ -23,5 +24,6 @@ router.put('/:id', authenticate, updateOrder); // Atualizar status
 router.delete('/:id', authenticate, deleteOrder); // Cancelar pedido
 router.patch('/:id/status', authenticate, updateOrderStatus);
 router.get('/my-orders', authenticate, getMyOrders);
+router.get('/seller-orders', authenticate, getSellerOrders);
 
 export default router;
