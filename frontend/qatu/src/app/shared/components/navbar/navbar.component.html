@@ -5,13 +5,8 @@
         </figure>
 
         <div class="navbar__search">
-            <input 
-                (keyup.enter)="search()"
-                [(ngModel)]="searchValue"
-                placeholder="Busque por produtos, marcas e categorias"
-                type="text"
-                class="navbar__search-input"
-            />
+            <input (keyup.enter)="search()" [(ngModel)]="searchValue"
+                placeholder="Busque por produtos, marcas e categorias" type="text" class="navbar__search-input" />
             <button (click)="search()" class="navbar__search-button">
                 <!-- TODO: Implementar busca -->
                 <span class="navbar__search-icon"></span>
@@ -35,6 +30,13 @@
         <button class="navbar__action-button navbar__cart-button" (click)="openModalCart()">
             <span class="navbar__cart-icon"></span>
         </button>
+
+        @if (isAuthenticated) {
+            <button class="navbar__action-button navbar__notification-button" (click)="openModalNotifications()">
+                <!-- TODO: Implementar modal de notificações -->
+                <span class="navbar__notification-icon"></span>
+            </button>
+        }
     </section>
 </header>
 
