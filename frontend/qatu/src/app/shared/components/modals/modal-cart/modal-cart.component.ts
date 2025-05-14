@@ -1,26 +1,30 @@
 // Libs
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
 
 // Interfaces
 import { Cart, CartItem } from '../../../../core/services/cart/cart.interface';
 
 // Services
 import { CartService } from '../../../../core/services/cart/cart.service';
+import { TokenService } from '../../../../core/services/token/token.service';
 
 @Component({
     selector: 'app-modal-cart',
-    imports: [],
+    imports: [RouterModule],
     templateUrl: './modal-cart.component.html',
     styleUrl: './modal-cart.component.scss'
 })
 export class ModalCartComponent implements OnInit {
-    products!: Cart;
+    protected products!: Cart;
+    protected isAuthenticated: boolean = false;
 
-    constructor(private dialog: MatDialog, private cartService: CartService) { }
+    constructor(private dialog: MatDialog, private cartService: CartService, private tokenService: TokenService) { }
 
     ngOnInit(): void {
         this.listProductsCart();
+        this.checkAuthStatus();
     }
 
     protected async listProductsCart(): Promise<void> {
@@ -59,5 +63,9 @@ export class ModalCartComponent implements OnInit {
 
     protected finishPurchase(): void {
         // TODO: Integrar a lógica alinhada com o endpoint
+    }
+
+    private checkAuthStatus(): void {
+        this.isAuthenticated = this.tokenService.isAuthenticated();
     }
 }

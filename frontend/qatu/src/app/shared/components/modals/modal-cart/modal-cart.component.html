@@ -5,6 +5,7 @@
     </section>
 
     <section class="cart__products">
+        @if (isAuthenticated) {
         <div>
             @if (products.items.length > 0) {
             @for (product of products.items; track $index) {
@@ -36,13 +37,29 @@
             }
             } @else {
             <div class="cart__empty">
-                <p>Seu carrinho está vazio</p>
+                <figure>
+                    <img style="width: 250px;" src="assets/figures/cart.svg">
+                </figure>
+                <p>Seu carrinho está vazio.</p>
                 <button routerLink="/dashboard" (click)="closeCart()">Continuar comprando</button>
             </div>
             }
         </div>
+        } @else {
+        <div class="cart__unauthenticated">
+            <figure class="cart__unauthenticated-figure">
+                <div class="cart__unauthenticated-image-container">
+                    <img src="assets/images/delete-cart.png" alt="Imagem de carrinho vazio">
+                </div>
+                <figcaption class="cart__unauthenticated-text">
+                    Faça login para acessar seu carrinho.
+                </figcaption>
+            </figure>
+        </div>
+        }
     </section>
 
+    @if (isAuthenticated) {
     <section class="cart__total">
         <div>
             <h3>Total:</h3>
@@ -50,4 +67,9 @@
         </div>
         <button (click)="finishPurchase()" [disabled]="products.items.length === 0">FINALIZAR COMPRA</button>
     </section>
+    } @else {
+    <section class="cart__total">
+        <button (click)="closeCart()" routerLink="/auth/login">LOGIN</button>
+    </section>
+    }
 </main>
