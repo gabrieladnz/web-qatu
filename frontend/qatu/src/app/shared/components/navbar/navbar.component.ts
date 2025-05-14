@@ -8,9 +8,6 @@ import { MatDialog } from '@angular/material/dialog';
 // Interfaces
 import { Product } from '../../../core/services/product/product.interface';
 
-// Services
-import { ProductService } from '../../../core/services/product/product.service';
-
 // Enums
 import { CategoryType } from './../../enums/category-type.enum';
 
