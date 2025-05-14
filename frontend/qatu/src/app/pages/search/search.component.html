@@ -1,13 +1,30 @@
 <!-- Navbar  -->
-<app-navbar style="position: relative;" (products)="updateArray($event)"></app-navbar>
+<app-navbar
+    style="position: relative"
+    (products)="updateArray($event)"
+></app-navbar>
 
 <main class="search">
     <!-- Produtos -->
     <section class="search__products">
         <div class="search__products__list">
-            <app-card-product [product]="(listProducts | async) || []"></app-card-product>
+            <app-card-product
+                [product]="(listProducts | async) || []"
+            ></app-card-product>
         </div>
     </section>
+
+    <div class="search__pagination">
+        <mat-paginator
+            [length]="totalProducts"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPage - 1"
+            [pageSizeOptions]="[]"
+            (page)="handlePageEvent($event)"
+            aria-label="Seleção de página"
+        >
+        </mat-paginator>
+    </div>
 </main>
 
 <!-- Rodapé -->
