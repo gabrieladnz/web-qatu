@@ -28,4 +28,8 @@ export class TokenService {
             replaceUrl: true,
         });
     }
+
+    public isAuthenticated(): boolean {
+        return !!this.get();
+    }
 }
