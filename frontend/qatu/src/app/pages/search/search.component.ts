@@ -37,13 +37,12 @@ export class SearchComponent implements OnInit {
 
     ngOnInit(): void {
         this.route.queryParams.subscribe(async (params) => {
-            const filters = {
-                category: params['category'],
-                title: params['title'],
-                minPrice: params['minPrice'] ? +params['minPrice'] : undefined,
-                maxPrice: params['maxPrice'] ? +params['maxPrice'] : undefined,
-                page: params['page'] ? +params['page'] : 1
-            };
+            const filters: SearchProductRequest = {};
+            if (params['category']) filters.category = params['category'];
+            if (params['title']) filters.search = params['title'];
+            if (params['minPrice']) filters.minPrice = +params['minPrice'];
+            if (params['maxPrice']) filters.maxPrice = +params['maxPrice'];
+            if (params['page']) filters.page = +params['page'];
 
             await this.fetchProducts(filters);
         });

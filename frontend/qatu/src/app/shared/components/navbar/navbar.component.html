@@ -5,7 +5,8 @@
         </figure>
 
         <div class="navbar__search">
-            <input
+            <input 
+                (keyup.enter)="search()"
                 [(ngModel)]="searchValue"
                 placeholder="Busque por produtos, marcas e categorias"
                 type="text"

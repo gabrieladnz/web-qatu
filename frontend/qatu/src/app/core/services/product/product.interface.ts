@@ -26,7 +26,7 @@ export interface SearchProductsResponse {
   }
 
 export interface SearchProductRequest {
-    title?: string;
+    search?: string;
     category?: string;
     minPrice?: number;
     maxPrice?: number;
