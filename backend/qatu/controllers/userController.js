@@ -103,7 +103,7 @@ export const resetPassword = async (req, res) => {
     } catch (error) {
       res.status(500).json({ success: false, message: 'Erro ao redefinir senha.', error: error.message });
     }
-  };
+};
 
 export const loginUser = async (req, res) => {
     const { email, password} = req.body
@@ -122,5 +122,49 @@ export const loginUser = async (req, res) => {
     }catch (error){
         res.status(error.status || 500).json({success: false, message: error.message})
     }
-  };
+};
   
+/**
+ * @route PATCH /api/users/:id/become-seller
+ * @desc Permite ao usuário virar um vendedor (isSeller = true)
+ * @access Authenticated User (Owner)
+ */
+export const becomeSeller = async (req, res) => {
+    try {
+      const userId = req.userId; // do token
+      const paramId = req.params.id;
+  
+      // Verifica se o usuário está tentando alterar a própria conta
+      if (userId !== paramId) {
+        return res.status(403).json({ 
+          success: false,
+          message: 'Acesso negado. Você só pode alterar sua própria conta.' 
+        });
+      }
+  
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ 
+          success: false,
+          message: 'Usuário não encontrado.' 
+        });
+      }
+  
+      // Atualiza para vendedor
+      user.isSeller = true;
+      await user.save();
+  
+      res.status(200).json({ 
+        success: true,
+        message: 'Parabéns! Agora sua conta é de vendedor.',
+        user: { id: user._id, name: user.name, email: user.email, isSeller: user.isSeller }
+      });
+  
+    } catch (err) {
+      res.status(500).json({ 
+        success: false,
+        message: 'Erro ao atualizar para vendedor.',
+        error: err.message 
+      });
+    }
+  };

@@ -7,7 +7,10 @@ import Product from '../models/productModel.js';
 
 export const createProduct = async (req, res) => {
   try {
-    const newProduct = new Product(req.body);
+    const newProduct = new Product({
+        ...req.body,
+        seller: req.userId   // 👈 aqui atribui o vendedor
+      });
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (err) {
