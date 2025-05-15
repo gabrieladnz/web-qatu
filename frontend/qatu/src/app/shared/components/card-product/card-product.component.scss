@@ -121,3 +121,23 @@
     gap: 2rem;
     width: 100%;
 }
+
+.search__empty {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2rem;
+    text-align: center;
+
+    figure {
+        max-width: 300px;
+        width: 100%;
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+}
