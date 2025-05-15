@@ -1,11 +1,13 @@
 // Libs
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 // Components
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { CardProductComponent } from '../../shared/components/card-product/card-product.component';
+import { ModalAboutQatuComponent } from '../../shared/components/modals/modal-about-qatu/modal-about-qatu.component';
 
 // Interfaces
 import { Product } from '../../core/services/product/product.interface';
@@ -24,7 +26,7 @@ export class DashboardComponent implements OnInit {
     protected listProducts: Product[] = [];
     protected CategoryType = CategoryType;
 
-    constructor(private productService: ProductService, private router: Router) {}
+    constructor(private productService: ProductService, private router: Router, private dialog: MatDialog) {}
 
     ngOnInit(): void {
         this.getProducts();
@@ -43,5 +45,9 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/search'], {
             queryParams: { category }
         });
+    }
+
+    protected openModalAboutQatu(): void {
+        this.dialog.open(ModalAboutQatuComponent)
     }
 }
