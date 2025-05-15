@@ -2,6 +2,8 @@ import Cart from '../models/cartModel.js';
 import Product from '../models/productModel.js';
 import Order from '../models/orderModel.js';
 import UserModel from '../models/userModel.js';
+import { triggerOrderNotifications } from '../utils/notificationTriggers.js';
+import { triggerOrderStatusNotification } from '../utils/notificationTriggers.js';
 
 /**
  * Cria um pedido a partir do carrinho do usuário logado.
@@ -35,6 +37,7 @@ export const checkout = async (req, res) => {
     });
 
     await order.save();
+    await triggerOrderNotifications(order, userId);
 
     // Atualiza o estoque de cada produto
     for (const item of cart.items) {
@@ -170,6 +173,7 @@ export const updateOrderStatus = async (req, res) => {
     // Atualiza e salva
     order.status = status;
     await order.save();
+    await triggerOrderStatusNotification(order.buyer, status, order._id);
 
     // Resposta com dados populados
     const updatedOrder = await Order.findById(orderId)

@@ -1,5 +1,6 @@
 import UserModel from '../models/userModel.js';
 import {loginUserService} from '../services/userService.js'
+import { triggerBecomeSellerNotification } from '../utils/notificationTriggers.js';
 
 /**
  * Registra um novo usuário.
@@ -153,6 +154,7 @@ export const becomeSeller = async (req, res) => {
       // Atualiza para vendedor
       user.isSeller = true;
       await user.save();
+      await triggerBecomeSellerNotification(userId);
   
       res.status(200).json({ 
         success: true,
