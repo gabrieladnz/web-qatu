@@ -1,7 +1,11 @@
 import Cart from '../models/cartModel.js';
 import Product from '../models/productModel.js';
 import Order from '../models/orderModel.js';
+import UserModel from '../models/userModel.js';
 
+/**
+ * Cria um pedido a partir do carrinho do usuário logado.
+ */
 export const checkout = async (req, res) => {
   const userId = req.userId;
 
@@ -19,24 +23,25 @@ export const checkout = async (req, res) => {
       }
     }
 
-    // Criar o pedido
+    // Cria o pedido com buyer, produtos e sellers
     const order = new Order({
-      user: userId,
+      buyer: userId,
       products: cart.items.map(item => ({
         product: item.product,
-        quantity: item.quantity
+        quantity: item.quantity,
+        seller: item.seller   // 👈 ESSENCIAL: usa o seller do carrinho
       })),
       total: cart.total
     });
 
     await order.save();
 
-    // Atualizar estoque
+    // Atualiza o estoque de cada produto
     for (const item of cart.items) {
       await Product.findByIdAndUpdate(item.product, { $inc: { stock: -item.quantity } });
     }
 
-    // Limpar carrinho
+    // Limpa o carrinho
     cart.items = [];
     cart.total = 0;
     await cart.save();

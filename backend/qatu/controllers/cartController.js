@@ -10,6 +10,7 @@ export const addToCart = async (req, res) => {
   
     try {
       const product = await Product.findById(productId);
+      const sellerId = product.seller;
       if (!product) return res.status(404).json({ message: 'Produto não encontrado.' });
   
       if (quantity > product.stock) {
@@ -37,7 +38,7 @@ export const addToCart = async (req, res) => {
           return res.status(400).json({ message: 'Você só pode adicionar até 30 unidades por produto.' });
       }
 
-      cart.items.push({ product: productId, quantity });
+      cart.items.push({ product: productId, quantity, seller: sellerId });
       }  
       
       await calculateCartTotal(cart);

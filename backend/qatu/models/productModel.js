@@ -35,6 +35,11 @@ const productSchema = new mongoose.Schema({
     min: 0,
     index: true
   },
+  seller: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   ratings: [
     {
       score: { type: Number, required: true, min: 1, max: 5 },

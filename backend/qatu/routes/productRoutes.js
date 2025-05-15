@@ -10,6 +10,7 @@ import { validateProduct } from '../middlewares/productValidator.js';
 import { handleValidationErrors } from '../middlewares/handleValidationErrors.js';
 import { addProductReview } from '../controllers/productController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
+import { isSeller } from '../middlewares/isSellerMiddleware.js';
 
 /**
  * @file Rotas de produtos.
@@ -21,9 +22,9 @@ router.get('/', getAllProducts);
 router.get('/:id', getProductById);
 
 // Rotas protegidas
-router.post('/', authenticate, validateProduct, handleValidationErrors, createProduct);
-router.post('/:id/review', authenticate, addProductReview);
-router.put('/:id', authenticate, validateProduct, handleValidationErrors, updateProduct);
-router.delete('/:id', authenticate, deleteProduct);
+router.post('/', authenticate, isSeller, validateProduct, handleValidationErrors, createProduct);
+router.post('/:id/review', authenticate, isSeller, addProductReview);
+router.put('/:id', authenticate, isSeller, validateProduct, handleValidationErrors, updateProduct);
+router.delete('/:id', authenticate, isSeller, deleteProduct);
 
 export default router;

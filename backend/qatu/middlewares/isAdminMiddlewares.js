@@ -1,8 +1,8 @@
-import User from '../models/userModel.js';
+import UserModel from '../models/userModel.js';
 
 export const isAdmin = async (req, res, next) => {
   try {
-    const user = await User.findById(req.userId);
+    const user = await UserModel.findById(req.userId);
     if (!user || !user.isAdmin) {
       return res.status(403).json({ message: 'Acesso negado. Requer privilégios de admin.' });
     }
