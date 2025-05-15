@@ -1,12 +1,17 @@
 <header class="navbar">
     <section class="navbar__main-section">
         <figure class="navbar__logo" routerLink="dashboard">
-            <img src="assets/images/logo-small.svg" alt="Logo Qatu">
+            <img src="assets/images/logo-small.svg" alt="Logo Qatu" />
         </figure>
 
         <div class="navbar__search">
-            <input (keyup.enter)="search()" [(ngModel)]="searchValue"
-                placeholder="Busque por produtos, marcas e categorias" type="text" class="navbar__search-input" />
+            <input
+                (keyup.enter)="search()"
+                [(ngModel)]="searchValue"
+                placeholder="Busque por produtos, marcas e categorias"
+                type="text"
+                class="navbar__search-input"
+            />
             <button (click)="search()" class="navbar__search-button">
                 <!-- TODO: Implementar busca -->
                 <span class="navbar__search-icon"></span>
@@ -27,42 +32,72 @@
             <span class="navbar__user-icon"></span>
         </button>
 
-        <button class="navbar__action-button navbar__cart-button" (click)="openModalCart()">
+        <button
+            class="navbar__action-button navbar__cart-button"
+            (click)="openModalCart()"
+        >
             <span class="navbar__cart-icon"></span>
         </button>
 
-        @if (isAuthenticated) {
-            <button class="navbar__action-button navbar__notification-button" (click)="openModalNotifications()">
-                <!-- TODO: Implementar modal de notificações -->
-                <span class="navbar__notification-icon"></span>
-            </button>
+        <button
+            class="navbar__action-button navbar__notification-button"
+            (click)="openModalNotifications()"
+        >
+            <span class="navbar__notification-icon"></span>
+        </button>
+
+        @if (isNotificationModalOpen) {
+        <app-modal-notification
+            [isOpen]="isNotificationModalOpen"
+            [title]="'Notificações'"
+            (close)="closeModalNotifications()"
+            (clearAll)="clearAllNotifications()"
+        ></app-modal-notification>
         }
     </section>
 </header>
 
 <header class="categories">
     <div class="categories__content">
-        <a (click)="searchToCategory(undefined)" class="categories__content__item">
+        <a
+            (click)="searchToCategory(undefined)"
+            class="categories__content__item"
+        >
             <span class="categories__content__emoji">🛒</span>
             <span class="categories__content__text">Todos os produtos</span>
         </a>
-        <a (click)="searchToCategory(CategoryType.CASA_E_MOVEIS)" class="categories__content__item">
+        <a
+            (click)="searchToCategory(CategoryType.CASA_E_MOVEIS)"
+            class="categories__content__item"
+        >
             <span class="categories__content__emoji">🏠</span>
             <span class="categories__content__text">Casa e móveis</span>
         </a>
-        <a (click)="searchToCategory(CategoryType.ESPORTE)" class="categories__content__item">
+        <a
+            (click)="searchToCategory(CategoryType.ESPORTE)"
+            class="categories__content__item"
+        >
             <span class="categories__content__emoji">⚽</span>
             <span class="categories__content__text">Esportes</span>
         </a>
-        <a (click)="searchToCategory(CategoryType.BELEZA)" class="categories__content__item">
+        <a
+            (click)="searchToCategory(CategoryType.BELEZA)"
+            class="categories__content__item"
+        >
             <span class="categories__content__emoji">💅🏻</span>
             <span class="categories__content__text">Beleza</span>
         </a>
-        <a (click)="searchToCategory(CategoryType.MODA)" class="categories__content__item">
+        <a
+            (click)="searchToCategory(CategoryType.MODA)"
+            class="categories__content__item"
+        >
             <span class="categories__content__emoji">👕</span>
             <span class="categories__content__text">Moda</span>
         </a>
-        <a (click)="searchToCategory(CategoryType.TECNOLOGIA)" class="categories__content__item">
+        <a
+            (click)="searchToCategory(CategoryType.TECNOLOGIA)"
+            class="categories__content__item"
+        >
             <span class="categories__content__emoji">📱</span>
             <span class="categories__content__text">Tecnologia</span>
         </a>

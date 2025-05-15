@@ -1,0 +1,63 @@
+<div
+    class="notification-overlay"
+    [class.active]="isOpen"
+    (click)="closeModal()"
+></div>
+
+<div class="notification-wrapper" [class.is-active]="isOpen">
+    <main class="notification">
+        <section class="notification__header">
+            <h2>{{ title }} ({{ notificationCount$ | async }})</h2>
+            <button (click)="closeModal()" aria-label="Fechar">×</button>
+        </section>
+
+        <section
+            class="notification__content"
+            #contentContainer
+            [class.loading]="isLoading"
+        >
+            <div
+                *ngFor="let notif of notifications; trackBy: trackById"
+                class="notification-item"
+                [class.unread]="!notif.read"
+                (click)="markAsRead(notif.id)"
+            >
+                <h3>{{ notif.title }}</h3>
+                <p>{{ notif.message }}</p>
+                <small>{{ notif.date | date : "dd/MM/yyyy HH:mm" }}</small>
+            </div>
+
+            <div *ngIf="isLoading" class="loading-indicator">
+                <div class="spinner"></div>
+                Carregando mais notificações...
+            </div>
+
+            <div
+                *ngIf="
+                    !notificationService.hasMore() && notifications.length > 0
+                "
+                class="end-of-list"
+            >
+                Você viu todas as notificações
+            </div>
+
+            <div *ngIf="notifications.length === 0" class="empty-notifications">
+                <object
+                    type="image/svg+xml"
+                    data="assets/images/empty-notifications.svg"
+                    class="svg-icon"
+                ></object>
+                <p>Nenhuma notificação disponível</p>
+            </div>
+        </section>
+
+        <section class="notification__footer">
+            <button
+                (click)="clearAllNotifications()"
+                [disabled]="notifications.length === 0"
+            >
+                LIMPAR TODAS AS NOTIFICAÇÕES
+            </button>
+        </section>
+    </main>
+</div>
