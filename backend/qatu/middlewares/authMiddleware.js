@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { isTokenBlacklisted } from '../utils/tokenBlacklist.js';
 dotenv.config();
 
 
@@ -11,6 +12,13 @@ export const authenticate = (req, res, next) => {
       return res.status(401).json({ 
         success: false,
         message: 'Acesso negado. Token não fornecido.' 
+      });
+    }
+
+    if (isTokenBlacklisted(token)) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Token inválido (logout realizado).' 
       });
     }
 
