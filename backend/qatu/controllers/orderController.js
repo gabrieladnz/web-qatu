@@ -1,7 +1,7 @@
 import Cart from '../models/cartModel.js';
 import Product from '../models/productModel.js';
 import Order from '../models/orderModel.js';
-import UserModel from '../models/userModel.js';
+import Notification from '../models/notificationModel.js';
 
 /**
  * Cria um pedido a partir do carrinho do usuário logado.
@@ -170,6 +170,12 @@ export const updateOrderStatus = async (req, res) => {
     // Atualiza e salva
     order.status = status;
     await order.save();
+
+    // Cria notificação para o comprador
+    await Notification.create({
+        user: order.buyer._id,
+        message: `O status do seu pedido ${order._id} foi atualizado para "${status}".`
+    });
 
     // Resposta com dados populados
     const updatedOrder = await Order.findById(orderId)
