@@ -94,8 +94,8 @@ export class NavbarComponent implements OnInit {
         this.isNotificationModalOpen = false;
     }
 
-    clearAllNotifications() {
-        this.notifications = []; 
+    protected clearAllNotifications() {
+        this.notifications = [];
         console.log('Todas as notificações foram limpas!');
     }
 
