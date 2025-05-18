@@ -16,19 +16,6 @@ services:
     networks:
       - qatu-network
 
-  frontend:
-    build:
-      context: ./frontend/qatu
-      dockerfile: Dockerfile
-    container_name: frontend
-    restart: always
-    ports:
-      - "3000:80"
-    depends_on:
-      - backend
-    networks:
-      - qatu-network
-
   database:
     image: mongo:latest
     container_name: database

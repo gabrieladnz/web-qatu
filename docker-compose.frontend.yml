@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  lb:
+    image: nginx:latest
+    container_name: nginx-lb
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./frontend/qatu/nginx.lb.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/qatu/certs:/etc/nginx/certs:ro
+    depends_on:
+      - frontend
+    networks:
+      - front-end
+
+  frontend:
+    build:
+      context: ./frontend/qatu
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    expose:
+      - "80"
+    networks:
+      - front-end
+
+networks:
+  front-end:
+    name: front-end
+    driver: bridge
