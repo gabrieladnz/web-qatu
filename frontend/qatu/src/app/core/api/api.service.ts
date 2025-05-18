@@ -45,7 +45,9 @@ export class ApiService {
         });
     }
 
-    public patch<T>(url: string, body: unknown): Observable<T> {
-        return this.http.patch<T>(`${this.BASE_URL}/${url}`, body);
+    public patch<T>(url: string, body: unknown, token?: string): Observable<T> {
+        return this.http.patch<T>(`${this.BASE_URL}/${url}`, body, {
+            headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
     }
 }
