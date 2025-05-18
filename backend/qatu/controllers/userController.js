@@ -170,3 +170,29 @@ export const becomeSeller = async (req, res) => {
       });
     }
   };
+
+  export const logoutUser = (req, res) => {
+  try {
+    const token = req.header('Authorization')?.split(' ')[1];
+    
+    if (!token) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Token não encontrado no header.' 
+      });
+    }
+
+    addToBlacklist(token);
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Logout realizado com sucesso.' 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Erro ao fazer logout.', 
+      error: error.message 
+    });
+  }
+};

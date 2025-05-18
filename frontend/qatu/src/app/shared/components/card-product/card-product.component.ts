@@ -1,5 +1,5 @@
 // Libs
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -8,6 +8,7 @@ import { Product } from '../../../core/services/product/product.interface';
 
 // Services
 import { CartService } from '../../../core/services/cart/cart.service';
+import { TokenService } from '../../../core/services/token/token.service';
 
 @Component({
     selector: 'app-card-product',
@@ -15,10 +16,15 @@ import { CartService } from '../../../core/services/cart/cart.service';
     templateUrl: './card-product.component.html',
     styleUrl: './card-product.component.scss'
 })
-export class CardProductComponent {
+export class CardProductComponent implements OnInit {
     @Input() product: Product[] = [];
+    protected isAuthenticated: boolean = false;
 
-    constructor(private router: Router, private cartService: CartService) { }
+    constructor(private router: Router, private cartService: CartService, private tokenService: TokenService) { }
+
+    ngOnInit(): void {
+        this.checkAuthStatus();
+    }
 
     protected openProductDetails(productId: string): void {
         this.router.navigate(['/product', productId]);
@@ -33,5 +39,9 @@ export class CardProductComponent {
         } catch (error) {
             console.error('Erro ao adicionar produto ao carrinho', error);
         }
+    }
+
+    private checkAuthStatus(): void {
+        this.isAuthenticated = this.tokenService.isAuthenticated();
     }
 }

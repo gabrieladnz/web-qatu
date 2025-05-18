@@ -1,7 +1,8 @@
 import express from 'express';
-import { registerUser, updateUser, resetPassword, getAllUsers, getUserById, loginUser } from '../controllers/userController.js';
+import { registerUser, updateUser, resetPassword, getAllUsers, getUserById, loginUser, logoutUser } from '../controllers/userController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 import { becomeSeller } from '../controllers/userController.js';
+
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.post('/reset-password', authenticate, resetPassword);
 router.get('/:id', authenticate, getUserById);
 router.put('/:id', authenticate, updateUser);
 router.get('/', authenticate, getAllUsers); 
+router.post('/logout', authenticate, logoutUser);
 
 // Endpoint para virar vendedor
 router.patch('/:id/become-seller', authenticate, becomeSeller);

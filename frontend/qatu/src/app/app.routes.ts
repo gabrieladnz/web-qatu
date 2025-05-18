@@ -9,6 +9,9 @@ import { RegisterComponent } from './pages/register/register.component';
 import { ProductViewComponent } from './pages/product-view/product-view.component';
 import { SearchComponent } from './pages/search/search.component';
 
+// Guards
+import { authGuard } from './core/guards/auth.guard';
+
 export const routes: Routes = [
     {
         path: '',

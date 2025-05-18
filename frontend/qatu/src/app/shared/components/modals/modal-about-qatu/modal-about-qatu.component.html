@@ -1,0 +1,77 @@
+<section class="modal-overlay">
+    <div class="modal-container" [@fadeInUp]>
+        <div class="modal-header">
+            <h2 class="modal-title">Sobre o Qatu</h2>
+            <button class="modal-close" (click)="closeModal()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="about-section">
+                <div class="about-header">
+                    <img src="assets/images/logo-small.svg" alt="Logo Qatu" class="about-logo">
+                    <h3>O e-commerce para empreendedores que querem crescer</h3>
+                </div>
+
+                <div class="about-content">
+                    <p class="highlight">
+                        O Casca Grossa Qatu surgiu com um propósito claro: criar uma plataforma robusta onde
+                        empreendedores
+                        possam expandir seus negócios, aumentar suas vendas e transformar suas operações de e-commerce.
+                    </p>
+
+                    <h4>Nossa missão</h4>
+                    <p>
+                        Impulsionar o sucesso de empreendedores através de uma plataforma completa de e-commerce,
+                        oferecendo ferramentas poderosas, estratégias eficientes e suporte especializado para
+                        transformar negócios digitais em operações lucrativas e escaláveis.
+                    </p>
+
+                    <h4>O que oferecemos</h4>
+                    <div class="features">
+                        <div class="feature-card">
+                            <mat-icon>shopping_cart</mat-icon>
+                            <h5>Plataforma completa</h5>
+                            <p>Sistema integrado para gerenciamento total do seu e-commerce com facilidade</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <mat-icon>trending_up</mat-icon>
+                            <h5>Estratégias de crescimento</h5>
+                            <p>Ferramentas e técnicas para aumentar suas vendas e expandir seu negócio</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <mat-icon>storefront</mat-icon>
+                            <h5>Marketplace dinâmico</h5>
+                            <p>Ambiente ideal para compra e venda com segurança e visibilidade</p>
+                        </div>
+                    </div>
+
+                    <h4>Para quem é o Casca Grossa Qatu?</h4>
+                    <ul class="audience-list">
+                        <li><strong>Empreendedores digitais</strong> que desejam escalar seus negócios</li>
+                        <li><strong>Lojistas físicos</strong> em busca de expansão para o ambiente online</li>
+                        <li><strong>Comerciantes online</strong> que buscam expandir seu alcance digital</li>
+                        <li><strong>Pequenas e médias empresas</strong> que querem otimizar suas vendas online</li>
+                        <li><strong>Iniciantes no e-commerce</strong> buscando uma plataforma completa e intuitiva</li>
+                    </ul>
+
+                    <div class="commitment">
+                        <h4>Nosso compromisso</h4>
+                        <p>
+                            Fornecemos uma plataforma segura, eficiente e em constante evolução, onde cada empreendedor
+                            encontra as ferramentas necessárias para seu crescimento. Todo o sistema é desenvolvido para
+                            garantir máxima performance, segurança e resultados consistentes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-primary" (click)="closeModal()">Entendi</button>
+        </div>
+    </div>
+</section>
