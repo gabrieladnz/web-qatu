@@ -1,0 +1,191 @@
+<app-navbar style="position: relative"></app-navbar>
+
+<!-- TODO: Adicionar lógica para verificar se o usuário é vendedor -->
+<main class="advertise">
+    <section class="advertise__container">
+        <header class="advertise__header">
+            <h2 class="advertise__title">
+                <span class="advertise__title-indicator"></span>
+                Anuncie na Qatu
+            </h2>
+            <p class="advertise__subtitle">Expanda seu negócio e alcance novos clientes</p>
+        </header>
+
+        @if (false) {
+        <!-- Conteúdo para usuário autenticado e vendedor -->
+        <section class="advertise__content">
+            <div class="advertise__section">
+                <div class="advertise__section-image">
+                    <img src="assets/figures/sale.svg" alt="Dashboard do vendedor">
+                </div>
+                <div class="advertise__section-text">
+                    <h2>Pronto para anunciar seu produto?</h2>
+                    <p class="advertise__highlight">
+                        Como vendedor do Qatu, você tem acesso direto a uma base de clientes
+                        em busca de produtos como o seu. Crie anúncios e aumente suas vendas!
+                    </p>
+                    <div class="advertise__benefits">
+                        <div class="advertise__benefit-item">
+                            <mat-icon>verified</mat-icon>
+                            <p>Visibilidade garantida</p>
+                        </div>
+                        <div class="advertise__benefit-item">
+                            <mat-icon>speed</mat-icon>
+                            <p>Processo de publicação rápido</p>
+                        </div>
+                        <div class="advertise__benefit-item">
+                            <mat-icon>trending_up</mat-icon>
+                            <p>Aumento comprovado nas vendas</p>
+                        </div>
+                    </div>
+                    <button class="advertise__button advertise__button--primary">
+                        <mat-icon>add_circle</mat-icon>
+                        Criar anúncio
+                    </button>
+                </div>
+            </div>
+
+            <div class="advertise__info-cards">
+                <div class="advertise__info-card">
+                    <mat-icon>lightbulb</mat-icon>
+                    <h3>Fácil de usar</h3>
+                    <p>Crie seus anúncios em poucos passos</p>
+                </div>
+                <div class="advertise__info-card">
+                    <mat-icon>local_shipping</mat-icon>
+                    <h3>Frete grátis</h3>
+                    <p>Todos os produtos com envio gratuito para o Brasil inteiro</p>
+                </div>
+                <div class="advertise__info-card">
+                    <mat-icon>storefront</mat-icon>
+                    <h3>Mais alcance</h3>
+                    <p>Conecte seus produtos a quem está procurando por eles</p>
+                </div>
+            </div>
+        </section>
+        } @else if (false) {
+        <!-- Conteúdo para usuário autenticado e não vendedor -->
+        <section class="advertise__content">
+            <div class="advertise__section">
+                <div class="advertise__section-image">
+                    <img src="assets/figures/buy.svg" alt="Torne-se um vendedor">
+                </div>
+                <div class="advertise__section-text">
+                    <h2>Torne-se um vendedor na Qatu</h2>
+                    <p class="advertise__highlight">
+                        Para anunciar seus produtos, você precisa se tornar um vendedor na nossa plataforma.
+                        O processo é simples, rápido e abre portas para um novo universo de oportunidades!
+                    </p>
+                    <div class="advertise__benefits">
+                        <div class="advertise__benefit-item">
+                            <div class="advertise__step-number">1</div>
+                            <p>Solicite um cadastro de vendedor</p>
+                        </div>
+                        <div class="advertise__benefit-item">
+                            <div class="advertise__step-number">2</div>
+                            <p>Aguarde</p>
+                        </div>
+                        <div class="advertise__benefit-item">
+                            <div class="advertise__step-number">3</div>
+                            <p>Comece a anunciar e vender</p>
+                        </div>
+                    </div>
+                    <button class="advertise__button advertise__button--primary">
+                        <mat-icon>store</mat-icon>
+                        Quero ser vendedor
+                    </button>
+                </div>
+            </div>
+
+            <div class="advertise__info-cards">
+                <div class="advertise__info-card">
+                    <mat-icon>shopping_cart</mat-icon>
+                    <h3>Anuncie com facilidade</h3>
+                    <p>Cadastre seus produtos de forma rápida e comece a vender</p>
+                </div>
+                <div class="advertise__info-card">
+                    <mat-icon>payments</mat-icon>
+                    <h3>Pagamentos seguros</h3>
+                    <p>Receba pagamentos de forma segura e facilitada</p>
+                </div>
+                <div class="advertise__info-card">
+                    <mat-icon>group</mat-icon>
+                    <h3>Mais visibilidade</h3>
+                    <p>Alcance pessoas de todo o Brasil interessadas no que você oferece</p>
+                </div>
+            </div>
+        </section>
+        } @else {
+        <!-- Conteúdo para usuário não autenticado  -->
+        <section class="advertise__content">
+            <div class="advertise__section">
+                <div class="advertise__section-image">
+                    <img src="assets/figures/login.svg" style="width: 65%;" alt="Login ou registro">
+                </div>
+                <div class="advertise__section-text">
+                    <h2>Acesse sua conta para anunciar</h2>
+                    <p class="advertise__highlight">
+                        Para publicar anúncios na Qatu, você precisa estar logado na plataforma.
+                        Caso ainda não tenha uma conta, crie uma gratuitamente em poucos minutos!
+                    </p>
+                    <div class="advertise__login-buttons">
+                        <button class="advertise__button advertise__button--primary" routerLink="/auth/login">
+                            <mat-icon>login</mat-icon>
+                            Fazer login
+                        </button>
+                        <button class="advertise__button advertise__button--secondary" routerLink="/auth/register">
+                            <mat-icon>person_add</mat-icon>
+                            Criar conta
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="advertise__info-cards advertise__info-cards--stats">
+                <div class="advertise__info-card">
+                    <mat-icon>bar_chart</mat-icon>
+                    <h3>+1.000</h3>
+                    <p>Vendas diárias</p>
+                </div>
+                <div class="advertise__info-card">
+                    <mat-icon>group</mat-icon>
+                    <h3>+10.000</h3>
+                    <p>Usuários ativos</p>
+                </div>
+                <div class="advertise__info-card">
+                    <mat-icon>shopping_bag</mat-icon>
+                    <h3>+500</h3>
+                    <p>Vendedores de sucesso</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="advertise__testimonials">
+            <h2 class="advertise__title">
+                <span class="advertise__title-indicator"></span>
+                O que dizem nossos vendedores
+            </h2>
+            <div class="advertise__testimonials-container">
+                <div class="advertise__testimonial-card">
+                    <div class="advertise__testimonial-content">
+                        <p>"Desde que comecei a anunciar na Qatu, minhas vendas aumentaram mais de 70%. A plataforma é
+                            intuitiva e o suporte é incrível!"</p>
+                        <h4>Marcelo Barbosa</h4>
+                        <p class="advertise__testimonial-role">Vendedor desde 2025</p>
+                    </div>
+                </div>
+                <div class="advertise__testimonial-card">
+                    <div class="advertise__testimonial-content">
+                        <p>"A Qatu me permitiu expandir meu negócio para todo o Brasil. A visibilidade que meus produtos
+                            ganharam foi impressionante!"</p>
+                        <h4>Pedro Aguiar</h4>
+                        <p class="advertise__testimonial-role">Vendedor desde 2025</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        }
+    </section>
+</main>
+
+<app-footer></app-footer>

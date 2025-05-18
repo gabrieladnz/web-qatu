@@ -11,6 +11,7 @@ import { SearchComponent } from './pages/search/search.component';
 import { PurchaseHistoryComponent } from './pages/purchase-history/purchase-history.component';
 import { SalesHistoryComponent } from './pages/sales-history/sales-history.component';
 import { ClientAreaComponent } from './pages/client-area/client-area.component';
+import { ProductSaleComponent } from './pages/product-sale/product-sale.component';
 
 // Guards
 import { authGuard } from './core/guards/auth.guard';
@@ -61,6 +62,10 @@ export const routes: Routes = [
             { path: 'purchases', component: PurchaseHistoryComponent },
             { path: 'sales', component: SalesHistoryComponent }
         ]
+    },
+    {
+        path: 'sale/page',
+        component: ProductSaleComponent
     },
     {
         path: '**',
