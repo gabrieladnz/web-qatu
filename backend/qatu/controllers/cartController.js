@@ -1,5 +1,6 @@
 import CartModel from '../models/cartModel.js';
 import Product from '../models/productModel.js';
+import { triggerAddToCartNotification } from '../utils/notificationTriggers.js';
 
 /**
  * Adiciona um produto ao carrinho do usuário
@@ -43,6 +44,7 @@ export const addToCart = async (req, res) => {
       
       await calculateCartTotal(cart);
       await cart.save();
+      await triggerAddToCartNotification(userId, productId, quantity);
 
       res.status(200).json({ message: 'Produto adicionado ao carrinho.', cart });
   
