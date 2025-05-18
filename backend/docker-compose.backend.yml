@@ -9,17 +9,19 @@ services:
     networks:
       - back-end
     depends_on:
-      - db
+      - db 
+    environment:
+      MONGO_URI: mongodb://db:27017/qatu
 
   db:
-    image: postgres:13
+    image: mongo:6.0
     volumes:
-      - db_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: senha123  
-      POSTGRES_DB: nome do banco  
+      - db_data:/data/db
     networks:
       - back-end
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: senha123 
 
 networks:
   back-end:
@@ -27,3 +29,4 @@ networks:
 
 volumes:
   db_data:
+    name: backend_db_data
