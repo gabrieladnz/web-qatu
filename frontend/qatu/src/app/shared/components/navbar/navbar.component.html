@@ -13,7 +13,6 @@
                 class="navbar__search-input"
             />
             <button (click)="search()" class="navbar__search-button">
-                <!-- TODO: Implementar busca -->
                 <span class="navbar__search-icon"></span>
             </button>
         </div>
@@ -27,11 +26,39 @@
     </section>
 
     <section class="navbar__actions">
-        <button class="navbar__action-button navbar__user-button">
-            <!-- TODO: Implementar dropdown com opções de usuário -->
+        <!-- Botão do usuário com dropdown -->
+        <button
+            class="navbar__action-button navbar__user-button"
+            [matMenuTriggerFor]="userMenu"
+            aria-label="Menu do usuário"
+        >
             <span class="navbar__user-icon"></span>
         </button>
+        <mat-menu #userMenu="matMenu" xPosition="before">
+            <ng-container *ngIf="isAuthenticated; else notLoggedIn">
+                <button mat-menu-item (click)="navigateTo('/purchase-history')">
+                    <span>Minhas compras</span>
+                </button>
+                <button mat-menu-item (click)="navigateTo('/sale-history')">
+                    <span>Minhas vendas</span>
+                </button>
+                <button mat-menu-item [routerLink]="'/sale/page'">
+                    <span>Anuncie aqui</span>
+                </button>
+                <button mat-menu-item (click)="logout()">
+                    <span>Sair</span>
+                </button>
+            </ng-container>
 
+            <ng-template #notLoggedIn>
+                <button mat-menu-item (click)="login()">
+                    <span>Entrar</span>
+                </button>
+                <button mat-menu-item [routerLink]="'/sale/page'">
+                    <span>Anuncie aqui</span>
+                </button>
+            </ng-template>
+        </mat-menu>
         <button
             class="navbar__action-button navbar__cart-button"
             (click)="openModalCart()"
@@ -39,14 +66,14 @@
             <span class="navbar__cart-icon"></span>
         </button>
 
+        @if (isAuthenticated) {
         <button
             class="navbar__action-button navbar__notification-button"
             (click)="openModalNotifications()"
         >
             <span class="navbar__notification-icon"></span>
         </button>
-
-        @if (isNotificationModalOpen) {
+        } @if (isNotificationModalOpen) {
         <app-modal-notification
             [isOpen]="isNotificationModalOpen"
             [title]="'Notificações'"

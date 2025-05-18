@@ -27,7 +27,7 @@ export class ModalNotificationComponent implements OnInit, AfterViewInit {
     public notifications: any[] = [];
     public isLoading = false;
 
-    constructor(public notificationService: NotificationService) {} // 👈 Tornado público
+    constructor(public notificationService: NotificationService) {} 
 
     ngOnInit(): void {
         this.notificationService.notifications$.subscribe((notifs) => {

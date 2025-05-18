@@ -44,6 +44,7 @@ export class ProductViewComponent implements OnInit {
         try {
             this.cartService.addToCart({
                 productId: itemProduct._id,
+                seller: itemProduct.seller,
                 quantity: 1,
             })
         } catch (error) {

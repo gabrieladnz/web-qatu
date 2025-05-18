@@ -44,7 +44,7 @@ export class ModalCartComponent implements OnInit {
     }
 
     protected async increaseQuantity(product: CartItem): Promise<void> {
-        await this.cartService.addToCart({ productId: product.product._id, quantity: 1 });
+        await this.cartService.addToCart({ productId: product.product._id, seller: product.product.seller, quantity: 1 });
         this.listProductsCart();
     }
 

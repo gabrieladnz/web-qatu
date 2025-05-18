@@ -4,6 +4,9 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Interfaces
 import { Product } from '../../../core/services/product/product.interface';
@@ -25,6 +28,8 @@ import { TokenService } from '../../../core/services/token/token.service';
         FormsModule,
         RouterModule,
         ModalNotificationComponent,
+        MatMenuModule,
+        MatButtonModule,
     ],
     templateUrl: './navbar.component.html',
     styleUrl: './navbar.component.scss',
@@ -34,7 +39,6 @@ export class NavbarComponent implements OnInit {
     protected searchValue: string = '';
     protected CategoryType = CategoryType;
     protected selectedCategory: string = '';
-    protected isAuthenticated: boolean = false;
     protected isNotificationModalOpen = false;
     protected notifications: string[] = [
         'Notificação 1',
@@ -45,11 +49,41 @@ export class NavbarComponent implements OnInit {
     constructor(
         private router: Router,
         public dialog: MatDialog,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private snackBar: MatSnackBar
     ) {}
 
-    ngOnInit(): void {
-        this.checkAuthStatus();
+    ngOnInit(): void {}
+
+    get isAuthenticated(): boolean {
+        return this.tokenService.isAuthenticated();
+    }
+
+    protected login(): void {
+        this.router.navigate(['/auth/login']);
+    }
+
+    protected async logout(): Promise<void> {
+        await this.tokenService.logout();
+        this.closeModalNotifications();
+
+        this.snackBar.open('Você saiu da sua conta. Até breve!', 'Fechar', {
+            duration: 3000,
+        });
+    }
+
+    protected navigateTo(route: string): void {
+        this.router.navigate([route]);
+    }
+
+    protected openAdForm(): void {
+        if (!this.tokenService.isAuthenticated()) {
+            this.router.navigate(['/auth/login'], {
+                queryParams: { returnUrl: '/create-ad' },
+            });
+            return;
+        }
+        this.router.navigate(['/create-ad']);
     }
 
     protected search(): void {
@@ -94,12 +128,8 @@ export class NavbarComponent implements OnInit {
         this.isNotificationModalOpen = false;
     }
 
-    clearAllNotifications() {
-        this.notifications = []; 
+    protected clearAllNotifications() {
+        this.notifications = [];
         console.log('Todas as notificações foram limpas!');
-    }
-
-    private checkAuthStatus(): void {
-        this.isAuthenticated = this.tokenService.isAuthenticated();
     }
 }
