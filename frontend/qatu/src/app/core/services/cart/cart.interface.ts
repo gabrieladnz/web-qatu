@@ -3,6 +3,7 @@ import { Product } from "../product/product.interface";
 
 export interface CartRequest {
     productId: string;
+    seller: string;
     quantity: number;
 }
 

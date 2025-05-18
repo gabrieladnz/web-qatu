@@ -39,21 +39,23 @@
             <span class="navbar__cart-icon"></span>
         </button>
 
-        <button
-            class="navbar__action-button navbar__notification-button"
-            (click)="openModalNotifications()"
-        >
-            <span class="navbar__notification-icon"></span>
-        </button>
+        @if (isAuthenticated) {
+            <button
+                class="navbar__action-button navbar__notification-button"
+                (click)="openModalNotifications()"
+            >
+                <span class="navbar__notification-icon"></span>
+            </button>
+        }
 
         @if (isNotificationModalOpen) {
-        <app-modal-notification
-            [isOpen]="isNotificationModalOpen"
-            [title]="'Notificações'"
-            (close)="closeModalNotifications()"
-            (clearAll)="clearAllNotifications()"
-        ></app-modal-notification>
-        }
+            <app-modal-notification
+                [isOpen]="isNotificationModalOpen"
+                [title]="'Notificações'"
+                (close)="closeModalNotifications()"
+                (clearAll)="clearAllNotifications()"
+            ></app-modal-notification>
+            }
     </section>
 </header>
 
