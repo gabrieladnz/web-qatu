@@ -3,7 +3,7 @@
 ## 📖 Sobre o projeto
 
 Qatu é uma plataforma de e-commerce desenvolvida para proporcionar uma experiência de compra acessível, segura e personalizada. O sistema permite que usuários explorem um catálogo de produtos, realizem pedidos e acompanhem suas compras.
-
+ 
 ---
 
 ## 🔧 Estrutura do projeto
