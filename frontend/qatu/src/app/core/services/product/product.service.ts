@@ -5,6 +5,7 @@ import { lastValueFrom } from 'rxjs';
 
 // Services
 import { ApiService } from '../../api/api.service';
+import { TokenService } from '../token/token.service';
 
 // Interfaces
 import { SearchProductRequest, ProductResponse, CreateProductRequest, CreateReviewRequest, CreateReviewResponse, DeleteProductResponse, Product } from './product.interface';
@@ -13,7 +14,7 @@ import { SearchProductRequest, ProductResponse, CreateProductRequest, CreateRevi
     providedIn: 'root',
 })
 export class ProductService extends ApiService {
-    constructor(protected override http: HttpClient) {
+    constructor(protected override http: HttpClient, private tokenService: TokenService) {
         super(http);
     }
 
@@ -51,8 +52,10 @@ export class ProductService extends ApiService {
 
     public async createProduct(product: CreateProductRequest): Promise<ProductResponse> {
         try {
+            const token = this.tokenService.get() || undefined;
+            
             return await lastValueFrom(
-                this.post<ProductResponse>('products', product)
+                this.post<ProductResponse>('products', product, token)
             );
         } catch (error) {
             const errorResponse = {

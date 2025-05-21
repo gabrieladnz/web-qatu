@@ -5,17 +5,18 @@ import { lastValueFrom } from 'rxjs';
 
 // Services
 import { ApiService } from '../../api/api.service';
+import { TokenService } from '../token/token.service';
 
 // Interfaces
-import { LoginRequest, LoginResponse } from './auth.interface';
-import { RegisterRequest, RegisterResponse } from './auth.interface'; 
+import { LoginRequest, LoginResponse, UserIdResponse } from './auth.interface';
+import { RegisterRequest, RegisterResponse } from './auth.interface';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService extends ApiService {
 
-    constructor(protected override http: HttpClient) {
+    constructor(protected override http: HttpClient, private tokenService: TokenService) {
         super(http);
     }
 
@@ -39,6 +40,20 @@ export class AuthService extends ApiService {
             return await lastValueFrom(
                 this.post<RegisterResponse>('users/register', body),
             );
+        } catch (error) {
+            const errorResponse = {
+                success: false,
+                message: error,
+            };
+
+            throw errorResponse;
+        }
+    }
+
+    public async getUserById(id: string): Promise<UserIdResponse> {
+        try {
+            const token = this.tokenService.get() ?? undefined;
+            return await lastValueFrom(this.get<UserIdResponse>(`users/${id}`, {}, token));
         } catch (error) {
             const errorResponse = {
                 success: false,
