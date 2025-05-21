@@ -1,4 +1,5 @@
 import UserModel from '../models/userModel.js';
+import CartModel from '../models/cartModel.js';
 import {loginUserService} from '../services/userService.js'
 import { triggerBecomeSellerNotification } from '../utils/notificationTriggers.js';
 
@@ -20,6 +21,14 @@ export const registerUser = async (req, res) => {
 
     const newUser = new UserModel({ name, email, password });
     await newUser.save();
+
+    // Cria automaticamente o carrinho vazio
+    const cart = new CartModel({
+      user: newUser._id,
+      items: [],
+      total: 0
+    });
+    await cart.save();
 
     res.status(201).json({ success: true, message: 'Usuário registrado com sucesso.' });
   } catch (error) {
