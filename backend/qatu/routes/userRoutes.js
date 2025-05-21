@@ -3,6 +3,7 @@ import { registerUser, updateUser, resetPassword, getAllUsers, getUserById, logi
 import { authenticate } from '../middlewares/authMiddleware.js';
 import { becomeSeller } from '../controllers/userController.js';
 import { validateRegister, validateResetPassword } from '../middlewares/userValidator.js';
+import { nameValidation, emailValidation} from '../middlewares/commonValidators.js';
 import { handleValidationErrors } from '../middlewares/handleValidationErrors.js';
 
 const router = express.Router();
@@ -13,7 +14,7 @@ router.post('/reset-password', authenticate, validateResetPassword, handleValida
 
 // Rotas protegidas
 router.get('/:id', authenticate, getUserById);
-router.put('/:id', authenticate, updateUser);
+router.put('/:id', authenticate, nameValidation, emailValidation, handleValidationErrors, updateUser);
 router.get('/', authenticate, getAllUsers); 
 router.post('/logout', authenticate, logoutUser);
 

@@ -75,6 +75,14 @@ export const updateUser = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
+    // verifica se está tentando alterar para um email já existente
+    if (updates.email) {
+      const emailExists = await UserModel.findOne({ email: updates.email, _id: { $ne: id } });
+      if (emailExists) {
+        return res.status(400).json({ message: 'Este e-mail já está em uso por outro usuário.' });
+      }
+    }
+
     const updatedUser = await UserModel.findByIdAndUpdate(id, updates, { new: true });
     if (!updatedUser) return res.status(404).json({ message: 'Usuário não encontrado.' });
 
