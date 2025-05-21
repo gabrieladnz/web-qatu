@@ -1,3 +1,84 @@
-<section>
-    
-</section>
+<main class="modal-seller">
+    <header class="modal-seller__header">
+        <h2 class="modal-seller__title">Anunciar produto</h2>
+        <figure class="modal-seller__logo">
+            <mat-icon>add_shopping_cart</mat-icon>
+        </figure>
+    </header>
+
+    <section class="modal-seller__content">
+        <p class="modal-seller__description">
+            Preencha as informações do seu produto para anunciá-lo na plataforma. Todos os campos são obrigatórios.
+        </p>
+
+        <form [formGroup]="productForm">
+            <section class="form-grid">
+                <div class="form-group">
+                    <label for="product-category">Categoria</label>
+                    <select formControlName="category" id="product-category" required>
+                        <option value="" disabled selected>Selecione uma categoria</option>
+                        @for (category of categoryOptions; track $index) {
+                        <option [value]="category.value">
+                            {{ category.label }}
+                        </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-title">Título</label>
+                    <input type="text" formControlName="title" id="product-title"
+                        placeholder="Ex: Fone de ouvido Bluetooth" required>
+                </div>
+
+                <div class="image-upload">
+                    <label for="product-image">
+                        <div class="image-upload-container" [class.has-image]="imagePreview">
+                            @if (imagePreview) {
+                            <img [src]="imagePreview" alt="Preview da imagem do produto">
+                            } @else {
+                            <div class="upload-placeholder">
+                                <mat-icon>cloud_upload</mat-icon>
+                                <span>Clique para adicionar imagem</span>
+                            </div>
+                            }
+                        </div>
+                    </label>
+                    <input type="file" id="product-image" accept="image/*" (change)="onImageSelected($event)" hidden>
+                    <input type="hidden" formControlName="image">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="product-description">Descrição</label>
+                    <textarea formControlName="description" id="product-description"
+                        placeholder="Descreva detalhes importantes do produto" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-price">Preço (R$)</label>
+                    <div class="form-group__prefix">
+                        <span class="prefix">R$</span>
+                        <input type="number" formControlName="price" id="product-price" placeholder="199.99" required
+                            min="0.01" step="0.01">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-stock">Estoque</label>
+                    <input type="number" formControlName="stock" id="product-stock" placeholder="15" required min="1"
+                        step="1">
+                </div>
+            </section>
+        </form>
+    </section>
+
+    <footer class="modal-seller__footer">
+        <button type="button" class="modal-seller__button modal-seller__button--cancel" (click)="closeModal()">
+            Cancelar
+        </button>
+        <button type="submit" class="modal-seller__button modal-seller__button--confirm"
+            [disabled]="productForm.invalid" (click)="createAd()">
+            <span>Anunciar</span>
+        </button>
+    </footer>
+</main>

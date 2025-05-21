@@ -17,5 +17,6 @@ export const loginUserService = async (email, password) => {
     return {
         token,
         message: "Bom te ver de novo " + user.name,
+        _id: user._id,
     }
 }

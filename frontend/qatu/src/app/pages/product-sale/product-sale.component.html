@@ -1,6 +1,5 @@
 <app-navbar style="position: relative"></app-navbar>
 
-<!-- TODO: Adicionar lógica para verificar se o usuário é vendedor -->
 <main class="advertise">
     <section class="advertise__container">
         <header class="advertise__header">
@@ -11,8 +10,7 @@
             <p class="advertise__subtitle">Expanda seu negócio e alcance novos clientes</p>
         </header>
 
-        @if (false) {
-        <!-- Conteúdo para usuário autenticado e vendedor -->
+        @if (isAuthenticated && userSeller) {
         <section class="advertise__content">
             <div class="advertise__section">
                 <div class="advertise__section-image">
@@ -38,7 +36,7 @@
                             <p>Aumento comprovado nas vendas</p>
                         </div>
                     </div>
-                    <button class="advertise__button advertise__button--primary">
+                    <button class="advertise__button advertise__button--primary" (click)="openAdvertiseProductModal()">
                         <mat-icon>add_circle</mat-icon>
                         Criar anúncio
                     </button>
@@ -63,8 +61,7 @@
                 </div>
             </div>
         </section>
-        } @else if (false) {
-        <!-- Conteúdo para usuário autenticado e não vendedor -->
+        } @else if (isAuthenticated) {
         <section class="advertise__content">
             <div class="advertise__section">
                 <div class="advertise__section-image">
@@ -90,7 +87,7 @@
                             <p>Comece a anunciar e vender</p>
                         </div>
                     </div>
-                    <button class="advertise__button advertise__button--primary">
+                    <button class="advertise__button advertise__button--primary" (click)="openBecomeSellerModal()">
                         <mat-icon>store</mat-icon>
                         Quero ser vendedor
                     </button>
@@ -116,7 +113,6 @@
             </div>
         </section>
         } @else {
-        <!-- Conteúdo para usuário não autenticado  -->
         <section class="advertise__content">
             <div class="advertise__section">
                 <div class="advertise__section-image">

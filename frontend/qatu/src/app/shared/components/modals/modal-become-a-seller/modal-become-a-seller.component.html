@@ -1,0 +1,48 @@
+<main class="modal-seller">
+    <header class="modal-seller__header">
+        <h2 class="modal-seller__title">Torne-se um vendedor na Qatu</h2>
+        <div class="modal-seller__logo">
+            <mat-icon>store</mat-icon>
+        </div>
+    </header>
+
+    <div class="modal-seller__content">
+        <p class="modal-seller__description">
+            Expanda seus horizontes no marketplace Qatu e comece a vender seus produtos para uma comunidade em
+            crescimento.
+            Como vendedor, você terá acesso a diversos benefícios exclusivos.
+        </p>
+
+        <ul class="modal-seller__benefits">
+            <li class="modal-seller__benefits-item">
+                <mat-icon>campaign</mat-icon>
+                <span class="modal-seller__benefits-item-text">Anúncio fácil</span>
+            </li>
+            <li class="modal-seller__benefits-item">
+                <mat-icon>verified_user</mat-icon>
+                <span class="modal-seller__benefits-item-text">Pagamento seguro</span>
+            </li>
+            <li class="modal-seller__benefits-item">
+                <mat-icon>visibility</mat-icon>
+                <span class="modal-seller__benefits-item-text">Visibilidade</span>
+            </li>
+        </ul>
+    </div>
+
+    <footer class="modal-seller__footer">
+        <button class="modal-seller__button modal-seller__button--cancel" (click)="closeModal()">
+            Cancelar
+        </button>
+        <button class="modal-seller__button modal-seller__button--confirm" (click)="confirmBecomeSeller()"
+            [disabled]="loading">
+            @if (loading) {
+            <span class="modal-seller__spinner">
+                <mat-spinner diameter="20"></mat-spinner>
+                Processando...
+            </span>
+            } @else {
+            <span>Quero ser vendedor</span>
+            }
+        </button>
+    </footer>
+</main>
