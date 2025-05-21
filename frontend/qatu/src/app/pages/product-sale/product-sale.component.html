@@ -1,6 +1,5 @@
 <app-navbar style="position: relative"></app-navbar>
 
-<!-- TODO: Adicionar lógica para verificar se o usuário é vendedor -->
 <main class="advertise">
     <section class="advertise__container">
         <header class="advertise__header">
@@ -11,8 +10,7 @@
             <p class="advertise__subtitle">Expanda seu negócio e alcance novos clientes</p>
         </header>
 
-        @if (false) {
-        <!-- Conteúdo para usuário autenticado e vendedor -->
+        @if (isAuthenticated && userSeller) {
         <section class="advertise__content">
             <div class="advertise__section">
                 <div class="advertise__section-image">
@@ -63,8 +61,7 @@
                 </div>
             </div>
         </section>
-        } @else if (false) {
-        <!-- Conteúdo para usuário autenticado e não vendedor -->
+        } @else if (isAuthenticated) {
         <section class="advertise__content">
             <div class="advertise__section">
                 <div class="advertise__section-image">
@@ -116,7 +113,6 @@
             </div>
         </section>
         } @else {
-        <!-- Conteúdo para usuário não autenticado  -->
         <section class="advertise__content">
             <div class="advertise__section">
                 <div class="advertise__section-image">

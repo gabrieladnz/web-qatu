@@ -71,7 +71,6 @@
         }
     }
 
-    /* Highlight text */
     &__highlight {
         font-size: 16px;
         color: #25A55F;
@@ -81,7 +80,6 @@
         line-height: 1.6;
     }
 
-    /* Benefits section */
     &__benefits {
         display: flex;
         flex-wrap: wrap;
@@ -310,7 +308,6 @@
     }
 }
 
-/* Responsividade */
 @media screen and (max-width: 992px) {
     .advertise {
         &__section {

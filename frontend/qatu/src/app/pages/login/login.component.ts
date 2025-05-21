@@ -39,6 +39,7 @@ export class LoginComponent {
             await this.authService.login(this.loginForm.value).then((response) => {
                 if (response.success) {
                     this.tokenService.save(response.token);
+                    this.tokenService.saveUserId(response._id);
                     this.loginFailed = false;
                     this.router.navigate(['/dashboard']);
                 } else {
