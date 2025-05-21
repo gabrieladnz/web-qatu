@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { FooterComponent } from "../../shared/components/footer/footer.component";
 import { ModalBecomeASellerComponent } from '../../shared/components/modals/modal-become-a-seller/modal-become-a-seller.component';
+import { ModalAdvertiseProductComponent } from '../../shared/components/modals/modal-advertise-product/modal-advertise-product.component';
 
 // Services
 import { AuthService } from '../../core/services/auth/auth.service';
@@ -59,5 +60,9 @@ export class ProductSaleComponent implements OnInit {
                 this.checkUserSeller();
             }
         });
+    }
+
+    protected openAdvertiseProductModal(): void {
+        this.dialog.open(ModalAdvertiseProductComponent);
     }
 }
