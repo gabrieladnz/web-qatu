@@ -113,12 +113,13 @@ export const loginUser = async (req, res) => {
         return res.status(400),json({ success: false, message: 'Senha ou email inválidos.' })
     }
     try{
-        const{token, message} = await loginUserService( email, password);
+        const{token, message, _id} = await loginUserService( email, password);
         res.status(200).json({
             success: true,
             message: 'Login realizado com sucesso',
             token,
-            message
+            message,
+            _id
         });
     }catch (error){
         res.status(error.status || 500).json({success: false, message: error.message})
