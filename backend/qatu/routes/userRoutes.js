@@ -2,11 +2,12 @@ import express from 'express';
 import { registerUser, updateUser, resetPassword, getAllUsers, getUserById, loginUser, logoutUser } from '../controllers/userController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 import { becomeSeller } from '../controllers/userController.js';
-
+import { validateRegister } from '../middlewares/userValidator.js';
+import { handleValidationErrors } from '../middlewares/handleValidationErrors.js';
 
 const router = express.Router();
 
-router.post('/register', registerUser);
+router.post('/register',validateRegister, handleValidationErrors, registerUser);
 router.post('/login', loginUser);
 router.post('/reset-password', authenticate, resetPassword);
 
