@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 export class TokenService {
     private type: 'sessionStorage' | 'localStorage' = 'localStorage';
     private readonly tokenUser = 'auth_token';
+    private readonly userIdKey = 'user_id';
 
     constructor(private router: Router, private http: HttpClient) {}
 
@@ -17,6 +18,7 @@ export class TokenService {
 
     public delete(): void {
         window[this.type].removeItem(this.tokenUser);
+        sessionStorage.removeItem(this.userIdKey);
     }
 
     public save(token: string): void {
@@ -48,5 +50,13 @@ export class TokenService {
 
     public isAuthenticated(): boolean {
         return !!this.get();
+    }
+
+    public saveUserId(userId: string): void {
+        sessionStorage.setItem(this.userIdKey, userId);
+    }
+
+    public getUserId(): string | null {
+        return sessionStorage.getItem(this.userIdKey);
     }
 }

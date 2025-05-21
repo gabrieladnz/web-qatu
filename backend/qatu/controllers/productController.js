@@ -1,4 +1,5 @@
 import Product from '../models/productModel.js';
+import { uploadBase64Image } from '../utils/uploadImage.js';
 
 /**
  * @file Controlador para operações com produtos.
@@ -7,11 +8,21 @@ import Product from '../models/productModel.js';
 
 export const createProduct = async (req, res) => {
   try {
+    const { image, ...otherData } = req.body;
+
+    let imageUrl = image;
+    if (image && image.startsWith('data:')) {
+      imageUrl = await uploadBase64Image(image);
+    }
+
     const newProduct = new Product({
-        ...req.body,
-        seller: req.userId   // 👈 aqui atribui o vendedor
-      });
+      ...otherData,
+      image: imageUrl,
+      seller: req.userId
+    });
+
     await newProduct.save();
+
     res.status(201).json(newProduct);
   } catch (err) {
     res.status(400).json({ message: 'Erro ao criar produto', error: err.message });
@@ -94,20 +105,43 @@ export const getProductById = async (req, res) => {
 };
 
 
+/**
+ * Atualiza um produto existente. Somente o seller dono do produto pode editar.
+ */
 export const updateProduct = async (req, res) => {
   try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Produto não encontrado' });
+
+    // Verifica se quem está logado é o seller dono
+    if (product.seller.toString() !== req.userId) {
+      return res.status(403).json({ message: 'Acesso negado. Você só pode editar seus próprios produtos.' });
+    }
+
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updated) return res.status(404).json({ message: 'Produto não encontrado' });
     res.status(200).json(updated);
   } catch (err) {
     res.status(400).json({ message: 'Erro ao atualizar produto', error: err.message });
   }
 };
 
+/**
+ * Deleta um produto existente. Pode ser deletado pelo seller dono OU por um admin.
+ */
 export const deleteProduct = async (req, res) => {
   try {
-    const deleted = await Product.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: 'Produto não encontrado' });
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Produto não encontrado' });
+
+    // Se não for o seller dono, verifica se é admin
+    if (product.seller.toString() !== req.userId) {
+      const user = await UserModel.findById(req.userId);
+      if (!user || !user.isAdmin) {
+        return res.status(403).json({ message: 'Acesso negado. Apenas o vendedor ou um administrador podem excluir este produto.' });
+      }
+    }
+
+    await Product.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: 'Produto removido com sucesso' });
   } catch (err) {
     res.status(500).json({ message: 'Erro ao deletar produto', error: err.message });

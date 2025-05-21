@@ -1,4 +1,5 @@
 import UserModel from '../models/userModel.js';
+import CartModel from '../models/cartModel.js';
 import {loginUserService} from '../services/userService.js'
 import { triggerBecomeSellerNotification } from '../utils/notificationTriggers.js';
 
@@ -20,6 +21,14 @@ export const registerUser = async (req, res) => {
 
     const newUser = new UserModel({ name, email, password });
     await newUser.save();
+
+    // Cria automaticamente o carrinho vazio
+    const cart = new CartModel({
+      user: newUser._id,
+      items: [],
+      total: 0
+    });
+    await cart.save();
 
     res.status(201).json({ success: true, message: 'Usuário registrado com sucesso.' });
   } catch (error) {
@@ -75,6 +84,14 @@ export const updateUser = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
+    // verifica se está tentando alterar para um email já existente
+    if (updates.email) {
+      const emailExists = await UserModel.findOne({ email: updates.email, _id: { $ne: id } });
+      if (emailExists) {
+        return res.status(400).json({ message: 'Este e-mail já está em uso por outro usuário.' });
+      }
+    }
+
     const updatedUser = await UserModel.findByIdAndUpdate(id, updates, { new: true });
     if (!updatedUser) return res.status(404).json({ message: 'Usuário não encontrado.' });
 
@@ -113,12 +130,13 @@ export const loginUser = async (req, res) => {
         return res.status(400),json({ success: false, message: 'Senha ou email inválidos.' })
     }
     try{
-        const{token, message} = await loginUserService( email, password);
+        const{token, message, _id} = await loginUserService( email, password);
         res.status(200).json({
             success: true,
             message: 'Login realizado com sucesso',
             token,
-            message
+            message,
+            _id
         });
     }catch (error){
         res.status(error.status || 500).json({success: false, message: error.message})

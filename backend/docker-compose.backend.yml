@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./qatu 
+      dockerfile: Dockerfile 
+    ports:
+      - "5000:5000"
+    networks:
+      - back-end
+    depends_on:
+      - db 
+    environment:
+      MONGO_URI: mongodb://db:27017/qatu
+
+  db:
+    image: mongo:6.0
+    volumes:
+      - db_data:/data/db
+    networks:
+      - back-end
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: senha123 
+
+networks:
+  back-end:
+    driver: bridge
+
+volumes:
+  db_data:
+    name: backend_db_data
