@@ -1,13 +1,54 @@
-<app-navbar></app-navbar>
+<app-navbar style="position: relative;"></app-navbar>
 
 <main class="client">
-    <section class="client__sidebar">
+    <div class="client__container">
+        <header class="client__header">
+            <h1 class="client__title">
+                <span class="client__title-indicator"></span>
+                Área do cliente
+            </h1>
+            <p class="client__subtitle">Gerencie suas compras e vendas</p>
+        </header>
 
-    </section>
+        <div class="client__layout">
+            <aside class="client__sidebar">
+                <nav class="client__nav">
+                    <ul class="client__nav-list">
+                        <li class="client__nav-item">
+                            <a routerLink="purchases" routerLinkActive="client__nav-link--active"
+                                class="client__nav-link">
+                                <div class="client__nav-link-content">
+                                    <mat-icon class="client__nav-icon">shopping_cart</mat-icon>
+                                    <div class="client__nav-text">
+                                        <span class="client__nav-title">Histórico de compras</span>
+                                        <span class="client__nav-desc">Visualize seus pedidos</span>
+                                    </div>
+                                </div>
+                                <mat-icon class="client__nav-arrow">chevron_right</mat-icon>
+                            </a>
+                        </li>
+                        
+                        <li class="client__nav-item">
+                            <a routerLink="sales" routerLinkActive="client__nav-link--active" class="client__nav-link">
+                                <div class="client__nav-link-content">
+                                    <mat-icon class="client__nav-icon">storefront</mat-icon>
+                                    <div class="client__nav-text">
+                                        <span class="client__nav-title">Histórico de vendas</span>
+                                        <span class="client__nav-desc">Acompanhe suas vendas</span>
+                                    </div>
+                                </div>
+                                <mat-icon class="client__nav-arrow">chevron_right</mat-icon>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
 
-    <section>
-        <router-outlet></router-outlet>
-    </section>
+            <section class="client__content">
+                <router-outlet></router-outlet>
+            </section>
+        </div>
+    </div>
 </main>
 
 <app-footer></app-footer>
