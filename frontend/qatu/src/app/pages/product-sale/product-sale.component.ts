@@ -28,8 +28,8 @@ export class ProductSaleComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.checkAuthStatus();
         this.checkUserSeller();
+        this.checkAuthStatus();
     }
 
     private checkAuthStatus(): void {
