@@ -1,1 +1,58 @@
-<p>purchase-history works!</p>
+<main class="purchase-history">
+    <h2 class="purchase-history__title">Histórico de compras</h2>
+
+    <section class="purchase-history__orders">
+        @for (order of orders; track $index) {
+        <div class="order-card">
+            <header class="order-card__header">
+                <div class="order-card__info">
+                    <h3 class="order-card__id">Pedido #{{ order._id.slice(-8) }}</h3>
+                    <p class="order-card__date">{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+                </div>
+
+                <div class="order-card__status">
+                    <span class="status-badge status-badge--{{ order.status }}">
+                        {{ order.status }}
+                    </span>
+                </div>
+            </header>
+
+            <div class="order-card__buyer">
+                <h4 class="order-card__buyer-title">Comprador:</h4>
+                <p class="order-card__buyer-name">{{ order.buyer.name }}</p>
+                <p class="order-card__buyer-email">{{ order.buyer.email }}</p>
+            </div>
+
+            <article class="order-card__products">
+                <h4 class="order-card__products-title">
+                    Produtos ({{ order.products.length }} {{ order.products.length === 1 ? 'item' : 'itens' }}):
+                </h4>
+                <section class="product-list">
+                    @for (item of order.products; track $index) {
+                    <div class="product-item">
+                        <div class="product-item__number">{{ $index + 1 }}.</div>
+                        <div class="product-item__details">
+                            <span class="product-item__title">{{ item.product.title }}</span>
+                            <div class="product-item__info">
+                                <span class="product-item__price">{{ item.product.price |
+                                    currency:'BRL':'symbol':'1.2-2':'pt-BR' }} cada</span>
+                                <span class="product-item__quantity">Qtd: {{ item.quantity }}</span>
+                                <span class="product-item__subtotal">
+                                    Subtotal: {{ item.product.price * item.quantity |
+                                    currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                                </span>
+
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </section>
+            </article>
+
+            <footer class="order-card__total">
+                <strong>Total: {{ order.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+            </footer>
+        </div>
+        }
+    </section>
+</main>

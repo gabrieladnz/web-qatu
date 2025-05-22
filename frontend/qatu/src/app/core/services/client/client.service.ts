@@ -19,12 +19,12 @@ export class ClientService extends ApiService {
         super(http);
     }
 
-    public async getPurchasesOrders(): Promise<SellerOrdersResponse[]> {
+    public async getPurchasesOrders(): Promise<SellerOrdersResponse> {
         try {
             const token = this.tokenService.get() ?? undefined;
 
             return await lastValueFrom(
-                this.get<SellerOrdersResponse[]>('orders/seller-orders', {}, token)
+                this.get<SellerOrdersResponse>('orders/seller-orders', {}, token)
             );
         } catch (error) {
             const errorResponse = {
