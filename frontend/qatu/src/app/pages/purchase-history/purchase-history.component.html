@@ -2,6 +2,7 @@
     <h2 class="purchase-history__title">Histórico de compras</h2>
 
     <section class="purchase-history__orders">
+        @if (orders.length === 0) {
         @for (order of orders; track $index) {
         <div class="order-card">
             <header class="order-card__header">
@@ -53,6 +54,11 @@
                 <strong>Total: {{ order.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
             </footer>
         </div>
+        }
+        } @else {
+        <figure style="text-align: center;">
+            <img src="assets/figures/empty-search.svg" style="width: 40%; max-width: 250px;" alt="Ilustração de pesquisa vazia">
+        </figure>
         }
     </section>
 </main>
