@@ -2,7 +2,7 @@
     <h2 class="purchase-history__title">Histórico de compras</h2>
 
     <section class="purchase-history__orders">
-        @if (orders.length === 0) {
+        @if (orders.length > 0) {
         @for (order of orders; track $index) {
         <div class="order-card">
             <header class="order-card__header">
