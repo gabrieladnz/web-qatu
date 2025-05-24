@@ -18,7 +18,7 @@
     <div class="product-card__footer">
         <div class="product-card__price-container">
             <span class="product-card__currency">R$</span>
-            <span class="product-card__price">{{ itemProduct.price }}</span>
+            <span class="product-card__price">{{ itemProduct.price | currency:'BRL':'':'1.2-2':'pt-BR' }}</span>
         </div>
 
         <button class="product-card__button" [disabled]="!isAuthenticated" (click)="addToCart(itemProduct); $event.stopPropagation()">
