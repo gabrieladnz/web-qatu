@@ -6,7 +6,8 @@ import {
   updateOrder,
   deleteOrder,
   getMyOrders,
-  getSellerOrders
+  getSellerOrders,
+  getSalesHistory
 } from '../controllers/orderController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 import { isAdmin } from '../middlewares/isAdminMiddlewares.js'; 
@@ -25,5 +26,6 @@ router.get('/:id', authenticate, getOrderById); // Dono do pedido ou admin
 router.put('/:id', authenticate, updateOrder); // Atualizar status
 router.delete('/:id', authenticate, deleteOrder); // Cancelar pedido
 router.patch('/:id/status', authenticate, updateOrderStatus);
+router.get('/seller', authenticate, getSalesHistory);
 
 export default router;
