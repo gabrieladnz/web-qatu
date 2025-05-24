@@ -277,4 +277,45 @@ export const getSellerOrders = async (req, res) => {
         error: err.message
         });
     }
-    };
+};
+
+/**
+ * GET /api/orders/seller
+ * Retorna o histórico de vendas do vendedor logado.
+ * Responde com um array de pedidos contendo:
+ * - informações do comprador
+ * - produtos vendidos
+ * - status do pedido
+ * - data da compra
+ */
+export const getSalesHistory = async (req, res) => {
+  try {
+    const sellerId = req.userId;
+
+    const orders = await Order.find({ 'products.seller': sellerId })
+      .populate('buyer', 'name email')
+      .populate('products.product', 'title price image')
+      .sort({ createdAt: -1 });
+
+      const sales = orders.map(order => ({
+      _id: order._id,
+      buyer: order.buyer,
+      status: order.status,
+      createdAt: order.createdAt,
+      products: order.products
+        .filter(p => p.seller.toString() === sellerId)
+        .map(p => ({
+          product: p.product,
+          quantity: p.quantity,
+          price: p.product.price
+        }))
+    }));
+
+    res.status(200).json(sales);
+  } catch (err) {
+    res.status(500).json({
+      message: 'Erro ao buscar histórico de vendas',
+      error: err.message
+    });
+  }
+};
