@@ -8,21 +8,11 @@ import { uploadBase64Image } from '../utils/uploadImage.js';
 
 export const createProduct = async (req, res) => {
   try {
-    const { image, ...otherData } = req.body;
-
-    let imageUrl = image;
-    if (image && image.startsWith('data:')) {
-      imageUrl = await uploadBase64Image(image);
-    }
-
     const newProduct = new Product({
-      ...otherData,
-      image: imageUrl,
-      seller: req.userId
-    });
-
+        ...req.body,
+        seller: req.userId   
+      });
     await newProduct.save();
-
     res.status(201).json(newProduct);
   } catch (err) {
     res.status(400).json({ message: 'Erro ao criar produto', error: err.message });
