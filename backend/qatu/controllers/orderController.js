@@ -260,11 +260,21 @@ export const getSellerOrders = async (req, res) => {
       orders
     });
 
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: 'Erro ao buscar pedidos',
-      error: err.message
-    });
-  }
-};
+    } catch (err) {
+        if (
+        err.name === 'CastError' ||
+        (err.message && err.message.includes('Cast to ObjectId'))
+        ) {
+        return res.status(200).json({
+            success: true,
+            count: 0,
+            orders: []
+        });
+        }
+        res.status(500).json({
+        success: false,
+        message: 'Não há pedidos no momento!',
+        error: err.message
+        });
+    }
+    };
