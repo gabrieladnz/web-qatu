@@ -1,3 +1,4 @@
+// Libs
 import { CommonModule } from '@angular/common';
 import {
     Component,
@@ -8,7 +9,13 @@ import {
     AfterViewInit,
     ViewChild,
     ElementRef,
+    OnDestroy
 } from '@angular/core';
+
+// Interfaces
+import { Notification } from '../../../../core/services/notification/notification.interface';
+
+// Services
 import { NotificationService } from '../../../../core/services/notification/notification.service';
 
 @Component({
@@ -18,66 +25,100 @@ import { NotificationService } from '../../../../core/services/notification/noti
     templateUrl: './modal-notification.component.html',
     styleUrls: ['./modal-notification.component.scss'],
 })
-export class ModalNotificationComponent implements OnInit, AfterViewInit {
+export class ModalNotificationComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() title: string = 'Notificações';
     @Input() isOpen: boolean = false;
     @Output() close = new EventEmitter<void>();
     @ViewChild('contentContainer') contentContainer!: ElementRef;
 
-    public notifications: any[] = [];
-    public isLoading = false;
+    protected notifications: Notification[] = [];
+    protected isLoading = false;
+    private scrollListener?: () => void;
 
-    constructor(public notificationService: NotificationService) {} 
+    constructor(private notificationService: NotificationService) { }
 
-    ngOnInit(): void {
-        this.notificationService.notifications$.subscribe((notifs) => {
-            this.notifications = notifs;
-            this.isLoading = false;
-        });
+    public async ngOnInit(): Promise<void> {
+        await this.loadNotifications();
     }
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         this.setupScrollListener();
     }
 
+    public ngOnDestroy(): void {
+        if (this.scrollListener && this.contentContainer?.nativeElement) {
+            this.contentContainer.nativeElement.removeEventListener('scroll', this.scrollListener);
+        }
+    }
+
+    private async loadNotifications(): Promise<void> {
+        this.isLoading = true;
+        try {
+            this.notifications = await this.notificationService.getNotifications();
+        } catch (error) {
+            console.error('Erro ao carregar notificações:', error);
+            this.notifications = [];
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
     private setupScrollListener(): void {
-        this.contentContainer.nativeElement.addEventListener('scroll', () => {
-            if (this.isLoading || !this.notificationService.hasMore()) return;
+        if (!this.contentContainer?.nativeElement) return;
+
+        this.scrollListener = () => {
+            if (this.isLoading) return;
 
             const element = this.contentContainer.nativeElement;
             const atBottom =
-                element.scrollHeight - element.scrollTop <=
-                element.clientHeight + 50;
+                element.scrollHeight - element.scrollTop <= element.clientHeight + 50;
 
             if (atBottom) {
                 this.loadMoreNotifications();
             }
-        });
+        };
+
+        this.contentContainer.nativeElement.addEventListener('scroll', this.scrollListener);
     }
 
     private loadMoreNotifications(): void {
-        this.isLoading = true;
-        this.notificationService.loadMore();
+        // TODO: Não há paginação no back, implementar depois
     }
 
-    public closeModal(): void {
+    protected async markAsRead(notification: Notification): Promise<void> {
+        if (notification.read) return;
+
+        try {
+            const response = await this.notificationService.markNotificationAsRead(notification._id);
+
+            if (response.success && response.notification) {
+                this.notifications = this.notifications.map((n) =>
+                    n._id === notification._id ? response.notification : n
+                );
+            }
+        } catch (error) {
+            console.error('Erro ao marcar notificação como lida:', error);
+        }
+    }
+
+    protected closeModal(): void {
         this.isOpen = false;
         setTimeout(() => this.close.emit(), 300);
     }
 
-    public clearAllNotifications(): void {
-        this.notificationService.clearAll();
+    protected clearAllNotifications(): void {
+        this.notifications = [];
     }
 
-    public markAsRead(id: number): void {
-        this.notificationService.markAsRead(id);
+    protected trackById(index: number, item: Notification): string {
+        return item._id;
     }
 
-    public trackById(index: number, item: any): number {
-        return item.id;
+    protected get notificationCount(): number {
+        return this.notifications.length;
     }
 
-    get notificationCount$() {
-    return this.notificationService.totalNotifications$;
-  }
+    protected get unreadCount(): number {
+        return this.notifications.filter(n => !n.read).length;
+    }
 }

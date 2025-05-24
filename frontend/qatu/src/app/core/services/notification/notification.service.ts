@@ -1,56 +1,58 @@
+// Libs
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { MOCK_NOTIFICATIONS } from './mock-notifications';
+import { lastValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+
+// Services
+import { TokenService } from '../token/token.service';
+import { ApiService } from '../../api/api.service';
+
+// Interfaces
+import { Notification, ReadNotificationResponse } from './notification.interface';
 
 @Injectable({ providedIn: 'root' })
-export class NotificationService {
-    private allNotifications = [...MOCK_NOTIFICATIONS];
-    private displayedNotifications = new BehaviorSubject<any[]>([]);
-    private _totalNotifications = new BehaviorSubject<number>(
-        this.allNotifications.length
-    );
-    private currentPage = 0;
-    private readonly pageSize = 10;
-
-    public totalNotifications$ = this._totalNotifications.asObservable();
-    public notifications$ = this.displayedNotifications.asObservable();
-
-    constructor() {
-        this.loadMore();
+export class NotificationService extends ApiService {
+    constructor(private tokenService: TokenService, protected override http: HttpClient) {
+        super(http);
     }
 
-    public loadMore() {
-        const startIdx = this.currentPage * this.pageSize;
-        const newNotifications = this.allNotifications.slice(
-            startIdx,
-            startIdx + this.pageSize
-        );
+    public async getNotifications(): Promise<Notification[]> {
+        try {
+            const token = this.tokenService.get() ?? undefined;
 
-        this.currentPage++;
-        this.displayedNotifications.next([
-            ...this.displayedNotifications.value,
-            ...newNotifications,
-        ]);
+            return await lastValueFrom(
+                this.get<Notification[]>('notifications', {}, token)
+            );
+        } catch (error) {
+            const errorResponse = {
+                success: false,
+                message: error,
+                notifications: []
+            };
+
+            throw errorResponse;
+        }
     }
 
-    public hasMore(): boolean {
-        return this.currentPage * this.pageSize < this.allNotifications.length;
-    }
+    public async markNotificationAsRead(notificationId: string): Promise<ReadNotificationResponse> {
+        try {
+            const token = this.tokenService.get() ?? undefined;
 
-    public markAsRead(id: number): void {
-        const updated = this.allNotifications.map((n) =>
-            n.id === id ? { ...n, read: true } : n
-        );
-        this.allNotifications = updated;
-        this.displayedNotifications.next(
-            updated.slice(0, this.currentPage * this.pageSize)
-        );
+            return await lastValueFrom(
+                this.patch<ReadNotificationResponse>(`notifications/${notificationId}/read`, {}, token)
+            );
+        } catch (error) {
+            const errorResponse = {
+                success: false,
+                message: error,
+                notification: {} as Notification
+            };
+
+            throw errorResponse;
+        }
     }
 
     public clearAll(): void {
-        this.allNotifications = [];
-        this._totalNotifications.next(0);
-        this.displayedNotifications.next([]);
-        this.currentPage = 0;
+        // TODO: Integrar com o endpoint que o back irá fazer
     }
 }
