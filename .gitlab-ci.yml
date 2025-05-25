@@ -7,7 +7,7 @@ stages:
   - docker_push
 
 variables:
-  VERSION: "DEV-2.2.1"
+  VERSION: "DEV-1.0.0"
   IMAGE_NAME: "my-shop-backend"
 
 # Caminho até o backend
@@ -52,14 +52,24 @@ docker_build:
   services:
     - docker:24.0.5-dind
   script:
-    - docker build -t $IMAGE_NAME:$VERSION .
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION .
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+  artifacts:
+    name: "docker-image-info"
+    expire_in: 1 hour
+    paths:
+      - image_info.txt
+  after_script:
+    - echo "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" > image_info.txt
 
 docker_push:
   stage: docker_push
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
+  dependencies:
+    - docker_build
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-    - docker tag $IMAGE_NAME:$VERSION $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
-    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+    - echo "Imagem já está no registry do GitLab."
