@@ -13,7 +13,7 @@ variables:
 # Caminho até o backend
 default:
   before_script:
-    - cd grupo4/backend/qatu
+    - cd backend/qatu
 
 install_dependencies:
   stage: install
@@ -22,7 +22,7 @@ install_dependencies:
     - npm ci
   artifacts:
     paths:
-      - grupo4/backend/qatu/node_modules/
+      - backend/qatu/node_modules/
 
 build_app:
   stage: build
@@ -43,7 +43,7 @@ test_coverage:
     - npm run coverage
   artifacts:
     paths:
-      - grupo4/backend/qatu/coverage/
+      - backend/qatu/coverage/
     when: always
 
 docker_build:
@@ -52,7 +52,7 @@ docker_build:
   services:
     - docker:24.0.5-dind
   script:
-    - docker build -t $IMAGE_NAME:$VERSION grupo4/backend/qatu
+    - docker build -t $IMAGE_NAME:$VERSION backend/qatu
 
 docker_push:
   stage: docker_push
