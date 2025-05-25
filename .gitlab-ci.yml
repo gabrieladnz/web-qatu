@@ -52,7 +52,7 @@ docker_build:
   services:
     - docker:24.0.5-dind
   script:
-    - docker build -t $IMAGE_NAME:$VERSION backend/qatu
+    - docker build -t $IMAGE_NAME:$VERSION .
 
 docker_push:
   stage: docker_push
