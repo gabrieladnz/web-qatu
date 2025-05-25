@@ -1,60 +1,7 @@
 stages:
-  - install
-  - build
-  - test
-  - coverage
-  - docker_build
-  - docker_push
+  - greet
 
-variables:
-  VERSION: "DEV-1.0.0"
-  IMAGE_NAME: "my-shop-backend"
-
-install_dependencies:
-  stage: install
-  image: node:18
+hello-be:
+  stage: greet
   script:
-    - npm ci
-  artifacts:
-    paths:
-      - node_modules/
-
-build_app:
-  stage: build
-  image: node:18
-  script:
-    - echo "Nada a compilar, JavaScript puro"
-
-unit_tests:
-  stage: test
-  image: node:18
-  script:
-    - npm test
-
-test_coverage:
-  stage: coverage
-  image: node:18
-  script:
-    - npm run coverage
-  artifacts:
-    paths:
-      - coverage/
-    when: always
-
-docker_build:
-  stage: docker_build
-  image: docker:24.0.5
-  services:
-    - docker:24.0.5-dind
-  script:
-    - docker build -t $IMAGE_NAME:$VERSION .
-
-docker_push:
-  stage: docker_push
-  image: docker:24.0.5
-  services:
-    - docker:24.0.5-dind
-  script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-    - docker tag $IMAGE_NAME:$VERSION $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
-    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+    - echo "Hello World from Backend!"
