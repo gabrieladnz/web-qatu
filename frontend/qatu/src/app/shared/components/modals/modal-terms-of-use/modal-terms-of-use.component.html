@@ -1,1 +1,98 @@
-<p>modal-terms-of-use works!</p>
+<main class="modal-overlay">
+    <section class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title">Termos de Uso</h2>
+            <button class="modal-close" (click)="closeModal()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="about-section">
+                <div class="about-header">
+                    <img
+                        src="assets/images/logo-small.svg"
+                        alt="Logo Qatu"
+                        class="about-logo"
+                    />
+                    <h3>Saiba como usamos e protegemos suas informações</h3>
+                </div>
+
+                <div class="about-content terms-content">
+                    <p class="highlight">
+                        Ao utilizar os serviços da Qatu, você concorda com os
+                        termos e condições descritos neste documento.
+                    </p>
+
+                    <div class="terms-block">
+                        <h4>Aceitação dos Termos</h4>
+                        <p>
+                            Ao acessar ou utilizar nossa plataforma, você
+                            declara que leu, compreendeu e aceitou os Termos de
+                            Uso. Estes termos constituem um contrato legal entre
+                            você e a Qatu.
+                        </p>
+                    </div>
+
+                    <div class="terms-block">
+                        <h4>Cadastro e Segurança</h4>
+                        <p>
+                            O usuário é responsável por manter a
+                            confidencialidade de seus dados de acesso, bem como
+                            por todas as atividades realizadas com sua conta.
+                            Recomendamos o uso de senhas fortes e autenticação
+                            em dois fatores quando disponível.
+                        </p>
+                    </div>
+
+                    <div class="terms-block">
+                        <h4>Uso da Plataforma</h4>
+                        <p>
+                            O uso deve respeitar todas as leis vigentes. É
+                            proibido utilizar a plataforma para atividades
+                            fraudulentas, ilegais ou que violem direitos de
+                            terceiros. Reservamo-nos o direito de suspender
+                            contas que violarem estas diretrizes.
+                        </p>
+                    </div>
+
+                    <div class="terms-block">
+                        <h4>Propriedade Intelectual</h4>
+                        <p>
+                            Todos os conteúdos da plataforma (textos, imagens,
+                            marcas, etc.) pertencem à Qatu e são protegidos por
+                            leis de propriedade intelectual. O conteúdo gerado
+                            por usuários é de sua responsabilidade.
+                        </p>
+                    </div>
+
+                    <div class="terms-block">
+                        <h4>Modificações</h4>
+                        <p>
+                            Podemos alterar os termos a qualquer momento.
+                            Recomendamos revisá-los periodicamente. Alterações
+                            significativas serão comunicadas por e-mail ou
+                            através de notificações na plataforma.
+                        </p>
+                    </div>
+
+                    <div class="terms-block">
+                        <h4>Estamos aqui por você</h4>
+                        <p>
+                            A Qatu está comprometida em garantir transparência e
+                            segurança em cada interação. Se tiver dúvidas sobre
+                            estes termos ou como protegemos seus dados, nossa
+                            Central de Ajuda está sempre disponível.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-primary" (click)="closeModal()">
+                Li e concordo
+            </button>
+        </div>
+    </section>
+</main>

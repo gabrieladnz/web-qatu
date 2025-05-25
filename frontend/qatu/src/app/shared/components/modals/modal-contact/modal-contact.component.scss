@@ -1,0 +1,334 @@
+/* ===== ESTILOS BASE DO MODAL ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    overflow: auto;
+}
+
+.modal-container {
+    background-color: white;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.modal-container::-webkit-scrollbar {
+    width: 6px;
+}
+.modal-container::-webkit-scrollbar-thumb {
+    background-color: #25a55f;
+    border-radius: 8px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #f3f3f2;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #000000;
+    margin: 0;
+    position: relative;
+    display: inline-block;
+}
+
+.modal-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, #25a55f, #e1f349);
+    border-radius: 2px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background-color: #f3f3f2;
+}
+
+.modal-close mat-icon {
+    color: #666;
+    font-size: 20px;
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 24px 24px;
+    gap: 12px;
+    border-top: 1px solid #f3f3f2;
+    position: sticky;
+    bottom: 0;
+    background: white;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #25a55f, #1c7d48);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(37, 165, 95, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(37, 165, 95, 0.4);
+}
+
+/* ===== ESTILOS PARA CONTATO - TOTALMENTE PADRONIZADO ===== */
+.about-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.about-logo {
+    max-width: 120px;
+    margin-bottom: 16px;
+}
+
+.about-header h3 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #555;
+    margin: 0 0 8px 0;
+}
+
+.about-content {
+    width: 100%;
+}
+
+.highlight {
+    font-size: 16px;
+    color: #25a55f;
+    background-color: rgb(230, 248, 236);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px 12px 16px;
+    border-left: 3px solid #e1f349;
+    padding-left: 16px;
+    margin: 20px 0;
+    line-height: 1.6;
+}
+
+.contact-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+    margin: 24px 0;
+}
+
+.contact-card {
+    background-color: #f1f9a9;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    min-height: 180px;
+    justify-content: center;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(37, 165, 95, 0.2);
+}
+
+.contact-card mat-icon {
+    color: #25a55f;
+    font-size: 28px;
+    height: 28px;
+    width: 28px;
+    margin-bottom: 12px;
+    background: white;
+    border-radius: 50%;
+    padding: 6px;
+}
+
+.contact-card h4 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 8px 0;
+}
+
+.contact-card p {
+    font-size: 14px;
+    margin: 0;
+    color: #666;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.social-section {
+    margin-top: 32px;
+    width: 100%;
+    text-align: center;
+}
+
+.social-section h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 16px;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 8px;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #25a55f;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    background-color: #1c7d48;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(37, 165, 95, 0.3);
+}
+
+.social-icons mat-icon {
+    font-size: 24px;
+}
+
+/* ===== ANIMAÇÃO ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media screen and (max-width: 768px) {
+    .contact-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .about-header h3 {
+        font-size: 17px;
+    }
+
+    .highlight {
+        font-size: 15px;
+    }
+
+    .contact-card {
+        min-height: 160px;
+        padding: 16px;
+    }
+
+    .social-section {
+        margin-top: 24px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .modal-container {
+        border-radius: 16px;
+    }
+
+    .modal-title {
+        font-size: 20px;
+    }
+
+    .modal-body {
+        padding: 16px;
+    }
+
+    .about-logo {
+        max-width: 100px;
+    }
+
+    .contact-card mat-icon {
+        font-size: 24px;
+        height: 24px;
+        width: 24px;
+    }
+
+    .social-icons {
+        gap: 16px;
+    }
+
+    .social-icons a {
+        width: 40px;
+        height: 40px;
+    }
+
+    .social-icons mat-icon {
+        font-size: 20px;
+    }
+}
