@@ -9,8 +9,10 @@ import {
     AfterViewInit,
     ViewChild,
     ElementRef,
-    OnDestroy
+    OnDestroy,
+    inject
 } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Interfaces
 import { Notification } from '../../../../core/services/notification/notification.interface';
@@ -34,6 +36,7 @@ export class ModalNotificationComponent implements OnInit, AfterViewInit, OnDest
     protected notifications: Notification[] = [];
     protected isLoading = false;
     private scrollListener?: () => void;
+    protected snackBar = inject(MatSnackBar);
 
     constructor(private notificationService: NotificationService) { }
 
@@ -56,7 +59,10 @@ export class ModalNotificationComponent implements OnInit, AfterViewInit, OnDest
         try {
             this.notifications = await this.notificationService.getNotifications();
         } catch (error) {
-            console.error('Erro ao carregar notificações:', error);
+            this.snackBar.open('Erro ao carregar notificações.', 'Fechar', {
+                duration: 5000,
+                panelClass: ['error-snackbar']
+            });
             this.notifications = [];
         } finally {
             this.isLoading = false;
@@ -97,7 +103,10 @@ export class ModalNotificationComponent implements OnInit, AfterViewInit, OnDest
                 );
             }
         } catch (error) {
-            console.error('Erro ao marcar notificação como lida:', error);
+            this.snackBar.open('Erro ao marcar notificação como lida.', 'Fechar', {
+                duration: 5000,
+                panelClass: ['error-snackbar']
+            });
         }
     }
 
@@ -106,12 +115,16 @@ export class ModalNotificationComponent implements OnInit, AfterViewInit, OnDest
         setTimeout(() => this.close.emit(), 300);
     }
 
-    protected clearAllNotifications(): void {
-        this.notifications = [];
-    }
-
-    protected trackById(index: number, item: Notification): string {
-        return item._id;
+    protected async clearAllNotifications(): Promise<void> {
+        try {
+            await this.notificationService.clearAll();
+            this.notifications = [];
+        } catch (error) {
+            this.snackBar.open('Erro ao remover notificações.', 'Fechar', {
+                duration: 5000,
+                panelClass: ['error-snackbar']
+            });
+        }
     }
 
     protected get notificationCount(): number {

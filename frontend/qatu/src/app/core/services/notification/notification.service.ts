@@ -52,7 +52,25 @@ export class NotificationService extends ApiService {
         }
     }
 
-    public clearAll(): void {
-        // TODO: Integrar com o endpoint que o back irá fazer
+    public async clearAll(): Promise<{ success: boolean; message: string }> {
+        try {
+            const token = this.tokenService.get() ?? undefined;
+
+            const response = await lastValueFrom(
+                this.delete<{ message: string }>('notifications', {}, token)
+            );
+
+            return {
+                success: true,
+                message: response.message
+            };
+        } catch (error) {
+            const errorResponse = {
+                success: false,
+                message: error instanceof Error ? error.message : String(error)
+            };
+
+            throw errorResponse;
+        }
     }
 }
