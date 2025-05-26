@@ -1,7 +1,8 @@
 // Libs
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Components
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
@@ -22,6 +23,7 @@ import { CartService } from '../../core/services/cart/cart.service';
 })
 export class ProductViewComponent implements OnInit {
     protected product!: Product;
+    protected snackBar = inject(MatSnackBar);
 
     constructor(private productService: ProductService, private route: ActivatedRoute, private cartService: CartService) { }
 
@@ -47,6 +49,11 @@ export class ProductViewComponent implements OnInit {
                 seller: itemProduct.seller,
                 quantity: 1,
             })
+
+            this.snackBar.open('Produto adicionado ao carrinho.', 'Fechar', {
+                duration: 5000,
+                panelClass: ['success-snackbar']
+            });
         } catch (error) {
             console.error('Erro ao adicionar produto ao carrinho', error);
         }
