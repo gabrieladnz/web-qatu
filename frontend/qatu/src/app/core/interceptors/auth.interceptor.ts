@@ -25,7 +25,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
                 hasConnectionError.set(true);
                 tokenService.delete();
                 snackBar.open('Não foi possível conectar ao servidor. Por favor, tente novamente mais tarde.', 'Fechar', {
-                    duration: 5000
+                    duration: 5000,
                 });
             }
 

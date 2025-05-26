@@ -56,6 +56,7 @@ export const routes: Routes = [
     {
         path: 'client',
         component: ClientAreaComponent,
+        canActivate: [authGuard],
         canActivateChild: [authGuard],
         children: [
             { path: '', redirectTo: 'purchases', pathMatch: 'full' },
