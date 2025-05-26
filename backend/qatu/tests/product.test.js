@@ -1,7 +1,6 @@
 import { jest } from '@jest/globals';
 import * as productController from '../controllers/productController.js';
 import Product from '../models/productModel.js';
-
 // Mock de todas as dependências
 jest.mock('../models/productModel.js');
 
@@ -122,21 +121,32 @@ describe('Product Controller', () => {
         { id: 'product123' },
         { id: 'seller123' }
       );
+      req.userId = req.user.userId;
       const res = mockRes();
 
+      Product.findById.mockResolvedValue({
+        _id: 'product123',
+        seller: { toString: () => 'seller123' }
+      });
       Product.findByIdAndUpdate.mockResolvedValue({ _id: 'product123', title: 'Novo Título' });
 
       await productController.updateProduct(req, res);
 
       expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ title: 'Novo Título' }));
     });
   });
 
   describe('deleteProduct', () => {
     it('deve permitir exclusão', async () => {
       const req = mockReq({}, { id: 'product123' }, { id: 'seller123' });
+      req.userId = req.user.userId;
       const res = mockRes();
 
+      Product.findById.mockResolvedValue({
+        _id: 'product123',
+        seller: { toString: () => 'seller123' }
+      });
       Product.findByIdAndDelete.mockResolvedValue({ _id: 'product123' });
 
       await productController.deleteProduct(req, res);
@@ -165,4 +175,7 @@ describe('Product Controller', () => {
       expect(res.status).toHaveBeenCalledWith(201);
     });
   });
+  afterAll(async () => {
+  jest.clearAllTimers();
+});
 });

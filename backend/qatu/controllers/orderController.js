@@ -175,12 +175,6 @@ export const updateOrderStatus = async (req, res) => {
     await order.save();
     await triggerOrderStatusNotification(order.buyer, status, order._id);
 
-    // Cria notificação para o comprador
-    await Notification.create({
-        user: order.buyer._id,
-        message: `O status do seu pedido ${order._id} foi atualizado para "${status}".`
-    });
-
     // Resposta com dados populados
     const updatedOrder = await Order.findById(orderId)
       .populate('buyer', 'name email')
