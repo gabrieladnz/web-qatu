@@ -55,7 +55,30 @@ export class ProductViewComponent implements OnInit {
                 panelClass: ['success-snackbar']
             });
         } catch (error) {
-            console.error('Erro ao adicionar produto ao carrinho', error);
+            this.snackBar.open('Erro ao adicionar produto ao carrinho.', 'Fechar', {
+                duration: 5000,
+                panelClass: ['error-snackbar']
+            });
+        }
+    }
+
+    protected getLastRatingScore(): number {
+        if (!this.product.ratings || this.product.ratings.length === 0) {
+            return 0;
+        }
+
+        const lastRating = this.product.ratings[this.product.ratings.length - 1];
+        return lastRating.score;
+    }
+
+    protected getReviewText(): string {
+        const count = this.product.ratings?.length || 0;
+        if (count === 0) {
+            return 'avaliações';
+        } else if (count === 1) {
+            return 'avaliação';
+        } else {
+            return 'avaliações';
         }
     }
 }
