@@ -22,10 +22,11 @@ router.post('/checkout', authenticate, checkout);
 router.get('/seller-orders', authenticate, getSellerOrders);
 router.get('/my-orders', authenticate, getMyOrders);
 router.get('/', authenticate, isAdmin, getAllOrders); // Apenas admin
+router.get('/seller', authenticate, getSalesHistory);
 router.get('/:id', authenticate, getOrderById); // Dono do pedido ou admin
 router.put('/:id', authenticate, updateOrder); // Atualizar status
 router.delete('/:id', authenticate, deleteOrder); // Cancelar pedido
 router.patch('/:id/status', authenticate, updateOrderStatus);
-router.get('/seller', authenticate, getSalesHistory);
+
 
 export default router;
