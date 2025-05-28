@@ -12,6 +12,7 @@ import { PurchaseHistoryComponent } from './pages/purchase-history/purchase-hist
 import { SalesHistoryComponent } from './pages/sales-history/sales-history.component';
 import { ClientAreaComponent } from './pages/client-area/client-area.component';
 import { ProductSaleComponent } from './pages/product-sale/product-sale.component';
+import { PaymentComponent } from './pages/payment/payment.component';
 
 // Guards
 import { authGuard } from './core/guards/auth.guard';
@@ -67,6 +68,11 @@ export const routes: Routes = [
     {
         path: 'sale/page',
         component: ProductSaleComponent
+    },
+    {
+        path: 'payment/:orderId',
+        canActivate: [authGuard],
+        component: PaymentComponent
     },
     {
         path: '**',

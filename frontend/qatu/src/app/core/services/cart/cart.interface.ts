@@ -38,3 +38,21 @@ export interface CartItem {
     quantity: number;
     _id: string;
 }
+
+export interface CheckoutResponse {
+    message: string;
+    order: {
+        buyer: string;
+        products: {
+            product: string;
+            quantity: number;
+            seller: string;
+            _id: string;
+        }[];
+        total: number;
+        status: string;
+        _id: string;
+        createdAt: string;
+        __v: number;
+    }
+}

@@ -44,7 +44,7 @@
                 <p class="product__description-text">{{ product.description }}</p>
             </div>
 
-            <button class="product__buy-button" (click)="addToCart(product)">COMPRAR</button>
+            <button class="product__buy-button" [disabled]="!isAuthenticated" (click)="addToCart(product)">COMPRAR</button>
         </div>
     </section>
 </main>
