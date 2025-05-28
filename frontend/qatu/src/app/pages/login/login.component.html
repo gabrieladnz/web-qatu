@@ -1,12 +1,19 @@
-<form class="login__form" [formGroup]="loginForm">
+<form class="login__form" [formGroup]="loginForm" (ngSubmit)="login()">
     <h2>Bem-vindo(a) de volta!</h2>
 
     <div class="form-group">
         <label for="signup-email">E-mail</label>
-        <input type="email" formControlName="email" id="signup-email" required>
+        <input
+            type="email"
+            formControlName="email"
+            id="signup-email"
+            required
+        />
 
         @if (loginForm.get('email')?.hasError('email')) {
-        <span class="form-group__error">Por favor, insira um e-mail válido.</span>
+        <span class="form-group__error"
+            >Por favor, insira um e-mail válido.</span
+        >
         }
     </div>
 
@@ -14,20 +21,38 @@
         <label for="signup-password">Senha</label>
 
         <div class="form-group__password">
-            <input type="password" formControlName="password" id="signup-password"
-                [type]="hidePassword ? 'password' : 'text'" required>
+            <input
+                type="password"
+                formControlName="password"
+                id="signup-password"
+                [type]="hidePassword ? 'password' : 'text'"
+                required
+            />
 
-            <button class="form-group__password__toggle-password" (click)="passwordVisibility()">
-                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            <button
+                class="form-group__password__toggle-password"
+                (click)="passwordVisibility($event)"
+                type="button"
+            >
+                <mat-icon>{{
+                    hidePassword ? "visibility_off" : "visibility"
+                }}</mat-icon>
             </button>
         </div>
-
     </div>
 
     @if (loginFailed) {
-    <span class="form-group__error">Credenciais inválidas. Por favor, verifique seu e-mail e senha.</span>
+    <span class="form-group__error"
+        >Credenciais inválidas. Por favor, verifique seu e-mail e senha.</span
+    >
     }
-</form>
 
-<button class="login__button" [disabled]="loginForm.invalid" mat-raised-button type="submit"
-    (click)="login()">ENTRAR</button>
+    <button
+        class="login__button"
+        [disabled]="loginForm.invalid"
+        mat-raised-button
+        type="submit"
+    >
+        ENTRAR
+    </button>
+</form>
