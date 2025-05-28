@@ -7,4 +7,3 @@ const router = express.Router();
 router.post('/checkout', authenticate, pagamentoSimulado); 
 
 export default router;
-
