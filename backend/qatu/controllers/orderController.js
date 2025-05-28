@@ -162,11 +162,12 @@ export const updateOrderStatus = async (req, res) => {
       });
     }
 
-    const isBuyer = order.buyer.toString() === userId;
-    if (!isBuyer) {
-      return res.status(403).json({ 
+    // Verifica se o user é vendedor de pelo menos um produto
+    const isSeller = order.products.some(p => p.seller.toString() === userId);
+    if (!isSeller) {
+      return res.status(403).json({
         success: false,
-        message: 'Acesso negado. Apenas o comprador pode atualizar o status.'
+        message: 'Acesso negado. Apenas o vendedor pode atualizar o status deste pedido.'
       });
     }
 
