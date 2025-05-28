@@ -21,6 +21,8 @@ beforeAll(async () => {
     });
     console.log('Vendedor de teste criado');
   }
+  await productModel.deleteMany({ title: 'Produto Teste' });
+  await UserModel.deleteMany({email: 'testeuser@email.com'});
 });
 
 afterAll(async () => {
