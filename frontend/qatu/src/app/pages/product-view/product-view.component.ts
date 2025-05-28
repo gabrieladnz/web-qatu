@@ -14,6 +14,7 @@ import { Product } from '../../core/services/product/product.interface';
 // Services
 import { ProductService } from '../../core/services/product/product.service';
 import { CartService } from '../../core/services/cart/cart.service';
+import { TokenService } from '../../core/services/token/token.service';
 
 @Component({
     selector: 'app-product-view',
@@ -24,14 +25,17 @@ import { CartService } from '../../core/services/cart/cart.service';
 export class ProductViewComponent implements OnInit {
     protected product!: Product;
     protected snackBar = inject(MatSnackBar);
+    protected isAuthenticated: boolean = false;
 
-    constructor(private productService: ProductService, private route: ActivatedRoute, private cartService: CartService) { }
+    constructor(private productService: ProductService, private route: ActivatedRoute, private cartService: CartService, private tokenService: TokenService) { }
 
     ngOnInit(): void {
         this.route.paramMap.subscribe(params => {
             const id = params.get('id');
             if (id) this.getProductById(id);
         });
+
+        this.checkAuthStatus();
     }
 
     protected async getProductById(productId: string): Promise<void> {
@@ -44,7 +48,7 @@ export class ProductViewComponent implements OnInit {
 
     protected async addToCart(itemProduct: Product): Promise<void> {
         try {
-            this.cartService.addToCart({
+            await this.cartService.addToCart({
                 productId: itemProduct._id,
                 seller: itemProduct.seller,
                 quantity: 1,
@@ -80,5 +84,9 @@ export class ProductViewComponent implements OnInit {
         } else {
             return 'avaliações';
         }
+    }
+
+    private checkAuthStatus(): void {
+        this.isAuthenticated = this.tokenService.isAuthenticated();
     }
 }
