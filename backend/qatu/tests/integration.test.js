@@ -1,6 +1,6 @@
 import UserModel from '../models/userModel.js';
 import productModel from '../models/productModel.js';
-import supertest from 'supertest';
+import request from 'supertest';
 import mongoose from 'mongoose';
 import app from '../app.js';
 
@@ -9,9 +9,6 @@ global.userToken = null;
 global.createdProductId = null;
 global.testOrderId = null;
 
-const requesting = process.env.BACKEND_URL
-  ? supertest(process.env.BACKEND_URL)
-  : supertest(app);
 
 afterAll(async () => {
   await productModel.deleteMany({ title: 'Produto Teste' });
@@ -27,7 +24,7 @@ describe('Fluxo de cadastro e login de usuário', () => {
   };
 
   it('Deve registrar um novo usuário', async () => {
-    const res = await requesting
+    const res = await request(app)
       .post('/api/users/register')
       .send(user);
     expect(res.statusCode).toBe(201);
@@ -35,7 +32,7 @@ describe('Fluxo de cadastro e login de usuário', () => {
   });
 
   it('Não deve registrar usuário com email já existente', async () => {
-    const res = await requesting
+    const res = await request(app)
       .post('/api/users/register')
       .send(user);
     expect(res.statusCode).toBe(400);
@@ -43,7 +40,7 @@ describe('Fluxo de cadastro e login de usuário', () => {
   });
 
   it('Deve fazer login com sucesso', async () => {
-    const res = await requesting
+    const res = await request(app)
       .post('/api/users/login')
       .send({ email: user.email, password: user.password });
     expect(res.statusCode).toBe(200);
@@ -53,7 +50,7 @@ describe('Fluxo de cadastro e login de usuário', () => {
   });
 
   it('Não deve logar com senha errada', async () => {
-    const res = await requesting
+    const res = await request(app)
       .post('/api/users/login')
       .send({ email: user.email, password: 'senhaerrada' });
     expect(res.statusCode).toBe(401);
@@ -72,7 +69,7 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
     };
 
     it('Login de vendedor', async () => {
-        const res = await requesting
+        const res = await request(app)
         .post('/api/users/login')
         .send({ email: 'vendedor@email.com', password: 'Vendedor!123' });
         expect(res.body.token).toBeDefined();
@@ -81,7 +78,7 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
     });
     
     it('Deve cadastrar um novo produto', async () => {
-        const res = await requesting
+        const res = await request(app)
         .post('/api/products')
         .send(product)
         .set('Authorization', `Bearer ${global.sellerToken}`);
@@ -90,21 +87,21 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
     });
     
     it('Deve listar todos os produtos', async () => {
-        const res = await requesting
+        const res = await request(app)
         .get('/api/products');
         expect(res.statusCode).toBe(200);
         expect(Array.isArray(res.body.productsWithAverage)).toBe(true);
     });
 
     it('Deve obter um produto por ID', async () => {
-        const res = await requesting
+        const res = await request(app)
         .get(`/api/products/${global.createdProductId}`);
         expect(res.statusCode).toBe(200);
         expect(res.body._id).toBe(global.createdProductId);
     });
 
     it ('Tentativa de cadastrar produto sem campos obrigatórios', async () => {
-        const res = await requesting
+        const res = await request(app)
         .post('/api/products')
         .send({ title: 'Produto Incompleto' })
         .set('Authorization', `Bearer ${global.sellerToken}`);
@@ -114,7 +111,7 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
 
     it('tentativa de visualizar produto inexistente', async () => {
         const fakeId = new mongoose.Types.ObjectId();
-        const res = await requesting
+        const res = await request(app)
         .get(`/api/products/${fakeId}`);
         expect(res.statusCode).toBe(404);
         expect(res.body.message).toBe('Produto não encontrado');
@@ -124,7 +121,7 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
 
 describe('Fluxo de compra de Produto', () => {
     it('Usuário adiciona ao carrinho', async () => {
-        const res = await requesting
+        const res = await request(app)
         .post('/api/cart/add')
         .send({
             productId: global.createdProductId,
@@ -138,7 +135,7 @@ describe('Fluxo de compra de Produto', () => {
     });
 
     it('Usuário visualiza carrinho', async () => {
-        const res = await requesting
+        const res = await request(app)
         .get('/api/cart')
         .set('Authorization', `Bearer ${global.userToken}`);
         
@@ -147,7 +144,7 @@ describe('Fluxo de compra de Produto', () => {
     });
 
     it('Confirma pedido do carrinho', async () => {
-        const res = await requesting
+        const res = await request(app)
         .post('/api/orders/checkout')
         .send({
             cartId: global.testOrderId,
@@ -163,7 +160,7 @@ describe('Fluxo de compra de Produto', () => {
     });
 
     it ('Dados inválidos para comprar', async () => {
-        const res = await requesting
+        const res = await request(app)
         .post('/api/payments/checkout')
         .send({
             orderId: global.testOrderId,
@@ -180,7 +177,7 @@ describe('Fluxo de compra de Produto', () => {
 
 
     it ('Terminar compra', async () => {
-        const res = await requesting
+        const res = await request(app)
         .post('/api/payments/checkout')
         .send({
             orderId: global.testOrderId,
@@ -195,7 +192,7 @@ describe('Fluxo de compra de Produto', () => {
     });
 
     it('Adicionar mais do que o estoque disponível', async () => {
-        const res = await requesting
+        const res = await request(app)
         .post('/api/cart/add')
         .send({
             productId: global.createdProductId,
