@@ -23,7 +23,6 @@ beforeAll(async () => {
   }
 });
 
-
 afterAll(async () => {
   await productModel.deleteMany({ title: 'Produto Teste' });
   await UserModel.deleteMany({email: 'testeuser@email.com'});
@@ -43,6 +42,7 @@ describe('Fluxo de cadastro e login de usuário', () => {
       .send(user);
     expect(res.statusCode).toBe(201);
     expect(res.body.success).toBe(true);
+    console.log(res.body);
   });
 
   it('Não deve registrar usuário com email já existente', async () => {
@@ -51,6 +51,7 @@ describe('Fluxo de cadastro e login de usuário', () => {
       .send(user);
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toMatch(/já cadastrado/i);
+    console.log(res.body);
   });
 
   it('Deve fazer login com sucesso', async () => {
@@ -60,6 +61,7 @@ describe('Fluxo de cadastro e login de usuário', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.token).toBeDefined();
+    console.log(res.body);
     global.userToken = res.body.token;
   });
 
@@ -69,6 +71,7 @@ describe('Fluxo de cadastro e login de usuário', () => {
       .send({ email: user.email, password: 'senhaerrada' });
     expect(res.statusCode).toBe(401);
     expect(res.body.success).toBe(false);
+    console.log(res.body);
   });
 });
 
@@ -87,8 +90,8 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
         .post('/api/users/login')
         .send({ email: 'vendedor@email.com', password: 'Vendedor!123' });
         expect(res.body.token).toBeDefined();
+        console.log(res.body);
         global.sellerToken = res.body.token;
-
     });
     
     it('Deve cadastrar um novo produto', async () => {
@@ -97,6 +100,7 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
         .send(product)
         .set('Authorization', `Bearer ${global.sellerToken}`);
         expect(res.statusCode).toBe(201);
+        console.log(res.body);
         global.createdProductId = res.body._id;
     });
     
@@ -105,6 +109,7 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
         .get('/api/products');
         expect(res.statusCode).toBe(200);
         expect(Array.isArray(res.body.productsWithAverage)).toBe(true);
+        console.log(res.body);
     });
 
     it('Deve obter um produto por ID', async () => {
@@ -112,6 +117,7 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
         .get(`/api/products/${global.createdProductId}`);
         expect(res.statusCode).toBe(200);
         expect(res.body._id).toBe(global.createdProductId);
+        console.log(res.body);
     });
 
     it ('Tentativa de cadastrar produto sem campos obrigatórios', async () => {
@@ -121,6 +127,7 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
         .set('Authorization', `Bearer ${global.sellerToken}`);
         expect(res.statusCode).toBe(400);
         expect(res.body.errors).toBeDefined();
+        console.log(res.body);
     });
 
     it('tentativa de visualizar produto inexistente', async () => {
@@ -129,6 +136,7 @@ describe('Fluxo de cadastro de Produto e visualização', () => {
         .get(`/api/products/${fakeId}`);
         expect(res.statusCode).toBe(404);
         expect(res.body.message).toBe('Produto não encontrado');
+        console.log(res.body);
     });
 
 });
@@ -145,6 +153,7 @@ describe('Fluxo de compra de Produto', () => {
         
         expect(res.statusCode).toBe(200);
         expect(res.body.message).toBe('Produto adicionado ao carrinho.');
+        console.log(res.body);
         global.testOrderId = res.body.cart._id;
     });
 
@@ -155,6 +164,7 @@ describe('Fluxo de compra de Produto', () => {
         
         expect(res.statusCode).toBe(200);
         expect(Array.isArray(res.body.items)).toBe(true);
+        console.log(res.body);
     });
 
     it('Confirma pedido do carrinho', async () => {
@@ -170,6 +180,7 @@ describe('Fluxo de compra de Produto', () => {
         expect(res.statusCode).toBe(201);
         expect(res.body.message).toBe('Pedido realizado com sucesso.');
         expect(res.body.order).toBeDefined();
+        console.log(res.body);
         global.testOrderId = res.body.order._id;
     });
 
@@ -187,6 +198,7 @@ describe('Fluxo de compra de Produto', () => {
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toMatch(/deve ter exatamente/);
         expect(res.body.success).toBe(false);
+        console.log(res.body);
     });
 
 
@@ -203,6 +215,7 @@ describe('Fluxo de compra de Produto', () => {
         .set('Authorization', `Bearer ${global.userToken}`);
         expect(res.statusCode).toBe(200);
         expect(res.body.message).toBe('Pagamento aprovado (simulado).');
+        console.log(res.body);
     });
 
     it('Adicionar mais do que o estoque disponível', async () => {
@@ -215,5 +228,6 @@ describe('Fluxo de compra de Produto', () => {
         .set('Authorization', `Bearer ${global.userToken}`);
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toMatch('Quantidade solicitada excede o estoque disponível.');
+        console.log(res.body);
     });
 });
