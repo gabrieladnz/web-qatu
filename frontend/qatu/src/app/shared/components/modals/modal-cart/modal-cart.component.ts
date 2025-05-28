@@ -1,7 +1,8 @@
 // Libs
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Interfaces
 import { Cart, CartItem } from '../../../../core/services/cart/cart.interface';
@@ -19,8 +20,9 @@ import { TokenService } from '../../../../core/services/token/token.service';
 export class ModalCartComponent implements OnInit {
     protected products!: Cart;
     protected isAuthenticated: boolean = false;
+    protected snackBar = inject(MatSnackBar);
 
-    constructor(private dialog: MatDialog, private cartService: CartService, private tokenService: TokenService) { }
+    constructor(private dialog: MatDialog, private cartService: CartService, private tokenService: TokenService, private router: Router) { }
 
     ngOnInit(): void {
         this.listProductsCart();
@@ -31,7 +33,7 @@ export class ModalCartComponent implements OnInit {
         try {
             this.products = await this.cartService.getCart();
         } catch (error) {
-            console.error('Erro ao carregar o carrinho:', error);
+            console.error('Erro ao listar produtos no carrinho:', error);
         }
     }
 
@@ -53,7 +55,10 @@ export class ModalCartComponent implements OnInit {
             await this.cartService.removeFromCart(productId);
             this.listProductsCart();
         } catch (error) {
-            console.error('Erro ao remover produto:', error);
+            this.snackBar.open('Erro ao remover produto.', 'Fechar', {
+                duration: 5000,
+                panelClass: ['error-snackbar']
+            });
         }
     }
 
@@ -61,8 +66,24 @@ export class ModalCartComponent implements OnInit {
         this.dialog.closeAll();
     }
 
-    protected finishPurchase(): void {
-        // TODO: Integrar a lógica alinhada com o endpoint
+    protected async finishPurchase(): Promise<void> {
+        try {
+            const checkoutResponse = await this.cartService.checkout();
+
+            this.snackBar.open('Redirecionando para tela de pagamento.', 'Fechar', {
+                duration: 5000,
+                panelClass: ['success-snackbar']
+            });
+
+            this.closeCart();
+
+            this.router.navigate(['/payment', checkoutResponse.order._id]);
+        } catch (error) {
+            this.snackBar.open('Erro ao finalizar compra.', 'Fechar', {
+                duration: 5000,
+                panelClass: ['error-snackbar']
+            });
+        }
     }
 
     private checkAuthStatus(): void {
