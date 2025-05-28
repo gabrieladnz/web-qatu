@@ -208,8 +208,9 @@ export const getMyOrders = async (req, res) => {
     if (status) filters.status = status;
 
     const orders = await Order.find(filters)
-      .populate('products.product', 'title price image') // Traz dados básicos do produto
-      .sort({ createdAt: -1 }); // Mais recentes primeiro
+      .populate('buyer', 'name email') 
+      .populate('products.product', 'title price') 
+      .sort({ createdAt: -1 });  
 
     res.status(200).json({
       success: true,
@@ -225,6 +226,7 @@ export const getMyOrders = async (req, res) => {
     });
   }
 };
+
 
 /**
  * Lista todos os pedidos onde o usuário logado é vendedor
