@@ -9,6 +9,20 @@ global.userToken = null;
 global.createdProductId = null;
 global.testOrderId = null;
 
+beforeAll(async () => {
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  const existingSeller = await UserModel.findOne({ email: 'vendedor@email.com' });
+  if (!existingSeller) {
+    await UserModel.create({
+      name: 'Vendedor Teste',
+      email: 'vendedor@email.com',
+      password: 'Vendedor!123',
+      role: 'seller'
+    });
+    console.log('Vendedor de teste criado');
+  }
+});
+
 
 afterAll(async () => {
   await productModel.deleteMany({ title: 'Produto Teste' });
