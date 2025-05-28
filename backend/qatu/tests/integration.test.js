@@ -22,7 +22,7 @@ beforeAll(async () => {
     console.log('Vendedor de teste criado');
   }
   await productModel.deleteMany({ title: 'Produto Teste' });
-  await UserModel.deleteMany({email: 'testeuser@email.com'});
+  await UserModel.deleteMany({email: 'comprador@email.com'});
 });
 
 afterAll(async () => {
@@ -33,9 +33,9 @@ afterAll(async () => {
 
 describe('Fluxo de cadastro e login de usuário', () => {
   const user = {
-    name: 'testUser#1',
-    email: 'testeuser@email.com',
-    password: 'Senha123!'
+    name: 'comprador',
+    email: 'comprador@email.com',
+    password: 'Comprador!123',
   };
 
   it('Deve registrar um novo usuário', async () => {
