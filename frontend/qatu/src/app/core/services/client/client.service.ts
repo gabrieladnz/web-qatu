@@ -24,6 +24,23 @@ export class ClientService extends ApiService {
             const token = this.tokenService.get() ?? undefined;
 
             return await lastValueFrom(
+                this.get<SellerOrdersResponse>('orders/my-orders', {}, token)
+            );
+        } catch (error) {
+            const errorResponse = {
+                success: false,
+                message: error
+            };
+
+            throw errorResponse;
+        }
+    }
+
+    public async getSellerOrders(): Promise<SellerOrdersResponse> {
+        try {
+            const token = this.tokenService.get() ?? undefined;
+
+            return await lastValueFrom(
                 this.get<SellerOrdersResponse>('orders/seller-orders', {}, token)
             );
         } catch (error) {
@@ -36,31 +53,12 @@ export class ClientService extends ApiService {
         }
     }
 
-    public async getSellerOrders(): Promise<unknown[]> {
-        // TODO: Validar com o back, falta de tratamento de erro retorna quebra
+    public async updateOrderStatus(orderId: string, body: unknown): Promise<unknown> {
         try {
             const token = this.tokenService.get() ?? undefined;
 
             return await lastValueFrom(
-                this.get<unknown[]>('orders/seller', {}, token)
-            );
-        } catch (error) {
-            const errorResponse = {
-                success: false,
-                message: error
-            };
-
-            throw errorResponse;
-        }
-    }
-
-    public async updateOrderStatus(orderId: string, status: string): Promise<unknown> {
-        try {
-            // TODO: Validar com o back
-            const token = this.tokenService.get() ?? undefined;
-
-            return await lastValueFrom(
-                this.patch<unknown>(`orders/${orderId}/status`, token)
+                this.patch<unknown>(`orders/${orderId}/status`, body, token)
             );
         } catch (error) {
             const errorResponse = {

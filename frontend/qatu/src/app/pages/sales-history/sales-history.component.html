@@ -1,1 +1,117 @@
-<!-- TODO: Implementação pendente da correção de erro no retorno da lista de vendas no Back  -->
+<main class="purchase-history">
+    <h2 class="purchase-history__title">Histórico de vendas</h2>
+
+    <section class="purchase-history__sellers">
+        @if (sellers.length > 0) {
+        @for (order of sellers; track $index) {
+        <div class="order-card">
+            <header class="order-card__header">
+                <div class="order-card__info">
+                    <h3 class="order-card__id">Pedido #{{ order._id.slice(-8) }}</h3>
+                    <p class="order-card__date">{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+                </div>
+
+                <div class="order-card__status">
+                    @if (!isEditing(order._id)) {
+                    <span class="status-badge status-badge--{{ order.status }} status-badge--clickable"
+                        (click)="startEditing(order._id)">
+                        {{ getStatusLabel(order.status) }}
+                        <span class="edit-hint">✏️</span>
+                    </span>
+                    } @else {
+                    <div class="status-editor">
+                        <select class="status-select" [value]="order.status"
+                            (change)="prepareStatusUpdate(order._id, $any($event.target).value)"
+                            [disabled]="isUpdating">
+                            <option value="" disabled>Selecione o status</option>
+                            @for (statusOption of statusOptions; track statusOption.value) {
+                            <option [value]="statusOption.value">
+                                {{ statusOption.label }}
+                            </option>
+                            }
+                        </select>
+
+                        <button type="button" class="btn-cancel" (click)="cancelEditing()" [disabled]="isUpdating">
+                            ✕
+                        </button>
+                    </div>
+                    }
+                </div>
+            </header>
+
+            <div class="order-card__buyer">
+                <h4 class="order-card__buyer-title">Comprador:</h4>
+                <p class="order-card__buyer-name">{{ order.buyer.name }}</p>
+                <p class="order-card__buyer-email">{{ order.buyer.email }}</p>
+            </div>
+
+            <article class="order-card__products">
+                <h4 class="order-card__products-title">
+                    Produtos ({{ order.products.length }} {{ order.products.length === 1 ? 'item' : 'itens' }}):
+                </h4>
+                <section class="product-list">
+                    @for (item of order.products; track $index) {
+                    <div class="product-item">
+                        <div class="product-item__number">{{ $index + 1 }}.</div>
+                        <div class="product-item__details">
+                            <span class="product-item__title">{{ item.product.title }}</span>
+                            <div class="product-item__info">
+                                <span class="product-item__price">{{ item.product.price |
+                                    currency:'BRL':'symbol':'1.2-2':'pt-BR' }} cada</span>
+                                <span class="product-item__quantity">Qtd: {{ item.quantity }}</span>
+                                <span class="product-item__subtotal">
+                                    Subtotal: {{ item.product.price * item.quantity |
+                                    currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </section>
+            </article>
+
+            <footer class="order-card__total">
+                <strong>Total: {{ order.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+            </footer>
+        </div>
+        }
+        } @else {
+        <figure style="text-align: center;">
+            <img src="assets/figures/empty-search.svg" style="width: 40%; max-width: 250px;"
+                alt="Ilustração de pesquisa vazia">
+        </figure>
+        }
+    </section>
+
+    @if (showConfirmModal) {
+    <div class="modal-overlay" (click)="closeConfirmModal()">
+        <div class="modal-container" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirmar alteração</h3>
+                <button type="button" class="modal-close-btn" (click)="closeConfirmModal()">
+                    ✕
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <span class="status-icon">⚠️</span>
+                </div>
+                <p class="modal-message">
+                    Tem certeza que deseja alterar o status para
+                    <strong class="status-highlight">{{ confirmModalData?.statusLabel }}</strong>?
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" (click)="closeConfirmModal()">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn--primary" (click)="confirmStatusUpdate()">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+</main>
