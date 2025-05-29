@@ -8,7 +8,7 @@ import { ApiService } from '../../api/api.service';
 import { TokenService } from '../token/token.service';
 
 // Interfaces
-import { CartRequest, Cart, CartResponse } from './cart.interface';
+import { CartRequest, Cart, CartResponse, CheckoutResponse } from './cart.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -69,13 +69,12 @@ export class CartService extends ApiService {
         }
     }
 
-    public async checkout(): Promise<unknown> {
-        // TODO: Alinhar retornos após integração com o backend
+    public async checkout(): Promise<CheckoutResponse> {
         try {
             const token = this.tokenService.get() ?? undefined;
 
             return await lastValueFrom(
-                this.post<unknown>('orders/checkout', {}, token)
+                this.post<CheckoutResponse>('orders/checkout', {}, token)
             );
         } catch (error) {
             const errorResponse = {

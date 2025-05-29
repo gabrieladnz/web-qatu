@@ -1,0 +1,75 @@
+stages:
+  - install
+  - build
+  - test
+  - coverage
+  - docker_build
+  - docker_push
+
+variables:
+  VERSION: "DEV-1.0.0"
+  IMAGE_NAME: "my-shop-backend"
+
+# Caminho até o backend
+default:
+  before_script:
+    - cd backend/qatu
+
+install_dependencies:
+  stage: install
+  image: node:18
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - backend/qatu/node_modules/
+
+build_app:
+  stage: build
+  image: node:18
+  script:
+    - echo "Nada a compilar, JavaScript puro"
+
+unit_tests:
+  stage: test
+  image: node:18
+  script:
+    - npm test
+
+test_coverage:
+  stage: coverage
+  image: node:18
+  script:
+    - npm run coverage
+  artifacts:
+    paths:
+      - backend/qatu/coverage/
+    when: always
+
+docker_build:
+  stage: docker_build
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION .
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+  artifacts:
+    name: "docker-image-info"
+    expire_in: 1 hour
+    paths:
+      - image_info.txt
+  after_script:
+    - echo "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" > image_info.txt
+
+docker_push:
+  stage: docker_push
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  dependencies:
+    - docker_build
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - echo "Imagem já está no registry do GitLab."

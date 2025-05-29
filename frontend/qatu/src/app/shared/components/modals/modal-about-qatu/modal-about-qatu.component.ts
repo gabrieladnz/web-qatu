@@ -5,10 +5,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { animate } from '@angular/animations';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-modal-about-qatu',
-    imports: [MatIconModule],
+    imports: [CommonModule, MatButtonModule, MatIconModule],
     templateUrl: './modal-about-qatu.component.html',
     styleUrl: './modal-about-qatu.component.scss',
     animations: [
@@ -17,13 +19,13 @@ import { MatDialogRef } from '@angular/material/dialog';
                 style({ opacity: 0, transform: 'translateY(20px)' }),
                 animate(
                     '0.3s ease-out',
-                    style({ opacity: 1, transform: 'translateY(0)' }),
+                    style({ opacity: 1, transform: 'translateY(0)' })
                 ),
             ]),
             transition(':leave', [
                 animate(
                     '0.2s ease-in',
-                    style({ opacity: 0, transform: 'translateY(20px)' }),
+                    style({ opacity: 0, transform: 'translateY(20px)' })
                 ),
             ]),
         ]),
@@ -32,9 +34,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class ModalAboutQatuComponent {
     @Output() close = new EventEmitter<void>();
 
-    constructor(
-        private dialogRef: MatDialogRef<ModalAboutQatuComponent>,
-    ) { }
+    constructor(private dialogRef: MatDialogRef<ModalAboutQatuComponent>) {}
 
     protected closeModal(): void {
         setTimeout(() => {

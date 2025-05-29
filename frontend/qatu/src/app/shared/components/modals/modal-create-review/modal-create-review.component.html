@@ -1,0 +1,69 @@
+<main class="modal-seller">
+    <header class="modal-seller__header">
+        <h2 class="modal-seller__title">Avaliar produto</h2>
+        <figure class="modal-seller__logo">
+            <mat-icon>star_rate</mat-icon>
+        </figure>
+    </header>
+
+    <section class="modal-seller__content">
+        <p class="modal-seller__description">
+            Compartilhe sua experiência com este produto. Sua avaliação ajuda outros usuários a tomar melhores decisões
+            de compra.
+        </p>
+
+        <form [formGroup]="reviewForm">
+            <section class="form-grid">
+                <div class="form-group full-width">
+                    <label for="review-score">Avaliação</label>
+                    <div class="star-rating" id="review-score">
+                        @for (star of stars; track $index) {
+                        <button type="button" class="star-rating__star"
+                            [class.star-rating__star--active]="$index < selectedScore"
+                            [class.star-rating__star--hover]="$index < hoverScore" (click)="setScore($index + 1)"
+                            (mouseenter)="setHoverScore($index + 1)" (mouseleave)="setHoverScore(0)"
+                            [attr.aria-label]="'Dar ' + ($index + 1) + ' estrela' + ($index > 0 ? 's' : '')">
+                            <mat-icon>star</mat-icon>
+                        </button>
+                        }
+                    </div>
+                    <input type="hidden" formControlName="score" [value]="selectedScore">
+                    @if (reviewForm.get('score')?.invalid && reviewForm.get('score')?.touched) {
+                    <span class="form-group__error">
+                        Por favor, selecione uma avaliação
+                    </span>
+                    }
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="review-comment">Comentário</label>
+                    <textarea formControlName="comment" id="review-comment"
+                        placeholder="Conte sobre sua experiência com o produto..." rows="4" required></textarea>
+                    @if (reviewForm.get('comment')?.invalid && reviewForm.get('comment')?.touched) {
+                    <span class="form-group__error">
+                        @if (reviewForm.get('comment')?.errors?.['required']) {
+                        <span>O comentário é obrigatório</span>
+                        }
+                        @if (reviewForm.get('comment')?.errors?.['minlength']) {
+                        <span>O comentário deve ter pelo menos 10 caracteres</span>
+                        }
+                        @if (reviewForm.get('comment')?.errors?.['maxlength']) {
+                        <span>O comentário não pode ter mais de 500 caracteres</span>
+                        }
+                    </span>
+                    }
+                </div>
+            </section>
+        </form>
+    </section>
+
+    <footer class="modal-seller__footer">
+        <button type="button" class="modal-seller__button modal-seller__button--cancel" (click)="closeModal()">
+            Cancelar
+        </button>
+        <button type="submit" class="modal-seller__button modal-seller__button--confirm"
+            [disabled]="reviewForm.invalid || selectedScore === 0" (click)="createReview()">
+            <span>Enviar avaliação</span>
+        </button>
+    </footer>
+</main>

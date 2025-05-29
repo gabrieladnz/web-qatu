@@ -30,7 +30,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 24px;
-    border-bottom: 1px solid #F3F3F2;
+    border-bottom: 1px solid #f3f3f2;
 }
 
 .modal-title {
@@ -42,13 +42,13 @@
     display: inline-block;
 
     &::after {
-        content: '';
+        content: "";
         position: absolute;
         left: 0;
         bottom: -8px;
         width: 40px;
         height: 3px;
-        background: linear-gradient(90deg, #25A55F, #E1F349);
+        background: linear-gradient(90deg, #25a55f, #e1f349);
         border-radius: 2px;
     }
 }
@@ -66,7 +66,7 @@
     transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: #F3F3F2;
+        background-color: #f3f3f2;
     }
 
     mat-icon {
@@ -76,7 +76,7 @@
 }
 
 .modal-body {
-    padding: 24px;
+    padding: 2em;
     overflow-y: auto;
     flex: 1;
 }
@@ -109,10 +109,14 @@
 
         p.highlight {
             font-size: 16px;
-            color: #25A55F;
-            border-left: 3px solid #E1F349;
+            color: #25a55f;
+            background-color: rgb(230, 248, 236);
+            border-radius: 0 8px 8px 0;
+            padding: 12px 16px 12px 16px;
+            border-left: 3px solid #e1f349;
             padding-left: 16px;
             margin: 20px 0;
+            line-height: 1.6;
         }
 
         h4 {
@@ -129,7 +133,7 @@
             margin: 20px 0;
 
             .feature-card {
-                background-color: #F1F9A9;
+                background-color: #f1f9a9;
                 border-radius: 16px;
                 padding: 20px;
                 display: flex;
@@ -144,7 +148,7 @@
                 }
 
                 mat-icon {
-                    color: #25A55F;
+                    color: #25a55f;
                     font-size: 28px;
                     height: 28px;
                     width: 28px;
@@ -175,25 +179,25 @@
                 position: relative;
 
                 &::marker {
-                    color: #25A55F;
+                    color: #25a55f;
                 }
 
                 strong {
-                    color: #25A55F;
+                    color: #25a55f;
                     font-weight: 500;
                 }
             }
         }
 
         .commitment {
-            background: linear-gradient(135deg, #F1F9A9 0%, #E9F679 100%);
+            background: linear-gradient(135deg, #f1f9a9 0%, #e9f679 100%);
             border-radius: 16px;
             padding: 20px;
             margin: 24px 0 12px;
 
             h4 {
                 margin-top: 0;
-                color: #25A55F;
+                color: #25a55f;
             }
 
             p {
@@ -208,7 +212,7 @@
     justify-content: flex-end;
     padding: 16px 24px 24px;
     gap: 12px;
-    border-top: 1px solid #F3F3F2;
+    border-top: 1px solid #f3f3f2;
 
     button {
         padding: 10px 20px;
@@ -220,7 +224,7 @@
     }
 
     .btn-primary {
-        background: linear-gradient(90deg, #25A55F, #1C7D48);
+        background: linear-gradient(90deg, #25a55f, #1c7d48);
         color: white;
         border: none;
         box-shadow: 0 4px 12px rgba(37, 165, 95, 0.3);

@@ -27,3 +27,17 @@ export const markNotificationAsRead = async (req, res) => {
         res.status(500).json({ message: 'Erro ao marcar notificação como lida', error: error.message });
     }
 }
+export const deleteAllNotifications = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const result = await Notification.deleteMany({ user: userId });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'Nenhuma notificação encontrada para este usuário' });
+        }
+
+        res.status(200).json({ success: true, message: `Todas as ${result.deletedCount} notificações foram removidas.` });
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao remover notificações', error: error.message });
+    }
+};

@@ -1,5 +1,5 @@
 // Libs
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Services
 import { ProductService } from '../../../../core/services/product/product.service';
@@ -33,6 +34,7 @@ import { CategoryType } from '../../../enums/category-type.enum';
 export class ModalAdvertiseProductComponent implements OnInit {
     protected productForm: FormGroup;
     protected imagePreview: string | null = null;
+    protected snackBar = inject(MatSnackBar);
 
     protected categoryOptions = [
         { value: CategoryType.TECNOLOGIA, label: 'Tecnologia' },
@@ -81,9 +83,18 @@ export class ModalAdvertiseProductComponent implements OnInit {
         try {
             await this.productService.createProduct(this.productForm.value);
             this.dialogRef.close(true);
+
+            this.snackBar.open('Produto anunciado!', 'Fechar', {
+                duration: 5000,
+                panelClass: ['success-snackbar']
+            });
         } catch (error) {
-            console.error("Erro na criação de um anúncio:", error);
             this.dialogRef.close(false);
+            
+            this.snackBar.open('Erro na criação do anúncio.', 'Fechar', {
+                duration: 5000,
+                panelClass: ['error-snackbar']
+            });
         }
     }
 
