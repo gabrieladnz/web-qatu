@@ -2,6 +2,8 @@ import { jest } from '@jest/globals';
 import * as userController from '../controllers/userController.js';
 import UserModel from '../models/userModel.js';
 import CartModel from '../models/cartModel.js';
+import request from 'supertest';
+import app from '../app.js';
 import { loginUserService } from '../services/userService.js';
 import { triggerBecomeSellerNotification } from '../utils/notificationTriggers.js';
 import { addToBlacklist } from '../utils/tokenBlacklist.js';
@@ -186,4 +188,32 @@ describe('userController', () => {
   });
 });
 
+describe('Validação funcional dos endpoints de usuário', () => {
+  it('deve retornar erro se nome estiver vazio no registro', async () => {
+    const res = await request(app)
+      .post('/api/users/register')
+      .send({ name: '', email: 'teste@teste.com', password: 'Senha123!' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors[0].msg).toMatch(/nome/i);
+  });
+
+  it('deve retornar erro se email for inválido no registro', async () => {
+    const res = await request(app)
+      .post('/api/users/register')
+      .send({ name: 'Pedro', email: 'email-invalido', password: 'Senha123!' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors[0].msg).toMatch(/email/i);
+  });
+
+  it('deve retornar erro se senha for fraca no registro', async () => {
+    const res = await request(app)
+      .post('/api/users/register')
+      .send({ name: 'Pedro', email: 'teste@teste.com', password: '123' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors[0].msg).toMatch(/senha/i);
+  });
+});
 
