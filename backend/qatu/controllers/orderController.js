@@ -162,11 +162,12 @@ export const updateOrderStatus = async (req, res) => {
       });
     }
 
-    const isBuyer = order.buyer.toString() === userId;
-    if (!isBuyer) {
-      return res.status(403).json({ 
+    // Verifica se o user é vendedor de pelo menos um produto
+    const isSeller = order.products.some(p => p.seller.toString() === userId);
+    if (!isSeller) {
+      return res.status(403).json({
         success: false,
-        message: 'Acesso negado. Apenas o comprador pode atualizar o status.'
+        message: 'Acesso negado. Apenas o vendedor pode atualizar o status deste pedido.'
       });
     }
 
@@ -174,12 +175,6 @@ export const updateOrderStatus = async (req, res) => {
     order.status = status;
     await order.save();
     await triggerOrderStatusNotification(order.buyer, status, order._id);
-
-    // Cria notificação para o comprador
-    await Notification.create({
-        user: order.buyer._id,
-        message: `O status do seu pedido ${order._id} foi atualizado para "${status}".`
-    });
 
     // Resposta com dados populados
     const updatedOrder = await Order.findById(orderId)
@@ -214,8 +209,9 @@ export const getMyOrders = async (req, res) => {
     if (status) filters.status = status;
 
     const orders = await Order.find(filters)
-      .populate('products.product', 'title price image') // Traz dados básicos do produto
-      .sort({ createdAt: -1 }); // Mais recentes primeiro
+      .populate('buyer', 'name email') 
+      .populate('products.product', 'title price') 
+      .sort({ createdAt: -1 });  
 
     res.status(200).json({
       success: true,
@@ -231,6 +227,7 @@ export const getMyOrders = async (req, res) => {
     });
   }
 };
+
 
 /**
  * Lista todos os pedidos onde o usuário logado é vendedor
@@ -260,10 +257,61 @@ export const getSellerOrders = async (req, res) => {
       orders
     });
 
+    } catch (err) {
+        if (
+        err.name === 'CastError' ||
+        (err.message && err.message.includes('Cast to ObjectId'))
+        ) {
+        return res.status(200).json({
+            success: true,
+            count: 0,
+            orders: []
+        });
+        }
+        res.status(500).json({
+        success: false,
+        message: 'Não há pedidos no momento!',
+        error: err.message
+        });
+    }
+};
+
+/**
+ * GET /api/orders/seller
+ * Retorna o histórico de vendas do vendedor logado.
+ * Responde com um array de pedidos contendo:
+ * - informações do comprador
+ * - produtos vendidos
+ * - status do pedido
+ * - data da compra
+ */
+export const getSalesHistory = async (req, res) => {
+  try {
+    const sellerId = req.userId;
+
+    const orders = await Order.find({ 'products.seller': sellerId })
+      .populate('buyer', 'name email')
+      .populate('products.product', 'title price image')
+      .sort({ createdAt: -1 });
+
+      const sales = orders.map(order => ({
+      _id: order._id,
+      buyer: order.buyer,
+      status: order.status,
+      createdAt: order.createdAt,
+      products: order.products
+        .filter(p => p.seller.toString() === sellerId)
+        .map(p => ({
+          product: p.product,
+          quantity: p.quantity,
+          price: p.product.price
+        }))
+    }));
+
+    res.status(200).json(sales);
   } catch (err) {
     res.status(500).json({
-      success: false,
-      message: 'Erro ao buscar pedidos',
+      message: 'Erro ao buscar histórico de vendas',
       error: err.message
     });
   }

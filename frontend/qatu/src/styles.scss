@@ -16,3 +16,32 @@ body {
     background-color: #ffffff !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
+
+.mat-mdc-menu-content {
+    background-color: #ffffff;
+}
+
+/* Notificação no sistema */
+.success-snackbar .mat-mdc-snack-bar-label {
+    color: white !important;
+}
+
+.success-snackbar .mat-mdc-button {
+    color: white !important;
+}
+
+.error-snackbar .mat-mdc-snack-bar-label {
+    color: white !important;
+}
+
+.error-snackbar .mat-mdc-button {
+    color: white !important;
+}
+
+.success-snackbar .mdc-snackbar__surface {
+    background-color: #25A55F !important;
+}
+
+.error-snackbar .mdc-snackbar__surface {
+    background-color: #d32f2f !important;
+}

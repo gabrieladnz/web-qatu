@@ -6,6 +6,7 @@ import { catchError, throwError } from 'rxjs';
 
 // Services
 import { TokenService } from '../services/token/token.service';
+import { Router } from '@angular/router';
 
 export const hasAuthError = signal<boolean>(false);
 export const hasConnectionError = signal<boolean>(false);
@@ -13,19 +14,21 @@ export const hasConnectionError = signal<boolean>(false);
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
     const tokenService = inject(TokenService);
     const snackBar = inject(MatSnackBar);
+    const router = inject(Router);
 
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
             if (error.status === 401) {
                 hasAuthError.set(true);
                 tokenService.delete();
+                router.navigate(['/auth/login']);
             }
 
             if (error.status === 0) {
                 hasConnectionError.set(true);
                 tokenService.delete();
                 snackBar.open('Não foi possível conectar ao servidor. Por favor, tente novamente mais tarde.', 'Fechar', {
-                    duration: 5000
+                    duration: 5000,
                 });
             }
 

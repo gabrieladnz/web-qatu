@@ -7,7 +7,7 @@ import productRoutes from './routes/productRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
-
+import paymentRoutes from './routes/paymentRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -26,8 +26,12 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/payments', paymentRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+
+// Exporta o app para testes
+export default app;

@@ -1,6 +1,7 @@
 // Libs
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 // Components
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
@@ -8,10 +9,8 @@ import { FooterComponent } from "../../shared/components/footer/footer.component
 
 @Component({
   selector: 'app-client-area',
-  imports: [NavbarComponent, FooterComponent, RouterModule],
+  imports: [NavbarComponent, FooterComponent, RouterModule, MatIconModule],
   templateUrl: './client-area.component.html',
   styleUrl: './client-area.component.scss'
 })
-export class ClientAreaComponent {
-
-}
+export class ClientAreaComponent { }

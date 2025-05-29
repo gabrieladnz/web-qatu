@@ -15,13 +15,16 @@
                 <span class="product__category-tag">{{ product.category | titlecase }}</span>
             </div>
 
-            <!-- TODO: Rever como vai funcionar a avaliação do produto  -->
-            <!-- <div class="product__rating">
+            <div class="product__rating">
                 <div class="product__stars">
-                    <span class="product__star" *ngFor="let star of generateStars(product.rating)">★</span>
+                    <span class="product__star" *ngFor="let star of [1,2,3,4,5]; let i = index"
+                        [class.product__star--filled]="i < getLastRatingScore()"
+                        [class.product__star--empty]="i >= getLastRatingScore()">
+                        ★
+                    </span>
                 </div>
-                    <span class="product__reviews">({{ product.reviews }} avaliações)</span>
-                </div> -->
+                <span class="product__reviews">({{ product.ratings?.length || 0 }} {{ getReviewText() }})</span>
+            </div>
 
             <div class="product__delivery">
                 <span class="product__delivery-text">Entrega grátis</span>
@@ -29,7 +32,7 @@
 
             <div class="product__price">
                 <span class="product__price-currency">R$</span>
-                <span class="product__price-value">{{ product.price.toFixed(2).replace('.', ',') }}</span>
+                <span class="product__price-value">{{ product.price | currency:'BRL':'':'1.2-2':'pt-BR' }}</span>
             </div>
 
             <div class="product__stock">
@@ -41,7 +44,7 @@
                 <p class="product__description-text">{{ product.description }}</p>
             </div>
 
-            <button class="product__buy-button" (click)="addToCart(product)">COMPRAR</button>
+            <button class="product__buy-button" [disabled]="!isAuthenticated" (click)="addToCart(product)">COMPRAR</button>
         </div>
     </section>
 </main>

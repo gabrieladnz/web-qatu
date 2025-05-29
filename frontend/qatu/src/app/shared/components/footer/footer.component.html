@@ -1,14 +1,16 @@
 <footer class="footer">
-    <figure class="footer__logo">
-        <img src="assets/images/logo-big.svg" alt="Logo Qatu">
-    </figure>
+  <figure class="footer__logo">
+    <img src="assets/images/logo-big.svg" alt="Logo Qatu" />
+  </figure>
 
-    <article class="footer__links">
-        <a href="/sobre-nos" class="footer__link">Sobre nós</a>
-        <a href="/central-de-ajuda" class="footer__link">Central de ajuda</a>
-        <a href="/termos-de-uso" class="footer__link">Termos de uso</a>
-        <a href="/contato" class="footer__link">Contato</a>
-    </article>
+  <article class="footer__links">
+    <a class="footer__link" (click)="openAboutModal()">Sobre nós</a>
+    <a class="footer__link" (click)="openHelpCenterModal()">Central de ajuda</a>
+    <a class="footer__link" (click)="openTermsOfUseModal()">Termos de uso</a>
+    <a class="footer__link" (click)="openContactModal()">Contato</a>
+  </article>
 
-    <span class="footer__copyright">2025 Qatu - Todos os direitos reservados</span>
+  <span class="footer__copyright">
+    2025 Qatu - Todos os direitos reservados
+  </span>
 </footer>

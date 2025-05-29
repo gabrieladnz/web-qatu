@@ -4,21 +4,25 @@ import { CanActivateFn, Router } from '@angular/router';
 
 // Services
 import { TokenService } from '../services/token/token.service';
-import { hasAuthError } from '../interceptors/auth.interceptor';
 
 export const authGuard: CanActivateFn = async (route, state) => {
     const tokenService = inject(TokenService);
     const router = inject(Router);
 
-    const isAuthenticated = await tokenService.isAuthenticated();
+    try {
+        const isAuthenticated = await tokenService.isAuthenticated();
 
-    const noAuthErrors = !hasAuthError();
+        if (!isAuthenticated) {
+            return router.createUrlTree(['/auth/login'], {
+                queryParams: { returnUrl: state.url },
+            });
+        }
 
-    if (isAuthenticated && noAuthErrors) {
         return true;
+    } catch (error) {
+        console.error('Erro no authGuard:', error);
+        return router.createUrlTree(['/auth/login'], {
+            queryParams: { returnUrl: state.url },
+        });
     }
-
-    return router.createUrlTree(['/auth/login'], {
-        queryParams: { returnUrl: state.url },
-    });
 };

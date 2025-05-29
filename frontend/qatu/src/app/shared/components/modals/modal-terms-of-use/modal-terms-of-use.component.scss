@@ -1,0 +1,355 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    overflow: auto;
+}
+
+.modal-container {
+    background-color: white;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.modal-container::-webkit-scrollbar {
+    width: 6px;
+}
+.modal-container::-webkit-scrollbar-thumb {
+    background-color: #25a55f;
+    border-radius: 8px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #f3f3f2;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #000000;
+    margin: 0;
+    position: relative;
+    display: inline-block;
+}
+
+.modal-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, #25a55f, #e1f349);
+    border-radius: 2px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background-color: #f3f3f2;
+}
+
+.modal-close mat-icon {
+    color: #666;
+    font-size: 20px;
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 24px 24px;
+    gap: 12px;
+    border-top: 1px solid #f3f3f2;
+    position: sticky;
+    bottom: 0;
+    background: white;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #25a55f, #1c7d48);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(37, 165, 95, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(37, 165, 95, 0.4);
+}
+
+.about-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.about-logo {
+    max-width: 120px;
+    margin-bottom: 16px;
+}
+
+.about-header h3 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #555;
+    margin: 0;
+}
+
+.highlight {
+    font-size: 16px;
+    color: #25a55f;
+    border-left: 3px solid #e1f349;
+    background-color: rgb(230, 248, 236); 
+    border-radius: 0 8px 8px 0; 
+    padding: 12px 16px 12px 16px; 
+    margin: 30px 0;
+    line-height: 1.6;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.feature-card {
+    background-color: #f1f9a9;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+.feature-card mat-icon {
+    color: #25a55f;
+    font-size: 28px;
+    height: 28px;
+    width: 28px;
+    margin-bottom: 10px;
+    background: white;
+    border-radius: 50%;
+    padding: 6px;
+}
+
+.feature-card h5 {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    color: #333;
+}
+
+.feature-card p {
+    font-size: 14px;
+    margin: 0;
+    color: #666;
+    line-height: 1.5;
+}
+
+.audience-list {
+    padding-left: 24px;
+    margin: 16px 0;
+}
+
+.audience-list li {
+    margin-bottom: 8px;
+    position: relative;
+    color: #444;
+}
+
+.audience-list li::marker {
+    color: #25a55f;
+}
+
+.audience-list strong {
+    color: #25a55f;
+    font-weight: 500;
+}
+
+.commitment,
+.info-block {
+    background: linear-gradient(135deg, #f1f9a9 0%, #e9f679 100%);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 24px 0;
+    transition: transform 0.3s ease;
+}
+
+.commitment h4,
+.info-block h4 {
+    margin-top: 0;
+    color: #25a55f;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.commitment p,
+.info-block p {
+    margin: 8px 0 0;
+    color: #444;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.terms-content {
+    counter-reset: terms-section;
+}
+
+.terms-block {
+    background-color: #f1f9a9; 
+    border-radius: 16px;
+    padding: 20px;
+    margin: 16px 0;
+    border: none; 
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.terms-block::before {
+    counter-increment: terms-section;
+    content: counter(terms-section);
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(135deg, #25a55f, #1c7d48);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom-right-radius: 16px;
+}
+
+.terms-block h4 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #25a55f;
+    margin: 0 0 12px 40px;
+    padding-top: 4px;
+}
+
+.terms-block p {
+    margin: 0 0 0 40px;
+    color: #444;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.terms-block:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(37, 165, 95, 0.15);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .modal-container {
+        border-radius: 16px;
+        max-width: 95%;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 16px;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .terms-block {
+        padding: 16px;
+    }
+
+    .terms-block h4 {
+        margin-left: 36px;
+        font-size: 16px;
+    }
+
+    .terms-block p {
+        margin-left: 36px;
+        font-size: 14px;
+    }
+
+    .terms-block::before {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    .commitment h4,
+    .info-block h4 {
+        font-size: 17px;
+    }
+
+    .commitment p,
+    .info-block p {
+        font-size: 14px;
+    }
+}

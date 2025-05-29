@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 
 /**
  * Conecta com o banco de dados MongoDB usando URI do .env

@@ -36,10 +36,10 @@
         </button>
         <mat-menu #userMenu="matMenu" xPosition="before">
             <ng-container *ngIf="isAuthenticated; else notLoggedIn">
-                <button mat-menu-item (click)="navigateTo('/purchase-history')">
+                <button mat-menu-item routerLink="/client/purchases">
                     <span>Minhas compras</span>
                 </button>
-                <button mat-menu-item (click)="navigateTo('/sale-history')">
+                <button mat-menu-item routerLink="/client/sales">
                     <span>Minhas vendas</span>
                 </button>
                 <button mat-menu-item [routerLink]="'/sale/page'">
