@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const loginUserService = async (email, password) => {
-    const user = await UserModel.findOne({ email});
+    const user = await UserModel.findOne({email});
     if (!user) {
         throw new Error('Usuário não encontrado');
     }
