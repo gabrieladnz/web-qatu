@@ -1,0 +1,16 @@
+---
+- name: Criar banco de dados sonar no PostgreSQL
+  hosts: local
+  become: true
+  tasks:
+    - name: Instalar pacote do cliente PostgreSQL
+      apt:
+        name: postgresql-client
+        state: present
+        update_cache: yes
+
+    - name: Criar banco de dados sonar
+      shell: |
+        docker exec -i postgres psql -U postgres -c "CREATE DATABASE sonar;"
+      args:
+        warn: false
