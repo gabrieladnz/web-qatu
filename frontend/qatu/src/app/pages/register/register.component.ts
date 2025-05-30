@@ -28,9 +28,9 @@ import { AuthService } from '../../core/services/auth/auth.service';
     styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
-    protected registerForm: FormGroup;
-    protected hidePassword: boolean = true;
-    protected registerFailed: boolean = false;
+    public registerForm: FormGroup;
+    public hidePassword: boolean = true;
+    public registerFailed: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -44,11 +44,11 @@ export class RegisterComponent {
         });
     }
 
-    protected passwordVisibility(): void {
+    public passwordVisibility(): void {
         this.hidePassword = !this.hidePassword;
     }
 
-    protected async register(): Promise<void> {
+    public async register(): Promise<void> {
         this.registerFailed = false;
 
         if (this.registerForm.valid) {
