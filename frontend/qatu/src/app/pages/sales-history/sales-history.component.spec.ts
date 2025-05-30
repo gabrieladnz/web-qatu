@@ -1,23 +1,35 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { SalesHistoryComponent } from './sales-history.component';
 
 describe('SalesHistoryComponent', () => {
-  let component: SalesHistoryComponent;
-  let fixture: ComponentFixture<SalesHistoryComponent>;
+    let component: SalesHistoryComponent;
+    let fixture: ComponentFixture<SalesHistoryComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SalesHistoryComponent]
-    })
-    .compileComponents();
+    const mockMatSnackBar = {
+        open: jasmine.createSpy('open')
+    };
 
-    fixture = TestBed.createComponent(SalesHistoryComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                SalesHistoryComponent,
+                HttpClientTestingModule,
+            ],
+            providers: [
+                { provide: MatSnackBar, useValue: mockMatSnackBar },
+            ]
+        })
+            .compileComponents();
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+        fixture = TestBed.createComponent(SalesHistoryComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
