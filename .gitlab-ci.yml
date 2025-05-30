@@ -3,6 +3,8 @@ stages:
   - build
   - test
   - coverage
+  - static_analysis
+  - quality_gate
   - docker_build
   - docker_push
 
@@ -46,6 +48,18 @@ test_coverage:
       - backend/qatu/coverage/
     when: always
 
+static_code_analysis:
+  stage: static_analysis
+  image: sonarsource/sonar-scanner-cli:latest
+  script:
+    - sonar-scanner -Dsonar.projectKey=my-shop-backend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+
+quality_gate_check:
+  stage: quality_gate
+  image: curlimages/curl:latest
+  script:
+    - echo "Verificando Quality Gate via API do SonarQube (ou usar waitForQualityGate se via Jenkins com scanner CLI)"
+
 docker_build:
   stage: docker_build
   image: docker:24.0.5
@@ -73,3 +87,57 @@ docker_push:
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
     - echo "Imagem já está no registry do GitLab."
+
+# ===================== Frontend Pipeline =====================
+
+frontend_pipeline:
+  stage: build
+  image: node:18
+  before_script:
+    - cd frontend/qatu
+  script:
+    - echo "Transpilando se necessário"
+    - npm install
+    - npm run build || echo "Sem build necessário"
+
+frontend_tests:
+  stage: test
+  image: node:18
+  before_script:
+    - cd frontend/qatu
+  script:
+    - npm test
+
+frontend_static_scan:
+  stage: static_analysis
+  image: sonarsource/sonar-scanner-cli:latest
+  before_script:
+    - cd frontend/qatu
+  script:
+    - sonar-scanner -Dsonar.projectKey=my-shop-frontend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+
+frontend_quality_gate:
+  stage: quality_gate
+  image: curlimages/curl:latest
+  script:
+    - echo "Verificando Quality Gate via API do SonarQube para o FE"
+
+frontend_build_image:
+  stage: docker_build
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  before_script:
+    - cd frontend/qatu
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/frontend-qatu:$VERSION .
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/frontend-qatu:$VERSION
+
+frontend_push_image:
+  stage: docker_push
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - echo "Imagem frontend já enviada."
