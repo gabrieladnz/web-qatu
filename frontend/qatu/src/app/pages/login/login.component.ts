@@ -28,9 +28,9 @@ import { TokenService } from '../../core/services/token/token.service';
     styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-    protected loginForm: FormGroup;
-    protected hidePassword: boolean = true;
-    protected loginFailed: boolean = false;
+    public loginForm: FormGroup;
+    public hidePassword: boolean = true;
+    public loginFailed: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -44,14 +44,14 @@ export class LoginComponent {
         });
     }
 
-    protected passwordVisibility(event?: Event) {
+    public passwordVisibility(event?: Event) {
         if (event) {
             event.preventDefault();
         }
         this.hidePassword = !this.hidePassword;
     }
 
-    protected async login(): Promise<void> {
+    public async login(): Promise<void> {
         this.loginFailed = true;
 
         if (this.loginForm.valid) {
