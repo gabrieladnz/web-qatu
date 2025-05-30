@@ -12,15 +12,11 @@ variables:
   VERSION: "DEV-1.0.0"
   IMAGE_NAME: "my-shop-backend"
 
-# Caminho até o backend
-default:
-  before_script:
-    - cd backend/qatu
-
 install_dependencies:
   stage: install
   image: node:18
   script:
+    - cd backend/qatu
     - npm ci
   artifacts:
     paths:
@@ -30,18 +26,21 @@ build_app:
   stage: build
   image: node:18
   script:
+    - cd backend/qatu
     - echo "Nada a compilar, JavaScript puro"
 
 unit_tests:
   stage: test
   image: node:18
   script:
+    - cd backend/qatu
     - npm test
 
 test_coverage:
   stage: coverage
   image: node:18
   script:
+    - cd backend/qatu
     - npm run coverage
   artifacts:
     paths:
@@ -52,6 +51,7 @@ static_code_analysis:
   stage: static_analysis
   image: sonarsource/sonar-scanner-cli:latest
   script:
+    - cd backend/qatu
     - sonar-scanner -Dsonar.projectKey=my-shop-backend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
 
 quality_gate_check:
@@ -67,7 +67,7 @@ docker_build:
     - docker:24.0.5-dind
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION .
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION backend/qatu
     - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
   artifacts:
     name: "docker-image-info"
@@ -93,9 +93,8 @@ docker_push:
 frontend_pipeline:
   stage: build
   image: node:18
-  before_script:
-    - cd frontend/qatu
   script:
+    - cd frontend/qatu
     - echo "Transpilando se necessário"
     - npm install
     - npm run build || echo "Sem build necessário"
@@ -103,17 +102,15 @@ frontend_pipeline:
 frontend_tests:
   stage: test
   image: node:18
-  before_script:
-    - cd frontend/qatu
   script:
+    - cd frontend/qatu
     - npm test
 
 frontend_static_scan:
   stage: static_analysis
   image: sonarsource/sonar-scanner-cli:latest
-  before_script:
-    - cd frontend/qatu
   script:
+    - cd frontend/qatu
     - sonar-scanner -Dsonar.projectKey=my-shop-frontend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
 
 frontend_quality_gate:
@@ -127,9 +124,8 @@ frontend_build_image:
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
-  before_script:
-    - cd frontend/qatu
   script:
+    - cd frontend/qatu
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
     - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/frontend-qatu:$VERSION .
     - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/frontend-qatu:$VERSION
