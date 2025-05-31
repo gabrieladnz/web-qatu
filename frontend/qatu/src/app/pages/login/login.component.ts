@@ -52,21 +52,21 @@ export class LoginComponent {
     }
 
     public async login(): Promise<void> {
-        this.loginFailed = true;
-
         if (this.loginForm.valid) {
-            await this.authService
-                .login(this.loginForm.value)
-                .then((response) => {
-                    if (response.success) {
-                        this.tokenService.save(response.token);
-                        this.tokenService.saveUserId(response._id);
-                        this.loginFailed = false;
-                        this.router.navigate(['/dashboard']);
-                    } else {
-                        this.loginFailed = true;
-                    }
-                });
+            try {
+                const response = await this.authService.login(this.loginForm.value);
+
+                if (response.success) {
+                    this.tokenService.save(response.token);
+                    this.tokenService.saveUserId(response._id);
+                    this.loginFailed = false;
+                    this.router.navigate(['/dashboard']);
+                } else {
+                    this.loginFailed = true;
+                }
+            } catch (error) {
+                this.loginFailed = true;
+            }
         } else {
             this.loginForm.markAllAsTouched();
         }
