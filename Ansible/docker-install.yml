@@ -2,6 +2,7 @@
 - name: Instalar Docker Engine no Ubuntu Server (sem Snap)
   hosts: all
   become: true
+  gather_facts: no
 
   tasks:
     - name: Instala dependências
