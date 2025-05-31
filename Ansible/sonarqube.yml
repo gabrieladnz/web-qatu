@@ -1,6 +1,6 @@
 ---
 - name: Deploy SonarQube com Docker
-  hosts: local
+  hosts: localhost
   become: true
   tasks:
     - name: Cria rede docker chamada dev-net

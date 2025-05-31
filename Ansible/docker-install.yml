@@ -1,6 +1,6 @@
 ---
 - name: Instalar Docker Engine no Ubuntu Server (sem Snap)
-  hosts: all
+  hosts: localhost
   become: true
 
   tasks:

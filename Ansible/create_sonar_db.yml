@@ -1,6 +1,6 @@
 ---
 - name: Criar banco de dados sonar no PostgreSQL
-  hosts: local
+  hosts: localhost
   become: true
   tasks:
     - name: Instalar pacote do cliente PostgreSQL

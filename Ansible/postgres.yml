@@ -1,6 +1,6 @@
 ---
 - name: Deploy PostgreSQL com Docker
-  hosts: local
+  hosts: localhost
   become: true
   tasks:
     - name: Cria diretório de volume para dados do Postgres
