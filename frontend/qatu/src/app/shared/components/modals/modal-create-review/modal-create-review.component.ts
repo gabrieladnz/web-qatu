@@ -97,7 +97,7 @@ export class ModalCreateReviewComponent implements OnInit {
         } catch (error: any) {
             this.snackBar.open('Erro ao enviar avaliação.', 'Fechar', {
                 duration: 5000,
-                panelClass: ['success-snackbar']
+                panelClass: ['error-snackbar']
             });
 
             this.errorMessage = error?.message || 'Erro ao enviar avaliação. Tente novamente.';
