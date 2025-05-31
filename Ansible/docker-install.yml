@@ -2,7 +2,6 @@
 - name: Instalar Docker Engine no Ubuntu Server (sem Snap)
   hosts: all
   become: true
-  gather_facts: no
 
   tasks:
     - name: Instala dependências
@@ -14,6 +13,9 @@
           - lsb-release
         state: present
         update_cache: yes
+        force_apt_get: yes
+      environment:
+        DEBIAN_FRONTEND: noninteractive
 
     - name: Adiciona chave GPG oficial do Docker
       ansible.builtin.apt_key:
@@ -29,6 +31,9 @@
     - name: Atualiza cache do APT
       apt:
         update_cache: yes
+        force_apt_get: yes
+      environment:
+        DEBIAN_FRONTEND: noninteractive
 
     - name: Instala Docker Engine, CLI e containerd
       apt:
@@ -37,6 +42,9 @@
           - docker-ce-cli
           - containerd.io
         state: latest
+        force_apt_get: yes
+      environment:
+        DEBIAN_FRONTEND: noninteractive
 
     - name: Garante que o serviço Docker está ativo e habilitado
       systemd:
