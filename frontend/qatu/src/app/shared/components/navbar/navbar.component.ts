@@ -37,7 +37,7 @@ import { TokenService } from '../../../core/services/token/token.service';
 export class NavbarComponent implements OnInit {
     @Output() products = new EventEmitter<Product[]>();
     @ViewChild('categoriesContainer') categoriesContainer!: ElementRef;
-    
+
     protected searchValue: string = '';
     protected CategoryType = CategoryType;
     protected selectedCategory: string = '';
@@ -56,10 +56,11 @@ export class NavbarComponent implements OnInit {
         private router: Router,
         public dialog: MatDialog,
         private tokenService: TokenService,
-        private snackBar: MatSnackBar
-    ) {}
+        private snackBar: MatSnackBar,
+        private dialogRef: MatDialog
+    ) { }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     get isAuthenticated(): boolean {
         return this.tokenService.isAuthenticated();
@@ -115,7 +116,7 @@ export class NavbarComponent implements OnInit {
     }
 
     protected openModalCart(): void {
-        this.dialog.open(ModalCartComponent, {
+        const dialogRef = this.dialog.open(ModalCartComponent, {
             width: '400px',
             height: '100%',
             panelClass: 'custom__modal',
@@ -123,6 +124,12 @@ export class NavbarComponent implements OnInit {
             position: {
                 right: '0',
             },
+            exitAnimationDuration: 6000,
+            enterAnimationDuration: -6000
+        });
+
+        dialogRef.beforeClosed().subscribe(() => {
+            dialogRef.addPanelClass('modal__closed');
         });
     }
 
@@ -141,9 +148,9 @@ export class NavbarComponent implements OnInit {
 
     protected startDrag(event: MouseEvent | TouchEvent): void {
         this.isDragging = true;
-        
+
         const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
-        
+
         this.startX = clientX;
         this.scrollLeft = this.categoriesContainer.nativeElement.scrollLeft;
         this.categoriesContainer.nativeElement.style.cursor = 'grabbing';
@@ -153,9 +160,9 @@ export class NavbarComponent implements OnInit {
     protected onDrag(event: MouseEvent | TouchEvent): void {
         if (!this.isDragging) return;
         event.preventDefault();
-        
+
         const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
-        const walk = (clientX - this.startX) * 2; 
+        const walk = (clientX - this.startX) * 2;
         this.categoriesContainer.nativeElement.scrollLeft = this.scrollLeft - walk;
     }
 
