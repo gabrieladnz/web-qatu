@@ -39,9 +39,13 @@ body {
 }
 
 .success-snackbar .mdc-snackbar__surface {
-    background-color: #25A55F !important;
+    background-color: #25a55f !important;
 }
 
 .error-snackbar .mdc-snackbar__surface {
     background-color: #d32f2f !important;
+}
+
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+    border-radius: 32px 0 0 32px !important;
 }
