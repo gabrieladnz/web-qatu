@@ -24,7 +24,7 @@
       ansible.builtin.file:
         path: /etc/apt/keyrings
         state: directory
-        mode: "0755" 
+        mode: "0755"
 
     - name: Adiciona chave GPG oficial do Docker
       ansible.builtin.apt_key:
