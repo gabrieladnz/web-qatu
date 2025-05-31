@@ -85,7 +85,17 @@
 </header>
 
 <header class="categories">
-    <div class="categories__content">
+    <div
+        class="categories__content"
+        #categoriesContainer
+        (mousedown)="startDrag($event)"
+        (mousemove)="onDrag($event)"
+        (mouseup)="endDrag()"
+        (mouseleave)="endDrag()"
+        (touchstart)="startDrag($event)"
+        (touchmove)="onDrag($event)"
+        (touchend)="endDrag()"
+    >
         <a
             (click)="searchToCategory(undefined)"
             class="categories__content__item"
