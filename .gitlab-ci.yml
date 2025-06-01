@@ -53,10 +53,10 @@ static_code_analysis:
   script:
     - cd backend/qatu
     - sonar-scanner
-      -Dsonar.sources=src
-      -Dsonar.host.url=https://sonarcloud.io
-      -Dsonar.login=squ_02ff4e91860fc4623f0d8fd5eddc88622a1b2e47
-      -Dsonar.token=sqp_1a03eb6997e915f3277da46bd66a08b184c0fc46
+        -Dsonar.projectKey=my-shop-backend
+        -Dsonar.sources=src
+        -Dsonar.host.url=$SONAR_HOST_URL
+        -Dsonar.token=$SONAR_TOKEN_BACKEND
 
 quality_gate_check:
   stage: quality_gate
@@ -128,10 +128,10 @@ frontend_static_scan:
   script:
     - cd frontend/qatu
     - sonar-scanner
-      -Dsonar.sources=src
-      -Dsonar.host.url=https://sonarcloud.io
-      -Dsonar.login=squ_02ff4e91860fc4623f0d8fd5eddc88622a1b2e47
-      -Dsonar.token=sqp_45da4c311b70c4d98f92e62bfb030f4c00a3eb4a
+        -Dsonar.projectKey=my-shop-frontend
+        -Dsonar.sources=src
+        -Dsonar.host.url=$SONAR_HOST_URL
+        -Dsonar.token=$SONAR_TOKEN_FRONTEND
 
 frontend_quality_gate:
   stage: quality_gate
