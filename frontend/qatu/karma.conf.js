@@ -29,7 +29,6 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['ChromeHeadless'],
     singleRun: true,
     restartOnFileChange: false,
     
@@ -46,12 +45,6 @@ module.exports = function (config) {
           '--disable-web-security'
         ]
       }
-    },
-
-    // Configurações de timeout para CI
-    browserDisconnectTimeout: 10000,
-    browserDisconnectTolerance: 3,
-    browserNoActivityTimeout: 60000,
-    captureTimeout: 60000
+    }
   });
 };
