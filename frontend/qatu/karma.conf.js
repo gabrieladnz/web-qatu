@@ -1,3 +1,5 @@
+process.env.CHROME_BIN = process.env.CHROME_BIN || '/usr/bin/google-chrome-stable';
+
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -10,7 +12,7 @@ module.exports = function (config) {
       require('@angular-devkit/build-angular/plugins/karma'),
     ],
     client: {
-      clearContext: false, // leave Jasmine Spec Runner output visible in browser
+      clearContext: false,
     },
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage'),
@@ -31,7 +33,7 @@ module.exports = function (config) {
     singleRun: true,
     restartOnFileChange: false,
     
-    browsers: ['ChromeHeadlessCINoSandbox'],
+    browsers: process.env.CI ? ['ChromeHeadlessCINoSandbox'] : ['Chrome'],
     customLaunchers: {
       ChromeHeadlessCINoSandbox: {
         base: 'ChromeHeadless',
@@ -45,7 +47,7 @@ module.exports = function (config) {
         ]
       }
     },
-    
+
     // Configurações de timeout para CI
     browserDisconnectTimeout: 10000,
     browserDisconnectTolerance: 3,
