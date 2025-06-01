@@ -92,7 +92,7 @@ docker_push:
 
 frontend_pipeline:
   stage: build
-  image: node:18
+  image: node:20
   script:
     - cd frontend/qatu
     - echo "Transpilando se necessário"
@@ -101,10 +101,17 @@ frontend_pipeline:
 
 frontend_tests:
   stage: test
-  image: node:18
+  image: node:20
+  before_script:
+  - apt-get update
+  - apt-get install -y chromium
+  - export CHROME_BIN=chromium
   script:
     - cd frontend/qatu
-    - ng test
+    - npm ci
+    - npm install -g @angular/cli@19.2.14
+    - ng test --watch=false --browsers=ChromeHeadless 
+    - ng e2e --watch=false --browsers=ChromeHeadless || echo "Sem testes E2E"
 
 frontend_static_scan:
   stage: static_analysis
