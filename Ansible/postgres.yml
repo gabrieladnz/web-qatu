@@ -1,0 +1,24 @@
+---
+- name: Deploy PostgreSQL com Docker
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Cria diretório de volume para dados do Postgres
+      file:
+        path: /opt/postgres-data
+        state: directory
+        mode: '0755'
+
+    - name: Executa container PostgreSQL
+      docker_container:
+        name: postgres
+        image: postgres:15
+        state: started
+        restart_policy: always
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        volumes:
+          - /opt/postgres-data:/var/lib/postgresql/data
