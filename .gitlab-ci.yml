@@ -105,7 +105,6 @@ frontend_tests:
   before_script:
     - apt-get update
     - apt-get install -y chromium
-    - npm ci
     - npm install -g @angular/cli@19.2.14
   script:
     - cd frontend/qatu
