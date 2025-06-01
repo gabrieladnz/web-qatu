@@ -31,24 +31,20 @@ module.exports = function (config) {
     singleRun: true,
     restartOnFileChange: false,
     
-    // Configurações específicas para ambiente CI
+    browsers: ['ChromeHeadlessCINoSandbox'],
     customLaunchers: {
-      ChromeHeadlessCI: {
+      ChromeHeadlessCINoSandbox: {
         base: 'ChromeHeadless',
         flags: [
           '--no-sandbox',
-          '--disable-web-security',
           '--disable-gpu',
           '--disable-dev-shm-usage',
-          '--disable-extensions',
-          '--remote-debugging-port=9222',
-          '--headless'
+          '--disable-setuid-sandbox',
+          '--headless',
+          '--disable-web-security'
         ]
       }
     },
-    
-    // Usar ChromeHeadlessCI em ambiente CI
-    browsers: process.env.CI ? ['ChromeHeadlessCI'] : ['ChromeHeadless'],
     
     // Configurações de timeout para CI
     browserDisconnectTimeout: 10000,
