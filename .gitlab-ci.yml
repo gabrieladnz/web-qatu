@@ -113,10 +113,16 @@ frontend_tests:
     - apt-get update -qq
     - apt-get install -y -qq google-chrome-stable
     - npm ci
-    - ls -la karma.conf.js
-    - echo "Verificando configuração do Karma..."
   script:
-    - npx ng test --watch=false --browsers=ChromeHeadless
+    - pwd
+    - ls -la
+    - echo "=== Procurando karma.conf.js ==="
+    - find . -name "karma.conf.js" -type f
+    - echo "=== Verificando angular.json ==="
+    - cat angular.json | grep -A 10 -B 5 "test"
+    - echo "=== Verificando package.json scripts ==="
+    - cat package.json | grep -A 5 -B 5 "test"
+    - npx ng test --watch=false --karma-config=./karma.conf.js --browsers=ChromeHeadless
   retry:
     max: 1
 
