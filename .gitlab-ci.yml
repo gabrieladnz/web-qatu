@@ -103,13 +103,11 @@ frontend_tests:
   stage: test
   image: node:20
   before_script:
-    - apt-get update
-    - apt-get install -y chromium
+    - cd frontend/qatu
     - npm install -g @angular/cli@19.2.14
   script:
-    - cd frontend/qatu
     - npm ci
-    - ng test --watch=false
+    - ng test --watch=false --browsers=ChromeHeadless
 
 frontend_static_scan:
   stage: static_analysis
