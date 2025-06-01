@@ -1,6 +1,10 @@
 process.env.CHROME_BIN = process.env.CHROME_BIN || '/usr/bin/google-chrome-stable';
 
 module.exports = function (config) {
+  console.log('🔍 Configurando Karma...');
+  console.log('CI environment:', process.env.CI);
+  console.log('Chrome bin:', process.env.CHROME_BIN);
+  
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
@@ -32,7 +36,6 @@ module.exports = function (config) {
     singleRun: true,
     restartOnFileChange: false,
     
-    // Usar configuração específica para CI
     browsers: process.env.CI ? ['ChromeHeadlessCINoSandbox'] : ['Chrome'],
     
     customLaunchers: {
@@ -60,4 +63,6 @@ module.exports = function (config) {
     browserDisconnectTolerance: 3,
     browserNoActivityTimeout: 60000
   });
+  
+  console.log('✅ Karma configurado com browsers:', config.browsers || ['padrão']);
 };
