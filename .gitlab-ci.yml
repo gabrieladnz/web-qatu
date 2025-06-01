@@ -110,7 +110,7 @@ frontend_tests:
     - cd frontend/qatu
     - npm ci
     - npm install -g @angular/cli@19.2.14
-    - ng test --watch=false --browsers=ChromeHeadless 
+    - ng test --watch=false --browsers=ChromeHeadless --no-sandbox
     - ng e2e --watch=false --browsers=ChromeHeadless || echo "Sem testes E2E"
 
 frontend_static_scan:
