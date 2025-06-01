@@ -102,20 +102,25 @@ frontend_pipeline:
 frontend_tests:
   stage: test
   image: node:20
+  variables:
+    CI: "true"
+    CHROME_BIN: "/usr/bin/google-chrome-stable"
   before_script:
     - cd frontend/qatu
     - apt-get update -qq
-    - apt-get install -y -qq wget gnupg
-    - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-    - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+    - apt-get install -y -qq wget gnupg software-properties-common
+    - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg
+    - echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list
     - apt-get update -qq
     - apt-get install -y -qq google-chrome-stable --no-install-recommends
+    - google-chrome-stable --version
     - npm ci
   script:
-    - export CHROME_BIN=/usr/bin/google-chrome-stable
-    - export CHROME_FLAGS="--no-sandbox --disable-web-security --disable-gpu --disable-dev-shm-usage"
-    - npx ng test --watch=false
-
+    - npx ng test --watch=false --browsers=ChromeHeadlessCINoSandbox
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
 
 frontend_static_scan:
   stage: static_analysis
