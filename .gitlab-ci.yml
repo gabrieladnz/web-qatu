@@ -101,12 +101,13 @@ frontend_pipeline:
 
 frontend_tests:
   stage: test
-  image: node:20
+  image: cimg/node:20.11-browsers
   before_script:
     - cd frontend/qatu
+    - node --version
     - npm install -g @angular/cli@19.2.14
-  script:
     - npm ci
+  script:
     - ng test --watch=false --browsers=ChromeHeadless
 
 frontend_static_scan:
