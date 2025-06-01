@@ -52,7 +52,7 @@ static_code_analysis:
   image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd backend/qatu
-    - sonar-scanner -Dsonar.projectKey=my-shop-backend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+    - sonar-scanner -Dsonar.projectKey=my-shop-backend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN_BACKEND
 
 quality_gate_check:
   stage: quality_gate
@@ -114,14 +114,6 @@ frontend_tests:
     - apt-get install -y -qq google-chrome-stable
     - npm ci
   script:
-    - pwd
-    - ls -la
-    - echo "=== Procurando karma.conf.js ==="
-    - find . -name "karma.conf.js" -type f
-    - echo "=== Verificando angular.json ==="
-    - cat angular.json | grep -A 10 -B 5 "test"
-    - echo "=== Verificando package.json scripts ==="
-    - cat package.json | grep -A 5 -B 5 "test"
     - npx ng test --watch=false --karma-config=./karma.conf.js --browsers=ChromeHeadlessCINoSandbox
   retry:
     max: 1
@@ -131,7 +123,7 @@ frontend_static_scan:
   image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd frontend/qatu
-    - sonar-scanner -Dsonar.projectKey=my-shop-frontend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+    - sonar-scanner -Dsonar.projectKey=my-shop-frontend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN_FRONTEND
 
 frontend_quality_gate:
   stage: quality_gate

@@ -1,8 +1,5 @@
 module.exports = function (config) {
   process.env.CHROME_BIN = process.env.CHROME_BIN || '/usr/bin/google-chrome-stable';
-  console.log('🔍 Configurando Karma...');
-  console.log('CI environment:', process.env.CI);
-  console.log('Chrome bin:', process.env.CHROME_BIN);
   
   config.set({
     basePath: '',
