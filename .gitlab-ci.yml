@@ -114,7 +114,7 @@ frontend_tests:
   script:
     - export CHROME_BIN=/usr/bin/google-chrome-stable
     - export CHROME_FLAGS="--no-sandbox --disable-web-security --disable-gpu --disable-dev-shm-usage"
-    - npx ng test --watch=false --browsers=ChromeHeadless
+    - npx ng test --watch=false --browsers=ChromeHeadless --no-sandbox
 
 frontend_static_scan:
   stage: static_analysis
