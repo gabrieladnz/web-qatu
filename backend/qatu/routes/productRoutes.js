@@ -23,7 +23,7 @@ router.get('/:id', getProductById);
 
 // Rotas protegidas
 router.post('/', authenticate, isSeller, validateProduct, handleValidationErrors, createProduct);
-router.post('/:id/review', authenticate, isSeller, addProductReview);
+router.post('/:id/review', authenticate, addProductReview);
 router.put('/:id', authenticate, isSeller, validateProduct, handleValidationErrors, updateProduct);
 router.delete('/:id', authenticate, isSeller, deleteProduct);
 

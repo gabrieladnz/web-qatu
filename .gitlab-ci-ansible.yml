@@ -1,0 +1,42 @@
+stages:
+  - validate
+  - lint
+  - dry_run
+  - deploy
+
+variables:
+  ANSIBLE_FORCE_COLOR: 1  
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq python3-pip sshpass
+  - pip3 install --quiet ansible ansible-lint
+
+validate_playbook:
+  stage: validate
+  image: python:3.10
+  script:
+    - ansible-playbook docker-install.yml --syntax-check
+
+lint_playbook:
+  stage: lint
+  image: python:3.10
+  script:
+    - ansible-lint docker-install.yml
+
+dry_run_playbook:
+  stage: dry_run
+  image: python:3.10
+  script:
+    - ansible-playbook docker-install.yml --check -vvv
+  only:
+    - merge_requests 
+
+deploy_playbook:
+  stage: deploy
+  image: python:3.10
+  script:
+    - echo "$SSH_PRIVATE_KEY" > ssh_key && chmod 600 ssh_key
+    - ansible-playbook docker-install.yml -i hosts --key-file ssh_key
+  only:
+    - main  # Executa apenas no branch principal
+  when: manual  # Deploy requer aprovação manual

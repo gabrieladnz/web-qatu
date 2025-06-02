@@ -1,6 +1,6 @@
 // Libs
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -36,6 +36,8 @@ import { TokenService } from '../../../core/services/token/token.service';
 })
 export class NavbarComponent implements OnInit {
     @Output() products = new EventEmitter<Product[]>();
+    @ViewChild('categoriesContainer') categoriesContainer!: ElementRef;
+
     protected searchValue: string = '';
     protected CategoryType = CategoryType;
     protected selectedCategory: string = '';
@@ -46,14 +48,19 @@ export class NavbarComponent implements OnInit {
         'Notificação 3',
     ];
 
+    private isDragging = false;
+    private startX = 0;
+    private scrollLeft = 0;
+
     constructor(
         private router: Router,
         public dialog: MatDialog,
         private tokenService: TokenService,
-        private snackBar: MatSnackBar
-    ) {}
+        private snackBar: MatSnackBar,
+        private dialogRef: MatDialog
+    ) { }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     get isAuthenticated(): boolean {
         return this.tokenService.isAuthenticated();
@@ -109,7 +116,7 @@ export class NavbarComponent implements OnInit {
     }
 
     protected openModalCart(): void {
-        this.dialog.open(ModalCartComponent, {
+        const dialogRef = this.dialog.open(ModalCartComponent, {
             width: '400px',
             height: '100%',
             panelClass: 'custom__modal',
@@ -117,6 +124,12 @@ export class NavbarComponent implements OnInit {
             position: {
                 right: '0',
             },
+            exitAnimationDuration: 6000,
+            enterAnimationDuration: -6000
+        });
+
+        dialogRef.beforeClosed().subscribe(() => {
+            dialogRef.addPanelClass('modal__closed');
         });
     }
 
@@ -131,5 +144,31 @@ export class NavbarComponent implements OnInit {
     protected clearAllNotifications() {
         this.notifications = [];
         console.log('Todas as notificações foram limpas!');
+    }
+
+    protected startDrag(event: MouseEvent | TouchEvent): void {
+        this.isDragging = true;
+
+        const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+
+        this.startX = clientX;
+        this.scrollLeft = this.categoriesContainer.nativeElement.scrollLeft;
+        this.categoriesContainer.nativeElement.style.cursor = 'grabbing';
+        this.categoriesContainer.nativeElement.style.userSelect = 'none';
+    }
+
+    protected onDrag(event: MouseEvent | TouchEvent): void {
+        if (!this.isDragging) return;
+        event.preventDefault();
+
+        const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+        const walk = (clientX - this.startX) * 2;
+        this.categoriesContainer.nativeElement.scrollLeft = this.scrollLeft - walk;
+    }
+
+    protected endDrag(): void {
+        this.isDragging = false;
+        this.categoriesContainer.nativeElement.style.cursor = 'grab';
+        this.categoriesContainer.nativeElement.style.removeProperty('user-select');
     }
 }
