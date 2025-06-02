@@ -52,7 +52,7 @@ static_code_analysis:
   image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd backend/qatu
-    - sonar \
+    - sonar-scanner \
       -Dsonar.host.url=$SONAR_HOST_URL \
       -Dsonar.token=$SONAR_TOKEN_BACKEND \
       -Dsonar.projectKey=testdeploy_qatu-backend
@@ -126,7 +126,7 @@ frontend_static_scan:
   image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd frontend/qatu
-    - sonar \
+    - sonar-scanner \
       -Dsonar.host.url=$SONAR_HOST_URL \
       -Dsonar.token=$SONAR_TOKEN_FRONTEND \
       -Dsonar.projectKey=testdeploy_my-shop-frontend
