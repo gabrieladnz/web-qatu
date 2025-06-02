@@ -52,7 +52,7 @@ static_code_analysis:
   image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd backend/qatu
-    - sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.organization=TestDeploy -Dsonar.token=$SONAR_TOKEN_BACKEND -Dsonar.projectKey=testdeploy_qatu-backend
+    - sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.organization=testdeploy -Dsonar.token=$SONAR_TOKEN_BACKEND -Dsonar.projectKey=testdeploy_qatu-backend
 
 quality_gate_check:
   stage: quality_gate
@@ -123,7 +123,7 @@ frontend_static_scan:
   image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd frontend/qatu
-    - sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.organization=TestDeploy -Dsonar.token=$SONAR_TOKEN_FRONTEND -Dsonar.projectKey=testdeploy_my-shop-frontend
+    - sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.organization=testdeploy -Dsonar.token=$SONAR_TOKEN_FRONTEND -Dsonar.projectKey=testdeploy_my-shop-frontend
 
 frontend_quality_gate:
   stage: quality_gate
