@@ -53,7 +53,7 @@ export class ProductService extends ApiService {
     public async createProduct(product: CreateProductRequest): Promise<ProductResponse> {
         try {
             const token = this.tokenService.get() || undefined;
-            
+
             return await lastValueFrom(
                 this.post<ProductResponse>('products', product, token)
             );
@@ -99,8 +99,10 @@ export class ProductService extends ApiService {
 
     public async createReview(productId: string, review: CreateReviewRequest): Promise<CreateReviewResponse> {
         try {
+            const token = this.tokenService.get() || undefined;
+
             return await lastValueFrom(
-                this.post<CreateReviewResponse>(`products/${productId}/review`, review)
+                this.post<CreateReviewResponse>(`products/${productId}/review`, review, token)
             );
         } catch (error) {
             const errorResponse = {

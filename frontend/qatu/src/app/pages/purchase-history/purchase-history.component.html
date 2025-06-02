@@ -13,8 +13,15 @@
 
                 <div class="order-card__status">
                     <span class="status-badge status-badge--{{ order.status }}">
-                        {{ order.status }}
+                        {{ getStatusLabel(order.status) }}
                     </span>
+
+                    @if (order.status === 'delivered') {
+                    <button class="order-card__status__review-button" (click)="openReviewModal(order)">
+                        <mat-icon>star_rate</mat-icon>
+                        Avaliar produto
+                    </button>
+                    }
                 </div>
             </header>
 
@@ -51,7 +58,8 @@
         }
         } @else {
         <figure style="text-align: center;">
-            <img src="assets/figures/empty-search.svg" style="width: 40%; max-width: 250px;" alt="Ilustração de pesquisa vazia">
+            <img src="assets/figures/empty-search.svg" style="width: 40%; max-width: 250px;"
+                alt="Ilustração de pesquisa vazia">
         </figure>
         }
     </section>

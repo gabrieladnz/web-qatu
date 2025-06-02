@@ -175,6 +175,13 @@
         &:hover {
             background-color: darken(#25A55F, 10%);
         }
+
+        &:disabled {
+            background-color: #ccc !important;
+            color: #666 !important;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
     }
 }
 
