@@ -23,11 +23,11 @@ body {
 
 /* Notificação no sistema */
 .success-snackbar .mat-mdc-snack-bar-label {
-    color: white !important;
+    color: black !important;
 }
 
 .success-snackbar .mat-mdc-button {
-    color: white !important;
+    color: black !important;
 }
 
 .error-snackbar .mat-mdc-snack-bar-label {
@@ -39,7 +39,7 @@ body {
 }
 
 .success-snackbar .mdc-snackbar__surface {
-    background-color: #25a55f !important;
+    background-color: #E9F679 !important;
 }
 
 .error-snackbar .mdc-snackbar__surface {
