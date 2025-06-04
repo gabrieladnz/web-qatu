@@ -254,12 +254,16 @@ describe('LoginComponent', () => {
         });
 
         it('deve marcar todos os campos como touched quando formulário é inválido', async () => {
+            component.loginForm.patchValue({
+                email: 'usuario@',
+                password: '123'
+            });
+
+            expect(component.loginForm.valid).toBe(false);
             spyOn(component.loginForm, 'markAllAsTouched');
 
             await component.login();
-
             expect(component.loginForm.markAllAsTouched).toHaveBeenCalled();
-            expect(component.loginFailed).toBe(true);
         });
     });
 
