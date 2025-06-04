@@ -9,7 +9,7 @@ stages:
   - docker_push
 
 variables:
-  VERSION: "DEV-1.0.0"
+  VERSION: "DEV-1.1.0"
   IMAGE_NAME: "my-shop-backend"
 
 install_dependencies:
@@ -52,7 +52,7 @@ static_code_analysis:
   image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd backend/qatu
-    - sonar-scanner -Dsonar.projectKey=my-shop-backend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+    - sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.organization=testdeploy -Dsonar.token=$SONAR_TOKEN_BACKEND -Dsonar.projectKey=testdeploy_qatu-backend
 
 quality_gate_check:
   stage: quality_gate
@@ -92,7 +92,7 @@ docker_push:
 
 frontend_pipeline:
   stage: build
-  image: node:18
+  image: node:20
   script:
     - cd frontend/qatu
     - echo "Transpilando se necessário"
@@ -101,17 +101,29 @@ frontend_pipeline:
 
 frontend_tests:
   stage: test
-  image: node:18
-  script:
+  image: node:20
+  variables:
+    CI: "true"
+  before_script:
     - cd frontend/qatu
-    - npm test
+    - apt-get update -qq
+    - apt-get install -y -qq wget gnupg
+    - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+    - echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+    - apt-get update -qq
+    - apt-get install -y -qq google-chrome-stable
+    - npm ci
+  script:
+    - npx ng test --watch=false --karma-config=./karma.conf.js --browsers=ChromeHeadlessCINoSandbox
+  retry:
+    max: 1
 
 frontend_static_scan:
   stage: static_analysis
   image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd frontend/qatu
-    - sonar-scanner -Dsonar.projectKey=my-shop-frontend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+    - sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.organization=testdeploy -Dsonar.token=$SONAR_TOKEN_FRONTEND -Dsonar.projectKey=testdeploy_my-shop-frontend
 
 frontend_quality_gate:
   stage: quality_gate
@@ -125,10 +137,9 @@ frontend_build_image:
   services:
     - docker:24.0.5-dind
   script:
-    - cd frontend/qatu
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/frontend-qatu:$VERSION .
-    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/frontend-qatu:$VERSION
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION frontend/qatu
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
 
 frontend_push_image:
   stage: docker_push
