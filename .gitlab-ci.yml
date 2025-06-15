@@ -7,6 +7,7 @@ stages:
   - quality_gate
   - docker_build
   - docker_push
+  - acceptance_tests
 
 variables:
   VERSION: "DEV-1.1.0"
@@ -88,6 +89,54 @@ docker_push:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
     - echo "Imagem já está no registry do GitLab."
 
+acceptance_tests:
+  stage: acceptance_tests
+  image: curlimages/curl:latest
+  script:
+    - |
+      echo "Executando testes de aceitação no ambiente de produção..."
+
+      # Gera e-mail randômico
+      EMAIL="teste+$(date +%s)@teste.com"
+      echo "E-mail de teste gerado: $EMAIL"
+
+      # 1. Teste GET /api/products
+      echo "Testando GET /api/products"
+      code=$(curl -s -o /dev/null -w "%{http_code}" https://qatu-backend-production.up.railway.app/api/products)
+      if [ "$code" != "200" ]; then
+        echo "❌ /api/products falhou - HTTP $code"
+        exit 1
+      fi
+
+      # 2. Teste GET /api/products/:id
+      echo "Testando GET /api/products/683d16f0bd2722a068f98431"
+      code=$(curl -s -o /dev/null -w "%{http_code}" https://qatu-backend-production.up.railway.app/api/products/683d16f0bd2722a068f98431)
+      if [ "$code" != "200" ]; then
+        echo "❌ /api/products/:id falhou - HTTP $code"
+        exit 1
+      fi
+
+      # 3. Teste POST /api/users/register
+      echo "Testando POST /api/users/register com e-mail $EMAIL"
+      code=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://qatu-backend-production.up.railway.app/api/users/register \
+        -H "Content-Type: application/json" \
+        -d "{\"name\":\"Teste\",\"email\":\"$EMAIL\",\"password\":\"123456\"}")
+      if [ "$code" != "201" ] && [ "$code" != "200" ]; then
+        echo "❌ /api/users/register falhou - HTTP $code"
+        exit 1
+      fi
+
+      # 4. Teste POST /api/users/login
+      echo "Testando POST /api/users/login com e-mail $EMAIL"
+      code=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://qatu-backend-production.up.railway.app/api/users/login \
+        -H "Content-Type: application/json" \
+        -d "{\"email\":\"$EMAIL\",\"password\":\"123456\"}")
+      if [ "$code" != "200" ]; then
+        echo "❌ /api/users/login falhou - HTTP $code"
+        exit 1
+      fi
+  only:
+    - main
 # ===================== Frontend Pipeline =====================
 
 frontend_pipeline:
