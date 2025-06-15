@@ -89,7 +89,7 @@ docker_push:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
     - echo "Imagem já está no registry do GitLab."
 
-acceptance_tests_backend:
+acceptance_tests:
   stage: acceptance_tests
   image: curlimages/curl:latest
   script:
