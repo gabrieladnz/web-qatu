@@ -11,7 +11,7 @@ stages:
   - acceptance_tests
 
 variables:
-  VERSION: "DEV-1.1.0"
+  VERSION: "DEV-2.3.2"
   IMAGE_NAME: "my-shop-backend"
 
 install_dependencies:
