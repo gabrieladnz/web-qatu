@@ -136,8 +136,6 @@ acceptance_tests:
         echo "❌ /api/users/login falhou - HTTP $code"
         exit 1
       fi
-  only:
-    - main
 # ===================== Frontend Pipeline =====================
 
 frontend_pipeline:
