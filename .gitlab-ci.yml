@@ -121,7 +121,7 @@ acceptance_tests:
       echo "Testando POST /api/users/register com e-mail $EMAIL"
       code=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://qatu-backend-production.up.railway.app/api/users/register \
         -H "Content-Type: application/json" \
-        -d "{\"name\":\"Teste\",\"email\":\"$EMAIL\",\"password\":\"123456\"}")
+        -d "{\"name\":\"Teste\",\"email\":\"$EMAIL\",\"password\":\"Pipe#123\"}")
       if [ "$code" != "201" ] && [ "$code" != "200" ]; then
         echo "❌ /api/users/register falhou - HTTP $code"
         exit 1
@@ -131,7 +131,7 @@ acceptance_tests:
       echo "Testando POST /api/users/login com e-mail $EMAIL"
       code=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://qatu-backend-production.up.railway.app/api/users/login \
         -H "Content-Type: application/json" \
-        -d "{\"email\":\"$EMAIL\",\"password\":\"123456\"}")
+        -d "{\"email\":\"$EMAIL\",\"password\":\"Pipe#123\"}")
       if [ "$code" != "200" ]; then
         echo "❌ /api/users/login falhou - HTTP $code"
         exit 1
