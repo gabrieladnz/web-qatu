@@ -170,7 +170,7 @@ deploy_dev_backend:
         '
       "
 
-  deploy_prod_backend:
+deploy_prod_backend:
   stage: deploy
   only:
     - main
