@@ -155,9 +155,12 @@ deploy_dev:
   - chmod 644 ~/.ssh/known_hosts
   script:
     - echo "Conectando ao proxy e acessando ambiente de desenvolvimento..."
-    - ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university '
+    - >
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university '
         ssh ubuntu@10.27.5.174 "
-          echo \"$CI_REGISTRY_PASSWORD\" | docker login -u \"$CI_REGISTRY_USER\" --password-stdin $CI_REGISTRY &&
+          echo \"Fazendo login no Docker Registry...\"
+          echo \"$CI_REGISTRY_PASSWORD\" | docker login -u \"$CI_REGISTRY_USER\" --password-stdin \"$CI_REGISTRY\" &&
+          echo \"Puxando imagem: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION\" &&
           docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION &&
           docker stop backend-dev || true &&
           docker rm backend-dev || true &&
