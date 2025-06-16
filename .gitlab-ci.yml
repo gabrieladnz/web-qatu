@@ -189,7 +189,7 @@ deploy_prod_backend:
     - echo "Iniciando estratégia Blue-Green em produção..."
     - >
       ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
-        ssh ubuntu@10.27.5.174 '
+        ssh ubuntu@10.27.5.152 '
           echo \"Detectando ambiente ativo (green/blue)...\"
           ACTIVE_ENV=\$(docker ps --filter name=backend-green --format \"{{.Names}}\" | grep -q backend-green && echo green || echo blue)
 
