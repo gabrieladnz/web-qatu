@@ -156,11 +156,11 @@ deploy_dev:
   script:
     - echo "Conectando ao proxy e acessando ambiente de desenvolvimento..."
     - >
-      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university '
-        ssh ubuntu@10.27.5.174 "
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
+        env CI_REGISTRY='$CI_REGISTRY' CI_REGISTRY_USER='$CI_REGISTRY_USER' CI_REGISTRY_PASSWORD='$CI_REGISTRY_PASSWORD' \
+        ssh ubuntu@10.27.5.174 '
           echo \"Fazendo login no Docker Registry...\"
-          export CI_REGISTRY=\"$CI_REGISTRY\" CI_REGISTRY_USER=\"$CI_REGISTRY_USER\" CI_REGISTRY_PASSWORD=\"$CI_REGISTRY_PASSWORD\" &&
-          echo \"Login em \$CI_REGISTRY com usuário \$CI_REGISTRY_USER\" &&
+          echo \"Login em \$CI_REGISTRY com usuário \$CI_REGISTRY_USER\"
           echo \"\$CI_REGISTRY_PASSWORD\" | docker login -u \"\$CI_REGISTRY_USER\" --password-stdin \"\$CI_REGISTRY\" &&
           echo \"Puxando imagem: \$CI_REGISTRY/\$CI_PROJECT_NAMESPACE/\$CI_PROJECT_NAME:\$VERSION\" &&
           docker pull \$CI_REGISTRY/\$CI_PROJECT_NAMESPACE/\$CI_PROJECT_NAME:\$VERSION &&
@@ -168,8 +168,9 @@ deploy_dev:
           docker rm backend-dev || true &&
           echo \"Executando container com a imagem correta...\" &&
           docker run -d --name backend-dev -p 8080:8080 \$CI_REGISTRY/\$CI_PROJECT_NAMESPACE/\$CI_PROJECT_NAME:\$VERSION
-        "
-      '
+        '
+      "
+
 
 # ===================== Frontend Pipeline =====================
 
