@@ -192,32 +192,47 @@ deploy_prod_backend:
         ssh ubuntu@10.27.5.152 '
           echo \"Detectando ambiente ativo (green/blue)...\"
           ACTIVE_ENV=\$(docker ps --filter name=backend-green --format \"{{.Names}}\" | grep -q backend-green && echo green || echo blue)
-
           echo \"Ambiente ativo: \$ACTIVE_ENV\"
-
-          if \[ \"$ACTIVE_ENV\" == \"green\" ]; then
-            IDLE_ENV=blue
+          
+          if [ \"\$ACTIVE_ENV\" == \"green\" ]; then
+            IDLE_ENV=\"blue\"
           else
-            IDLE_ENV=green
+            IDLE_ENV=\"green\"
           fi
-
-          echo \"Atualizando ambiente ocioso: \$IDLE_ENV\"
+          
+          echo \"Ambiente ocioso: \$IDLE_ENV\"
+          echo \"Fazendo pull da nova imagem...\"
           docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
-
+          
+          echo \"Atualizando ambiente ocioso: \$IDLE_ENV\"
           docker stop backend-\$IDLE_ENV || true
           docker rm backend-\$IDLE_ENV || true
-          docker run -d --name backend-\$IDLE_ENV $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
-
-          echo \"Parando ambiente ativo: \$ACTIVE_ENV\"
-          docker stop backend-\$ACTIVE_ENV || true
-          docker rm backend-\$ACTIVE_ENV || true
-
-          echo \"Reiniciando novo ambiente (\$IDLE_ENV) na porta padrão (8080)...\"
-          docker stop backend-\$IDLE_ENV || true
-          docker rm backend-\$IDLE_ENV || true
-          docker run -d --name backend-\$IDLE_ENV -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
-
-          echo \"Feito! Ambiente ativo agora é: \$IDLE_ENV\"
+          docker run -d --name backend-\$IDLE_ENV -p 8081:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+          
+          echo \"Verificando se o novo ambiente está funcionando...\"
+          sleep 10
+          
+          if docker ps | grep -q backend-\$IDLE_ENV; then
+            echo \"Novo ambiente (\$IDLE_ENV) está rodando. Realizando switch...\"
+            
+            # Para o ambiente ativo atual
+            echo \"Parando ambiente ativo: \$ACTIVE_ENV\"
+            docker stop backend-\$ACTIVE_ENV || true
+            docker rm backend-\$ACTIVE_ENV || true
+            
+            # Recria o novo ambiente na porta principal (8080)
+            echo \"Recriando \$IDLE_ENV na porta principal (8080)...\"
+            docker stop backend-\$IDLE_ENV || true
+            docker rm backend-\$IDLE_ENV || true
+            docker run -d --name backend-\$IDLE_ENV -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+            
+            echo \"Deploy concluído! Ambiente ativo agora é: \$IDLE_ENV\"
+          else
+            echo \"Erro: Novo ambiente não está funcionando. Mantendo ambiente atual.\"
+            docker stop backend-\$IDLE_ENV || true
+            docker rm backend-\$IDLE_ENV || true
+            exit 1
+          fi
         '
       "
 
