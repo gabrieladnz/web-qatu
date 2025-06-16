@@ -12,7 +12,7 @@ stages:
   - deploy
 
 variables:
-  VERSION: "DEV-2.3.2"
+  VERSION: "DEV-2.3.3"
   IMAGE_NAME: "my-shop-backend"
 
 install_dependencies:
@@ -138,7 +138,7 @@ acceptance_tests:
         exit 1
       fi
 
-deploy_dev:
+deploy_dev_backend:
   stage: deploy
   only:
     - develop
@@ -153,22 +153,66 @@ deploy_dev:
     - chmod 700 ~/.ssh
     - ssh-keyscan -H devops.jala.university >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-script:
-  - echo "Conectando ao proxy e acessando ambiente de desenvolvimento..."
-  - >
-    ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
-      ssh ubuntu@10.27.5.174 '
-        echo \"Fazendo login no Docker Registry...\"
-        echo \"Login em $CI_REGISTRY com usuário $CI_REGISTRY_USER\"
-        echo \"$CI_REGISTRY_PASSWORD\" | docker login -u \"$CI_REGISTRY_USER\" --password-stdin \"$CI_REGISTRY\" &&
-        echo \"Puxando imagem: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION\" &&
-        docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION &&
-        docker stop backend-dev || true &&
-        docker rm backend-dev || true &&
-        echo \"Executando container com a imagem correta...\" &&
-        docker run -d --name backend-dev -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
-      '
-    "
+  script:
+    - echo "Conectando ao proxy e acessando ambiente de desenvolvimento..."
+    - >
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
+        ssh ubuntu@10.27.5.174 '
+          echo \"Fazendo login no Docker Registry...\"
+          echo \"Login em $CI_REGISTRY com usuário $CI_REGISTRY_USER\"
+          echo \"$CI_REGISTRY_PASSWORD\" | docker login -u \"$CI_REGISTRY_USER\" --password-stdin \"$CI_REGISTRY\" &&
+          echo \"Puxando imagem: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION\" &&
+          docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION &&
+          docker stop backend-dev || true &&
+          docker rm backend-dev || true &&
+          echo \"Executando container com a imagem correta...\" &&
+          docker run -d --name backend-dev -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+        '
+      "
+
+  deploy_prod_backend:
+  stage: deploy
+  only:
+    - main
+    - CI-CD/marcelo/Lab7
+  environment:
+    name: production
+  before_script:
+    - 'which ssh-agent || (apt-get update -y && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H devops.jala.university >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo "Iniciando estratégia Blue-Green em produção..."
+    - >
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
+        ssh ubuntu@10.27.5.174 '
+          echo \"Detectando ambiente ativo (green/blue)...\"
+          ACTIVE_ENV=\$(docker ps --filter name=backend-green --format \"{{.Names}}\" | grep backend-green && echo green || echo blue)
+
+          echo \"Ambiente ativo: \$ACTIVE_ENV\"
+
+          if [ \"\$ACTIVE_ENV\" == \"green\" ]; then
+            IDLE_ENV=blue
+          else
+            IDLE_ENV=green
+          fi
+
+          echo \"Atualizando ambiente ocioso: \$IDLE_ENV\"
+          docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION &&
+          docker stop backend-\$IDLE_ENV || true &&
+          docker rm backend-\$IDLE_ENV || true &&
+          docker run -d --name backend-\$IDLE_ENV -p 8081:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"Trocando ambiente ativo para: \$IDLE_ENV\"
+          docker stop backend-\$ACTIVE_ENV || true
+
+          echo \"Feito! Ambiente ativo agora é: \$IDLE_ENV\"
+        '
+      "
 
 
 
