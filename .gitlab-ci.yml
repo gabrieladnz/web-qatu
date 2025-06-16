@@ -246,11 +246,7 @@ deploy_prod_backend:
         '
       "
 
-
-
-
 # ===================== Frontend Pipeline =====================
-
 frontend_pipeline:
   stage: build
   image: node:20
@@ -309,3 +305,106 @@ frontend_push_image:
     - docker:24.0.5-dind
   script:
     - echo "Imagem frontend já enviada."
+
+deploy_dev_front:
+  stage: deploy
+  only:
+    - develop
+    - CI-CD/marcelo/Lab7
+  environment:
+    name: development
+  before_script:
+    - 'which ssh-agent || (apt-get update -y && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H devops.jala.university >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo "Deploy no ambiente de desenvolvimento com estratégia Recreate..."
+    - ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university '
+        ssh ubuntu@10.27.5.174 "
+          docker login -u \"$CI_REGISTRY_USER\" -p \"$CI_REGISTRY_PASSWORD\" $CI_REGISTRY &&
+          docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION &&
+          docker stop frontend-dev || true &&
+          docker rm frontend-dev || true &&
+          docker run -d --name frontend-dev -p 8082:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+        "
+      '
+
+deploy_prod_front:
+  stage: deploy
+  only:
+    - main
+    - CI-CD/marcelo/Lab7
+  environment:
+    name: production
+  before_script:
+    - 'which ssh-agent || (apt-get update -y && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H devops.jala.university >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo "Iniciando estratégia Blue-Green para FRONTEND em produção..."
+    - >
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
+        ssh ubuntu@10.27.5.152 '
+          echo \"=== DEPLOY BLUE-GREEN FRONTEND ===\"
+
+          if docker ps --format \"table {{.Names}}\t{{.Ports}}\" | grep -q \"frontend-green.*8082\"; then
+            ACTIVE=\"green\"
+            IDLE=\"blue\"
+          elif docker ps --format \"table {{.Names}}\t{{.Ports}}\" | grep -q \"frontend-blue.*8082\"; then
+            ACTIVE=\"blue\"
+            IDLE=\"green\"
+          else
+            ACTIVE=\"green\"
+            IDLE=\"blue\"
+            echo \"Primeiro deploy detectado. Criando ambos os containers...\"
+
+            docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+            docker run -d --name frontend-green -p 8082:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+            docker run -d --name frontend-blue -p 8083:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+            echo \"✅ PRIMEIRO DEPLOY CONCLUÍDO!\"
+            echo \"GREEN: porta 8082 (ativo)\"
+            echo \"BLUE: porta 8083 (ocioso)\"
+            exit 0
+          fi
+
+          echo \"Ambiente ATIVO: \$ACTIVE (atendendo tráfego)\"
+          echo \"Ambiente OCIOSO: \$IDLE (será atualizado)\"
+
+          echo \"Baixando nova imagem do frontend...\"
+          docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"Parando ambiente ocioso: frontend-\$IDLE\"
+          docker stop frontend-\$IDLE || true
+          docker rm frontend-\$IDLE || true
+
+          echo \"Implantando nova versão no ambiente ocioso: frontend-\$IDLE\"
+          docker run -d --name frontend-\$IDLE -p 8083:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"Realizando switch dos ambientes...\"
+
+          echo \"Parando ambiente ativo: frontend-\$ACTIVE\"
+          docker stop frontend-\$ACTIVE || true
+          docker rm frontend-\$ACTIVE || true
+
+          echo \"Movendo frontend-\$IDLE para produção (porta 8082)\"
+          docker stop frontend-\$IDLE
+          docker rm frontend-\$IDLE
+          docker run -d --name frontend-\$IDLE -p 8082:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"Recriando frontend-\$ACTIVE como novo ambiente ocioso (porta 8083)\"
+          docker run -d --name frontend-\$ACTIVE -p 8083:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"✅ DEPLOY DO FRONTEND CONCLUÍDO!\"
+          echo \"Novo ambiente ATIVO: \$IDLE (porta 8082) - nova versão\"
+          echo \"Novo ambiente OCIOSO: \$ACTIVE (porta 8083) - pronto para próximo deploy\"
+        '
+      "
