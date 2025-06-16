@@ -153,22 +153,22 @@ deploy_dev:
     - chmod 700 ~/.ssh
     - ssh-keyscan -H devops.jala.university >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-script:
-  - echo "Conectando ao proxy e acessando ambiente de desenvolvimento..."
-  - >
-    ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
-      ssh ubuntu@10.27.5.174 '
-        echo \"Fazendo login no Docker Registry...\"
-        echo \"Login em $CI_REGISTRY com usuário $CI_REGISTRY_USER\"
-        echo \"$CI_REGISTRY_PASSWORD\" | docker login -u \"$CI_REGISTRY_USER\" --password-stdin \"$CI_REGISTRY\" &&
-        echo \"Puxando imagem: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION\" &&
-        docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION &&
-        docker stop backend-dev || true &&
-        docker rm backend-dev || true &&
-        echo \"Executando container com a imagem correta...\" &&
-        docker run -d --name backend-dev -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
-      '
-    "
+  script:
+    - echo "Conectando ao proxy e acessando ambiente de desenvolvimento..."
+    - >
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
+        ssh ubuntu@10.27.5.174 '
+          echo \"Fazendo login no Docker Registry...\"
+          echo \"Login em $CI_REGISTRY com usuário $CI_REGISTRY_USER\"
+          echo \"$CI_REGISTRY_PASSWORD\" | docker login -u \"$CI_REGISTRY_USER\" --password-stdin \"$CI_REGISTRY\" &&
+          echo \"Puxando imagem: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION\" &&
+          docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION &&
+          docker stop backend-dev || true &&
+          docker rm backend-dev || true &&
+          echo \"Executando container com a imagem correta...\" &&
+          docker run -d --name backend-dev -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+        '
+      "
 
 
 
