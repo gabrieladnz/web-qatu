@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, updateUser, resetPassword, getAllUsers, getUserById, loginUser, logoutUser } from '../controllers/userController.js';
+import { registerUser, updateUser, resetPassword, getAllUsers, getUserById, loginUser, logoutUser, deleteUser } from '../controllers/userController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 import { becomeSeller } from '../controllers/userController.js';
 import { validateRegister, validateResetPassword, validateLogin} from '../middlewares/userValidator.js';
@@ -17,6 +17,7 @@ router.get('/:id', authenticate, getUserById);
 router.put('/:id', authenticate, nameValidation, emailValidation, handleValidationErrors, updateUser);
 router.get('/', authenticate, getAllUsers); 
 router.post('/logout', authenticate, logoutUser);
+router.delete('/delete/:id', authenticate, deleteUser);
 
 // Endpoint para virar vendedor
 router.patch('/:id/become-seller', authenticate, becomeSeller);
