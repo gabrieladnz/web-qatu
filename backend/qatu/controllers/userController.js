@@ -1,5 +1,8 @@
 import UserModel from '../models/userModel.js';
 import CartModel from '../models/cartModel.js';
+import Order from '../models/orderModel.js';
+import ProductModel from '../models/productModel.js';
+import NotificationModel from '../models/notificationModel.js';
 import {loginUserService} from '../services/userService.js'
 import { triggerBecomeSellerNotification } from '../utils/notificationTriggers.js';
 
@@ -213,4 +216,74 @@ export const becomeSeller = async (req, res) => {
       error: error.message 
     });
   }
+};
+
+export const deleteUser = async (req, res) => {
+    try {
+        const paramId = req.params.id;   
+        const userId = req.userId;          
+
+        // Só permite deletar a própria conta
+        if (userId !== paramId) {
+            return res.status(403).json({ 
+                success: false,
+                message: 'Acesso negado. Você só pode deletar sua própria conta.' 
+            });
+        }
+
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ 
+                success: false,
+                message: 'Usuário não encontrado.' 
+            });
+        }
+
+        // Verifica se há pedidos em andamento (nem como comprador, nem como vendedor)
+        const activeOrders = await Order.find({
+            $or: [
+                { buyer: userId, status: { $nin: ['delivered', 'cancelled'] } },
+                { seller: userId, status: { $nin: ['delivered', 'cancelled'] } }
+            ]
+        });
+
+        if (activeOrders.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Não é possível deletar a conta com pedidos em andamento'
+            });
+        }
+
+        // Remove produtos do usuário se for vendedor
+        if (user.isSeller) {
+            await ProductModel.deleteMany({ seller: userId });
+        }
+
+        // Remove carrinho do usuário
+        await CartModel.deleteOne({ user: userId });
+
+        // Remove pedidos do usuário (como comprador ou vendedor)
+        await Order.deleteMany({
+            $or: [{ buyer: userId }, { seller: userId }]
+        });
+
+        // Remove notificações do usuário
+        await NotificationModel.deleteMany({ user: userId });
+
+        // Finalmente, remove o usuário
+        await UserModel.findByIdAndDelete(userId);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Conta deletada com sucesso'
+        });
+
+    } catch (error) {
+        console.error('Erro ao deletar usuário:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Erro ao deletar usuário',
+            error: error.message
+        });
+    }
 };

@@ -1,5 +1,5 @@
 import { nameValidation, emailValidation, passwordValidation, newPasswordValidation } from './commonValidators.js';
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 
 export const validateRegister = [
   nameValidation,
@@ -20,4 +20,10 @@ export const validateLogin = [
 
   body('password')
     .notEmpty().withMessage('Senha é obrigatória.')
+];
+
+export const deleteUserValidation = [
+    param('id')
+        .isMongoId()
+        .withMessage('ID de usuário inválido')
 ];
