@@ -322,16 +322,16 @@ deploy_dev_front:
     - ssh-keyscan -H devops.jala.university >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - echo "Deploy no ambiente de desenvolvimento com estratégia Recreate..."
-    - ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university '
-        ssh ubuntu@10.27.5.174 "
-          docker login -u \"$CI_REGISTRY_USER\" -p \"$CI_REGISTRY_PASSWORD\" $CI_REGISTRY &&
-          docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION &&
+    - >
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
+        ssh ubuntu@10.27.5.174 '
+          echo \"$CI_REGISTRY_PASSWORD\" | docker login -u \"$CI_REGISTRY_USER\" --password-stdin \"$CI_REGISTRY\" &&
+          docker pull \"$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION\" &&
           docker stop frontend-dev || true &&
           docker rm frontend-dev || true &&
-          docker run -d --name frontend-dev -p 8082:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
-        "
-      '
+          docker run -d --name frontend-dev -p 8082:80 \"$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION\"
+        '
+      "
 
 deploy_prod_front:
   stage: deploy
