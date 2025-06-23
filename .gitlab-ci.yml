@@ -1,3 +1,4 @@
+#test
 stages:
   - install
   - build
@@ -7,9 +8,11 @@ stages:
   - quality_gate
   - docker_build
   - docker_push
+  - acceptance_tests
+  - deploy
 
 variables:
-  VERSION: "DEV-1.0.0"
+  VERSION: "DEV-2.3.3"
   IMAGE_NAME: "my-shop-backend"
 
 install_dependencies:
@@ -52,7 +55,7 @@ static_code_analysis:
   image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd backend/qatu
-    - sonar-scanner -Dsonar.projectKey=my-shop-backend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+    - sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.organization=testdeploy -Dsonar.token=$SONAR_TOKEN_BACKEND -Dsonar.projectKey=testdeploy_qatu-backend
 
 quality_gate_check:
   stage: quality_gate
@@ -88,11 +91,165 @@ docker_push:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
     - echo "Imagem já está no registry do GitLab."
 
-# ===================== Frontend Pipeline =====================
+acceptance_tests:
+  stage: acceptance_tests
+  image: curlimages/curl:latest
+  script:
+    - |
+      echo "Executando testes de aceitação no ambiente de produção..."
 
+      # Gera e-mail randômico
+      EMAIL="teste+$(date +%s)@teste.com"
+      echo "E-mail de teste gerado: $EMAIL"
+
+      # 1. Teste GET /api/products
+      echo "Testando GET /api/products"
+      code=$(curl -s -o /dev/null -w "%{http_code}" https://qatu-backend-production.up.railway.app/api/products)
+      if [ "$code" != "200" ]; then
+        echo "❌ /api/products falhou - HTTP $code"
+        exit 1
+      fi
+
+      # 2. Teste GET /api/products/:id
+      echo "Testando GET /api/products/683d16f0bd2722a068f98431"
+      code=$(curl -s -o /dev/null -w "%{http_code}" https://qatu-backend-production.up.railway.app/api/products/683d16f0bd2722a068f98431)
+      if [ "$code" != "200" ]; then
+        echo "❌ /api/products/:id falhou - HTTP $code"
+        exit 1
+      fi
+
+      # 3. Teste POST /api/users/register
+      echo "Testando POST /api/users/register com e-mail $EMAIL"
+      code=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://qatu-backend-production.up.railway.app/api/users/register \
+        -H "Content-Type: application/json" \
+        -d "{\"name\":\"Teste\",\"email\":\"$EMAIL\",\"password\":\"Pipe#123\"}")
+      if [ "$code" != "201" ] && [ "$code" != "200" ]; then
+        echo "❌ /api/users/register falhou - HTTP $code"
+        exit 1
+      fi
+
+      # 4. Teste POST /api/users/login
+      echo "Testando POST /api/users/login com e-mail $EMAIL"
+      code=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://qatu-backend-production.up.railway.app/api/users/login \
+        -H "Content-Type: application/json" \
+        -d "{\"email\":\"$EMAIL\",\"password\":\"Pipe#123\"}")
+      if [ "$code" != "200" ]; then
+        echo "❌ /api/users/login falhou - HTTP $code"
+        exit 1
+      fi
+
+deploy_dev_backend:
+  stage: deploy
+  only:
+    - develop
+    - CI-CD/marcelo/Lab7
+  environment:
+    name: development
+  before_script:
+    - 'which ssh-agent || (apt-get update -y && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H devops.jala.university >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo "Conectando ao proxy e acessando ambiente de desenvolvimento..."
+    - >
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
+        ssh ubuntu@10.27.5.174 '
+          echo \"Fazendo login no Docker Registry...\"
+          echo \"Login em $CI_REGISTRY com usuário $CI_REGISTRY_USER\"
+          echo \"$CI_REGISTRY_PASSWORD\" | docker login -u \"$CI_REGISTRY_USER\" --password-stdin \"$CI_REGISTRY\" &&
+          echo \"Puxando imagem: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION\" &&
+          docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION &&
+          docker stop backend-dev || true &&
+          docker rm backend-dev || true &&
+          echo \"Executando container com a imagem correta...\" &&
+          docker run -d --name backend-dev -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+        '
+      "
+
+deploy_prod_backend:
+  stage: deploy
+  only:
+    - main
+    - CI-CD/marcelo/Lab7
+  environment:
+    name: production
+  before_script:
+    - 'which ssh-agent || (apt-get update -y && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H devops.jala.university >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo "Iniciando estratégia Blue-Green em produção..."
+    - >
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
+        ssh ubuntu@10.27.5.152 '
+          echo \"=== DEPLOY BLUE-GREEN SIMPLES ===\"
+          
+          if docker ps --format \"table {{.Names}}\t{{.Ports}}\" | grep -q \"backend-green.*8080\"; then
+            ACTIVE=\"green\"
+            IDLE=\"blue\"
+          elif docker ps --format \"table {{.Names}}\t{{.Ports}}\" | grep -q \"backend-blue.*8080\"; then
+            ACTIVE=\"blue\"
+            IDLE=\"green\"
+          else
+            ACTIVE=\"green\"
+            IDLE=\"blue\"
+            echo \"Primeiro deploy detectado. Criando ambos os containers...\"
+
+            docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+            docker run -d --name backend-green -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+            docker run -d --name backend-blue -p 8081:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+            
+            echo \"✅ PRIMEIRO DEPLOY CONCLUÍDO!\"
+            echo \"GREEN: porta 8080 (ativo)\"
+            echo \"BLUE: porta 8081 (ocioso)\"
+            exit 0
+          fi
+          
+          echo \"Ambiente ATIVO: \$ACTIVE (atendendo tráfego)\"
+          echo \"Ambiente OCIOSO: \$IDLE (será atualizado)\"
+          
+          echo \"Baixando nova imagem...\"
+          docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+          
+          echo \"Parando ambiente ocioso: backend-\$IDLE\"
+          docker stop backend-\$IDLE || true
+          docker rm backend-\$IDLE || true
+          
+          echo \"Implantando nova versão no ambiente ocioso: backend-\$IDLE\"
+          docker run -d --name backend-\$IDLE -p 8081:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"Realizando switch dos ambientes...\"
+
+          echo \"Parando ambiente ativo: backend-\$ACTIVE\"
+          docker stop backend-\$ACTIVE || true
+          docker rm backend-\$ACTIVE || true
+
+          echo \"Movendo backend-\$IDLE para produção (porta 8080)\"
+          docker stop backend-\$IDLE
+          docker rm backend-\$IDLE
+          docker run -d --name backend-\$IDLE -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"Recriando backend-\$ACTIVE como novo ambiente ocioso (porta 8081)\"
+          docker run -d --name backend-\$ACTIVE -p 8081:8080 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+          
+          echo \"✅ DEPLOY CONCLUÍDO!\"
+          echo \"Novo ambiente ATIVO: \$IDLE (porta 8080) - nova versão\"
+          echo \"Novo ambiente OCIOSO: \$ACTIVE (porta 8081) - pronto para próximo deploy\"
+        '
+      "
+
+# ===================== Frontend Pipeline =====================
 frontend_pipeline:
   stage: build
-  image: node:18
+  image: node:20
   script:
     - cd frontend/qatu
     - echo "Transpilando se necessário"
@@ -101,17 +258,29 @@ frontend_pipeline:
 
 frontend_tests:
   stage: test
-  image: node:18
-  script:
+  image: node:20
+  variables:
+    CI: "true"
+  before_script:
     - cd frontend/qatu
-    - npm test
+    - apt-get update -qq
+    - apt-get install -y -qq wget gnupg
+    - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+    - echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+    - apt-get update -qq
+    - apt-get install -y -qq google-chrome-stable
+    - npm ci
+  script:
+    - npx ng test --watch=false --karma-config=./karma.conf.js --browsers=ChromeHeadlessCINoSandbox
+  retry:
+    max: 1
 
 frontend_static_scan:
   stage: static_analysis
   image: sonarsource/sonar-scanner-cli:latest
   script:
     - cd frontend/qatu
-    - sonar-scanner -Dsonar.projectKey=my-shop-frontend -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+    - sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.organization=testdeploy -Dsonar.token=$SONAR_TOKEN_FRONTEND -Dsonar.projectKey=testdeploy_my-shop-frontend
 
 frontend_quality_gate:
   stage: quality_gate
@@ -125,10 +294,9 @@ frontend_build_image:
   services:
     - docker:24.0.5-dind
   script:
-    - cd frontend/qatu
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/frontend-qatu:$VERSION .
-    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/frontend-qatu:$VERSION
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION frontend/qatu
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
 
 frontend_push_image:
   stage: docker_push
@@ -137,3 +305,106 @@ frontend_push_image:
     - docker:24.0.5-dind
   script:
     - echo "Imagem frontend já enviada."
+
+deploy_dev_front:
+  stage: deploy
+  only:
+    - develop
+    - CI-CD/marcelo/Lab7
+  environment:
+    name: development
+  before_script:
+    - 'which ssh-agent || (apt-get update -y && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H devops.jala.university >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - >
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
+        ssh ubuntu@10.27.5.174 '
+          echo \"$CI_REGISTRY_PASSWORD\" | docker login -u \"$CI_REGISTRY_USER\" --password-stdin \"$CI_REGISTRY\" &&
+          docker pull \"$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION\" &&
+          docker stop frontend-dev || true &&
+          docker rm frontend-dev || true &&
+          docker run -d --name frontend-dev -p 8082:80 \"$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION\"
+        '
+      "
+
+deploy_prod_front:
+  stage: deploy
+  only:
+    - main
+    - CI-CD/marcelo/Lab7
+  environment:
+    name: production
+  before_script:
+    - 'which ssh-agent || (apt-get update -y && apt-get install openssh-client -y)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H devops.jala.university >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo "Iniciando estratégia Blue-Green para FRONTEND em produção..."
+    - >
+      ssh -o StrictHostKeyChecking=no portugues-b@devops.jala.university "
+        ssh ubuntu@10.27.5.152 '
+          echo \"=== DEPLOY BLUE-GREEN FRONTEND ===\"
+
+          if docker ps --format \"table {{.Names}}\t{{.Ports}}\" | grep -q \"frontend-green.*8082\"; then
+            ACTIVE=\"green\"
+            IDLE=\"blue\"
+          elif docker ps --format \"table {{.Names}}\t{{.Ports}}\" | grep -q \"frontend-blue.*8082\"; then
+            ACTIVE=\"blue\"
+            IDLE=\"green\"
+          else
+            ACTIVE=\"green\"
+            IDLE=\"blue\"
+            echo \"Primeiro deploy detectado. Criando ambos os containers...\"
+
+            docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+            docker run -d --name frontend-green -p 8082:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+            docker run -d --name frontend-blue -p 8083:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+            echo \"✅ PRIMEIRO DEPLOY CONCLUÍDO!\"
+            echo \"GREEN: porta 8082 (ativo)\"
+            echo \"BLUE: porta 8083 (ocioso)\"
+            exit 0
+          fi
+
+          echo \"Ambiente ATIVO: \$ACTIVE (atendendo tráfego)\"
+          echo \"Ambiente OCIOSO: \$IDLE (será atualizado)\"
+
+          echo \"Baixando nova imagem do frontend...\"
+          docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"Parando ambiente ocioso: frontend-\$IDLE\"
+          docker stop frontend-\$IDLE || true
+          docker rm frontend-\$IDLE || true
+
+          echo \"Implantando nova versão no ambiente ocioso: frontend-\$IDLE\"
+          docker run -d --name frontend-\$IDLE -p 8083:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"Realizando switch dos ambientes...\"
+
+          echo \"Parando ambiente ativo: frontend-\$ACTIVE\"
+          docker stop frontend-\$ACTIVE || true
+          docker rm frontend-\$ACTIVE || true
+
+          echo \"Movendo frontend-\$IDLE para produção (porta 8082)\"
+          docker stop frontend-\$IDLE
+          docker rm frontend-\$IDLE
+          docker run -d --name frontend-\$IDLE -p 8082:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"Recriando frontend-\$ACTIVE como novo ambiente ocioso (porta 8083)\"
+          docker run -d --name frontend-\$ACTIVE -p 8083:80 $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION
+
+          echo \"✅ DEPLOY DO FRONTEND CONCLUÍDO!\"
+          echo \"Novo ambiente ATIVO: \$IDLE (porta 8082) - nova versão\"
+          echo \"Novo ambiente OCIOSO: \$ACTIVE (porta 8083) - pronto para próximo deploy\"
+        '
+      "
